@@ -30,7 +30,7 @@ class _GoalListState extends State<GoalList> {
     return Scaffold(
     resizeToAvoidBottomPadding: false,
       body: Padding(
-        padding: EdgeInsets.all(50.0),
+        padding: EdgeInsets.all(40.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +50,7 @@ class _GoalListState extends State<GoalList> {
 
   Padding _headline() {
     return Padding(
-        padding: EdgeInsets.only(top: 30, bottom: 10),
+        padding: EdgeInsets.only(top: 40,),
         child: Text(
           'Tasks',
           style: TextStyle(

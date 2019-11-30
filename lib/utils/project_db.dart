@@ -36,19 +36,34 @@ class SmartGoal {
   SmartGoal({this.goal, this.subTask, this.output});
 }
 
+class Journals extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  DateTimeColumn get dateCreated => dateTime()();
+  TextColumn get title => text()();
+  TextColumn get description => text()();
+  TextColumn get feelings =>  text()();
+  TextColumn get evaluation => text()();
+  TextColumn get analysis => text()();
+  TextColumn get conclusion => text()();
+  TextColumn get actionPlan  => text()();
+}
 
-@UseMoor(tables: [Goals, SubTasks, Outputs], daos: [GoalDao, SubTaskDao, OutputDao])
+
+
+
+
+@UseMoor(tables: [Goals, SubTasks, Outputs, Journals], daos: [GoalDao, SubTaskDao, OutputDao, JournalDao])
 class AppDatabase extends _$AppDatabase {
   AppDatabase () : super(FlutterQueryExecutor.inDatabaseFolder(path: 'db.sqlite'));
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
   @override
   MigrationStrategy get migration => MigrationStrategy(
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
     },
     onUpgrade: (Migrator m, int from, int to) async {
-      if ( from == 1 ) {
+      if ( from == 2 ) {
         await m.deleteTable('goals');
         await m.deleteTable('subTasks');
         await m.deleteTable('outputs');
@@ -142,6 +157,23 @@ class GoalDao extends DatabaseAccessor<AppDatabase> with _$GoalDaoMixin {
   Future insertGoal(Insertable<Goal> goal) => into(goals).insert(goal);
   Future updateGoal(Insertable<Goal> goal) => update(goals).replace(goal);
   Future deleteGoal(Insertable<Goal> goal) => delete(goals).delete(goal);
+}
+
+@UseDao(tables: [Journals])
+class JournalDao extends DatabaseAccessor<AppDatabase> with _$JournalDaoMixin {
+  final AppDatabase db;
+  JournalDao(this.db) : super(db);
+
+  Stream<List<Journal>> watchJournalEntries() => select(journals).watch();
+  Stream<Journal> watchJournalEntry(int id) {
+    final entryQuery =  select(journals)..where((entry) => entry.id.equals(id));
+    return entryQuery.watchSingle();
+  }
+
+  Future insertJournalEntry(Insertable<Journal> entry) => into(journals).insert(entry);
+  Future updateJournalEntry(Insertable<Journal> entry) => update(journals).replace(entry);
+  Future deleteJournalEntry(Insertable<Journal> entry) => delete(journals).delete(entry);
+
 }
 
 @UseDao(tables: [SubTasks])

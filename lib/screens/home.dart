@@ -45,17 +45,35 @@ class MyHome extends StatelessWidget {
           Card(
               color: Colors.white,
               shape: CircleBorder(),
-              child: Icon(HomeIcons.test, size: 50, color: Color(0xFF21BEDE),)
+              child: IconButton(
+                icon: Icon(HomeIcons.test, size: 50, color: Color(0xFF21BEDE),),
+                onPressed: () {
+//                  Navigator.pushNamed(context, '/goal_list');
+                },
+                tooltip: 'Assessments',
+              )
           ),
           Card(
               color: Colors.white,
               shape: CircleBorder(),
-              child: Icon(HomeIcons.diary, size: 50, color: Color(0xFF21BEDE),)
+              child: IconButton(
+                icon: Icon(HomeIcons.diary, size: 50, color: Color(0xFF21BEDE),),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/journal_list');
+                },
+                tooltip: 'Reflective Journal',
+              )
           ),
           Card(
               color: Colors.white,
               shape: CircleBorder(),
-              child: Icon(HomeIcons.conversation, size: 50, color: Color(0xFF21BEDE),)
+              child: IconButton(
+                icon: Icon(HomeIcons.conversation, size: 50, color: Color(0xFF21BEDE),),
+                onPressed: () {
+//                  Navigator.pushNamed(context, '/goal_list');
+                },
+                tooltip: 'Active Listening Checker',
+              )
           ),
           Card(
               color: Colors.white,

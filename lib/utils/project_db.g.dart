@@ -679,6 +679,483 @@ class $OutputsTable extends Outputs with TableInfo<$OutputsTable, Output> {
   }
 }
 
+class Journal extends DataClass implements Insertable<Journal> {
+  final int id;
+  final DateTime dateCreated;
+  final String title;
+  final String description;
+  final String feelings;
+  final String evaluation;
+  final String analysis;
+  final String conclusion;
+  final String actionPlan;
+  Journal(
+      {@required this.id,
+      @required this.dateCreated,
+      @required this.title,
+      @required this.description,
+      @required this.feelings,
+      @required this.evaluation,
+      @required this.analysis,
+      @required this.conclusion,
+      @required this.actionPlan});
+  factory Journal.fromData(Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final intType = db.typeSystem.forDartType<int>();
+    final dateTimeType = db.typeSystem.forDartType<DateTime>();
+    final stringType = db.typeSystem.forDartType<String>();
+    return Journal(
+      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      dateCreated: dateTimeType
+          .mapFromDatabaseResponse(data['${effectivePrefix}date_created']),
+      title:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}title']),
+      description: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}description']),
+      feelings: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}feelings']),
+      evaluation: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}evaluation']),
+      analysis: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}analysis']),
+      conclusion: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}conclusion']),
+      actionPlan: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}action_plan']),
+    );
+  }
+  factory Journal.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return Journal(
+      id: serializer.fromJson<int>(json['id']),
+      dateCreated: serializer.fromJson<DateTime>(json['dateCreated']),
+      title: serializer.fromJson<String>(json['title']),
+      description: serializer.fromJson<String>(json['description']),
+      feelings: serializer.fromJson<String>(json['feelings']),
+      evaluation: serializer.fromJson<String>(json['evaluation']),
+      analysis: serializer.fromJson<String>(json['analysis']),
+      conclusion: serializer.fromJson<String>(json['conclusion']),
+      actionPlan: serializer.fromJson<String>(json['actionPlan']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson(
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return {
+      'id': serializer.toJson<int>(id),
+      'dateCreated': serializer.toJson<DateTime>(dateCreated),
+      'title': serializer.toJson<String>(title),
+      'description': serializer.toJson<String>(description),
+      'feelings': serializer.toJson<String>(feelings),
+      'evaluation': serializer.toJson<String>(evaluation),
+      'analysis': serializer.toJson<String>(analysis),
+      'conclusion': serializer.toJson<String>(conclusion),
+      'actionPlan': serializer.toJson<String>(actionPlan),
+    };
+  }
+
+  @override
+  JournalsCompanion createCompanion(bool nullToAbsent) {
+    return JournalsCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      dateCreated: dateCreated == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateCreated),
+      title:
+          title == null && nullToAbsent ? const Value.absent() : Value(title),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      feelings: feelings == null && nullToAbsent
+          ? const Value.absent()
+          : Value(feelings),
+      evaluation: evaluation == null && nullToAbsent
+          ? const Value.absent()
+          : Value(evaluation),
+      analysis: analysis == null && nullToAbsent
+          ? const Value.absent()
+          : Value(analysis),
+      conclusion: conclusion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(conclusion),
+      actionPlan: actionPlan == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actionPlan),
+    );
+  }
+
+  Journal copyWith(
+          {int id,
+          DateTime dateCreated,
+          String title,
+          String description,
+          String feelings,
+          String evaluation,
+          String analysis,
+          String conclusion,
+          String actionPlan}) =>
+      Journal(
+        id: id ?? this.id,
+        dateCreated: dateCreated ?? this.dateCreated,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        feelings: feelings ?? this.feelings,
+        evaluation: evaluation ?? this.evaluation,
+        analysis: analysis ?? this.analysis,
+        conclusion: conclusion ?? this.conclusion,
+        actionPlan: actionPlan ?? this.actionPlan,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Journal(')
+          ..write('id: $id, ')
+          ..write('dateCreated: $dateCreated, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('feelings: $feelings, ')
+          ..write('evaluation: $evaluation, ')
+          ..write('analysis: $analysis, ')
+          ..write('conclusion: $conclusion, ')
+          ..write('actionPlan: $actionPlan')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf($mrjc(
+      id.hashCode,
+      $mrjc(
+          dateCreated.hashCode,
+          $mrjc(
+              title.hashCode,
+              $mrjc(
+                  description.hashCode,
+                  $mrjc(
+                      feelings.hashCode,
+                      $mrjc(
+                          evaluation.hashCode,
+                          $mrjc(
+                              analysis.hashCode,
+                              $mrjc(conclusion.hashCode,
+                                  actionPlan.hashCode)))))))));
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      (other is Journal &&
+          other.id == this.id &&
+          other.dateCreated == this.dateCreated &&
+          other.title == this.title &&
+          other.description == this.description &&
+          other.feelings == this.feelings &&
+          other.evaluation == this.evaluation &&
+          other.analysis == this.analysis &&
+          other.conclusion == this.conclusion &&
+          other.actionPlan == this.actionPlan);
+}
+
+class JournalsCompanion extends UpdateCompanion<Journal> {
+  final Value<int> id;
+  final Value<DateTime> dateCreated;
+  final Value<String> title;
+  final Value<String> description;
+  final Value<String> feelings;
+  final Value<String> evaluation;
+  final Value<String> analysis;
+  final Value<String> conclusion;
+  final Value<String> actionPlan;
+  const JournalsCompanion({
+    this.id = const Value.absent(),
+    this.dateCreated = const Value.absent(),
+    this.title = const Value.absent(),
+    this.description = const Value.absent(),
+    this.feelings = const Value.absent(),
+    this.evaluation = const Value.absent(),
+    this.analysis = const Value.absent(),
+    this.conclusion = const Value.absent(),
+    this.actionPlan = const Value.absent(),
+  });
+  JournalsCompanion.insert({
+    this.id = const Value.absent(),
+    @required DateTime dateCreated,
+    @required String title,
+    @required String description,
+    @required String feelings,
+    @required String evaluation,
+    @required String analysis,
+    @required String conclusion,
+    @required String actionPlan,
+  })  : dateCreated = Value(dateCreated),
+        title = Value(title),
+        description = Value(description),
+        feelings = Value(feelings),
+        evaluation = Value(evaluation),
+        analysis = Value(analysis),
+        conclusion = Value(conclusion),
+        actionPlan = Value(actionPlan);
+  JournalsCompanion copyWith(
+      {Value<int> id,
+      Value<DateTime> dateCreated,
+      Value<String> title,
+      Value<String> description,
+      Value<String> feelings,
+      Value<String> evaluation,
+      Value<String> analysis,
+      Value<String> conclusion,
+      Value<String> actionPlan}) {
+    return JournalsCompanion(
+      id: id ?? this.id,
+      dateCreated: dateCreated ?? this.dateCreated,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      feelings: feelings ?? this.feelings,
+      evaluation: evaluation ?? this.evaluation,
+      analysis: analysis ?? this.analysis,
+      conclusion: conclusion ?? this.conclusion,
+      actionPlan: actionPlan ?? this.actionPlan,
+    );
+  }
+}
+
+class $JournalsTable extends Journals with TableInfo<$JournalsTable, Journal> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $JournalsTable(this._db, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  GeneratedIntColumn _id;
+  @override
+  GeneratedIntColumn get id => _id ??= _constructId();
+  GeneratedIntColumn _constructId() {
+    return GeneratedIntColumn('id', $tableName, false,
+        hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
+  final VerificationMeta _dateCreatedMeta =
+      const VerificationMeta('dateCreated');
+  GeneratedDateTimeColumn _dateCreated;
+  @override
+  GeneratedDateTimeColumn get dateCreated =>
+      _dateCreated ??= _constructDateCreated();
+  GeneratedDateTimeColumn _constructDateCreated() {
+    return GeneratedDateTimeColumn(
+      'date_created',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _titleMeta = const VerificationMeta('title');
+  GeneratedTextColumn _title;
+  @override
+  GeneratedTextColumn get title => _title ??= _constructTitle();
+  GeneratedTextColumn _constructTitle() {
+    return GeneratedTextColumn(
+      'title',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  GeneratedTextColumn _description;
+  @override
+  GeneratedTextColumn get description =>
+      _description ??= _constructDescription();
+  GeneratedTextColumn _constructDescription() {
+    return GeneratedTextColumn(
+      'description',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _feelingsMeta = const VerificationMeta('feelings');
+  GeneratedTextColumn _feelings;
+  @override
+  GeneratedTextColumn get feelings => _feelings ??= _constructFeelings();
+  GeneratedTextColumn _constructFeelings() {
+    return GeneratedTextColumn(
+      'feelings',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _evaluationMeta = const VerificationMeta('evaluation');
+  GeneratedTextColumn _evaluation;
+  @override
+  GeneratedTextColumn get evaluation => _evaluation ??= _constructEvaluation();
+  GeneratedTextColumn _constructEvaluation() {
+    return GeneratedTextColumn(
+      'evaluation',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _analysisMeta = const VerificationMeta('analysis');
+  GeneratedTextColumn _analysis;
+  @override
+  GeneratedTextColumn get analysis => _analysis ??= _constructAnalysis();
+  GeneratedTextColumn _constructAnalysis() {
+    return GeneratedTextColumn(
+      'analysis',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _conclusionMeta = const VerificationMeta('conclusion');
+  GeneratedTextColumn _conclusion;
+  @override
+  GeneratedTextColumn get conclusion => _conclusion ??= _constructConclusion();
+  GeneratedTextColumn _constructConclusion() {
+    return GeneratedTextColumn(
+      'conclusion',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _actionPlanMeta = const VerificationMeta('actionPlan');
+  GeneratedTextColumn _actionPlan;
+  @override
+  GeneratedTextColumn get actionPlan => _actionPlan ??= _constructActionPlan();
+  GeneratedTextColumn _constructActionPlan() {
+    return GeneratedTextColumn(
+      'action_plan',
+      $tableName,
+      false,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        dateCreated,
+        title,
+        description,
+        feelings,
+        evaluation,
+        analysis,
+        conclusion,
+        actionPlan
+      ];
+  @override
+  $JournalsTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'journals';
+  @override
+  final String actualTableName = 'journals';
+  @override
+  VerificationContext validateIntegrity(JournalsCompanion d,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    if (d.id.present) {
+      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
+    } else if (id.isRequired && isInserting) {
+      context.missing(_idMeta);
+    }
+    if (d.dateCreated.present) {
+      context.handle(_dateCreatedMeta,
+          dateCreated.isAcceptableValue(d.dateCreated.value, _dateCreatedMeta));
+    } else if (dateCreated.isRequired && isInserting) {
+      context.missing(_dateCreatedMeta);
+    }
+    if (d.title.present) {
+      context.handle(
+          _titleMeta, title.isAcceptableValue(d.title.value, _titleMeta));
+    } else if (title.isRequired && isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (d.description.present) {
+      context.handle(_descriptionMeta,
+          description.isAcceptableValue(d.description.value, _descriptionMeta));
+    } else if (description.isRequired && isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (d.feelings.present) {
+      context.handle(_feelingsMeta,
+          feelings.isAcceptableValue(d.feelings.value, _feelingsMeta));
+    } else if (feelings.isRequired && isInserting) {
+      context.missing(_feelingsMeta);
+    }
+    if (d.evaluation.present) {
+      context.handle(_evaluationMeta,
+          evaluation.isAcceptableValue(d.evaluation.value, _evaluationMeta));
+    } else if (evaluation.isRequired && isInserting) {
+      context.missing(_evaluationMeta);
+    }
+    if (d.analysis.present) {
+      context.handle(_analysisMeta,
+          analysis.isAcceptableValue(d.analysis.value, _analysisMeta));
+    } else if (analysis.isRequired && isInserting) {
+      context.missing(_analysisMeta);
+    }
+    if (d.conclusion.present) {
+      context.handle(_conclusionMeta,
+          conclusion.isAcceptableValue(d.conclusion.value, _conclusionMeta));
+    } else if (conclusion.isRequired && isInserting) {
+      context.missing(_conclusionMeta);
+    }
+    if (d.actionPlan.present) {
+      context.handle(_actionPlanMeta,
+          actionPlan.isAcceptableValue(d.actionPlan.value, _actionPlanMeta));
+    } else if (actionPlan.isRequired && isInserting) {
+      context.missing(_actionPlanMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Journal map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return Journal.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  Map<String, Variable> entityToSql(JournalsCompanion d) {
+    final map = <String, Variable>{};
+    if (d.id.present) {
+      map['id'] = Variable<int, IntType>(d.id.value);
+    }
+    if (d.dateCreated.present) {
+      map['date_created'] =
+          Variable<DateTime, DateTimeType>(d.dateCreated.value);
+    }
+    if (d.title.present) {
+      map['title'] = Variable<String, StringType>(d.title.value);
+    }
+    if (d.description.present) {
+      map['description'] = Variable<String, StringType>(d.description.value);
+    }
+    if (d.feelings.present) {
+      map['feelings'] = Variable<String, StringType>(d.feelings.value);
+    }
+    if (d.evaluation.present) {
+      map['evaluation'] = Variable<String, StringType>(d.evaluation.value);
+    }
+    if (d.analysis.present) {
+      map['analysis'] = Variable<String, StringType>(d.analysis.value);
+    }
+    if (d.conclusion.present) {
+      map['conclusion'] = Variable<String, StringType>(d.conclusion.value);
+    }
+    if (d.actionPlan.present) {
+      map['action_plan'] = Variable<String, StringType>(d.actionPlan.value);
+    }
+    return map;
+  }
+
+  @override
+  $JournalsTable createAlias(String alias) {
+    return $JournalsTable(_db, alias);
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $GoalsTable _goals;
@@ -687,14 +1164,18 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $SubTasksTable get subTasks => _subTasks ??= $SubTasksTable(this);
   $OutputsTable _outputs;
   $OutputsTable get outputs => _outputs ??= $OutputsTable(this);
+  $JournalsTable _journals;
+  $JournalsTable get journals => _journals ??= $JournalsTable(this);
   GoalDao _goalDao;
   GoalDao get goalDao => _goalDao ??= GoalDao(this as AppDatabase);
   SubTaskDao _subTaskDao;
   SubTaskDao get subTaskDao => _subTaskDao ??= SubTaskDao(this as AppDatabase);
   OutputDao _outputDao;
   OutputDao get outputDao => _outputDao ??= OutputDao(this as AppDatabase);
+  JournalDao _journalDao;
+  JournalDao get journalDao => _journalDao ??= JournalDao(this as AppDatabase);
   @override
-  List<TableInfo> get allTables => [goals, subTasks, outputs];
+  List<TableInfo> get allTables => [goals, subTasks, outputs, journals];
 }
 
 // **************************************************************************
@@ -705,6 +1186,9 @@ mixin _$GoalDaoMixin on DatabaseAccessor<AppDatabase> {
   $GoalsTable get goals => db.goals;
   $SubTasksTable get subTasks => db.subTasks;
   $OutputsTable get outputs => db.outputs;
+}
+mixin _$JournalDaoMixin on DatabaseAccessor<AppDatabase> {
+  $JournalsTable get journals => db.journals;
 }
 mixin _$SubTaskDaoMixin on DatabaseAccessor<AppDatabase> {
   $SubTasksTable get subTasks => db.subTasks;
