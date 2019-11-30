@@ -4,12 +4,13 @@ Emotional Intelligence Training app that facilitates activities like Recflective
 
 ## Progress done
 * Goal Tracking Feature
+* Reflective Journal Feature
 
 ## Currently working on
-* Reflective Journal Writing Screens
-  * Changing database handler from flutter sqlite to flutter moor
+* Settings Screen
+ * Local Notifications
  
 ## To do
 * Active Listening Screens
-* Settings Screen
+* Assessment Screens
 * Breathing Exercise Screen
