@@ -70,7 +70,7 @@ class MyHome extends StatelessWidget {
               child: IconButton(
                 icon: Icon(HomeIcons.conversation, size: 50, color: Color(0xFF21BEDE),),
                 onPressed: () {
-//                  Navigator.pushNamed(context, '/goal_list');
+                  Navigator.pushNamed(context, '/listen_list');
                 },
                 tooltip: 'Active Listening Checker',
               )

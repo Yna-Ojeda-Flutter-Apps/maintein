@@ -48,25 +48,43 @@ class Journals extends Table {
   TextColumn get actionPlan  => text()();
 }
 
+class Listens extends Table{
+  IntColumn get id => integer().autoIncrement()();
+  DateTimeColumn get dateCreated => dateTime()();
+  TextColumn get actName => text()();
+  TextColumn get insights => text()();
+  BoolColumn get iHad1 => boolean().withDefault(Constant(false))();
+  BoolColumn get iHad2 => boolean().withDefault(Constant(false))();
+  BoolColumn get iHad3 => boolean().withDefault(Constant(false))();
+  BoolColumn get iHad4 => boolean().withDefault(Constant(false))();
+  BoolColumn get iGave1 => boolean().withDefault(Constant(false))();
+  BoolColumn get iGave2 => boolean().withDefault(Constant(false))();
+  BoolColumn get iGave3 => boolean().withDefault(Constant(false))();
+  BoolColumn get iCan1 => boolean().withDefault(Constant(false))();
+  BoolColumn get iCan2 => boolean().withDefault(Constant(false))();
+  BoolColumn get ididNot1 => boolean().withDefault(Constant(false))();
+  BoolColumn get ididNot2 => boolean().withDefault(Constant(false))();
+  BoolColumn get ididNot3 => boolean().withDefault(Constant(false))();
+}
 
 
 
-
-@UseMoor(tables: [Goals, SubTasks, Outputs, Journals], daos: [GoalDao, SubTaskDao, OutputDao, JournalDao])
+@UseMoor(tables: [Goals, SubTasks, Outputs, Journals, Listens], daos: [GoalDao, SubTaskDao, OutputDao, JournalDao, ListenDao])
 class AppDatabase extends _$AppDatabase {
   AppDatabase () : super(FlutterQueryExecutor.inDatabaseFolder(path: 'db.sqlite'));
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
   @override
   MigrationStrategy get migration => MigrationStrategy(
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
     },
     onUpgrade: (Migrator m, int from, int to) async {
-      if ( from == 2 ) {
+      if ( from == 3 ) {
         await m.deleteTable('goals');
         await m.deleteTable('subTasks');
         await m.deleteTable('outputs');
+        await m.deleteTable('journals');
         await m.createAllTables();
       }
     }
@@ -173,6 +191,23 @@ class JournalDao extends DatabaseAccessor<AppDatabase> with _$JournalDaoMixin {
   Future insertJournalEntry(Insertable<Journal> entry) => into(journals).insert(entry);
   Future updateJournalEntry(Insertable<Journal> entry) => update(journals).replace(entry);
   Future deleteJournalEntry(Insertable<Journal> entry) => delete(journals).delete(entry);
+
+}
+
+@UseDao(tables: [Listens])
+class ListenDao extends DatabaseAccessor<AppDatabase> with _$ListenDaoMixin {
+  final AppDatabase db;
+  ListenDao(this.db) : super(db);
+
+  Stream<List<Listen>> watchActiveListenEntries() => select(listens).watch();
+  Stream<Listen> watchListenEntry(int id) {
+    final activityEntry = select(listens)..where((activity) => activity.id.equals(id));
+    return activityEntry.watchSingle();
+  }
+
+  Future insertListenActivity(Insertable<Listen> activity) => into(listens).insert(activity);
+  Future updateListenActivity(Insertable<Listen> activity) => update(listens).replace(activity);
+  Future deleteListenActivity(Insertable<Listen> activity) => delete(listens).delete(activity);
 
 }
 

@@ -1,3 +1,6 @@
+import 'package:eit_app/screens/active_listening/active_list.dart';
+import 'package:eit_app/screens/active_listening/active_new.dart';
+import 'package:eit_app/screens/active_listening/active_detail.dart';
 import 'package:eit_app/screens/goaltracker/goal_detail.dart';
 import 'package:eit_app/screens/goaltracker/goal_list.dart';
 import 'package:eit_app/screens/home.dart';
@@ -21,6 +24,7 @@ class MyApp extends StatelessWidget {
         Provider(builder: (_) => db.subTaskDao),
         Provider(builder: (_) => db.outputDao),
         Provider(builder: (_) => db.journalDao),
+        Provider(builder: (_) => db.listenDao),
       ],
       child: MaterialApp(
         title: 'feelUP',
@@ -34,6 +38,9 @@ class MyApp extends StatelessWidget {
           JournalList.routeName: (context) => JournalList(),
           JournalNewForm.routeName: (context) => JournalNewForm(),
           JournalDetail.routeName: (context) => JournalDetail(),
+          ActiveListenList.routeName: (context) => ActiveListenList(),
+          ActiveListenNewForm.routeName: (context) => ActiveListenNewForm(),
+          ActiveListenDetail.routeName: (context) => ActiveListenDetail(),
         },
       ),
     );
