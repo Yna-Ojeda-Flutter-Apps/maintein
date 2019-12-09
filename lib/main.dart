@@ -1,5 +1,8 @@
 import 'package:eit_app/screens/assessments/assessments_form.dart';
 import 'package:eit_app/screens/assessments/assessments_list.dart';
+import 'package:eit_app/screens/active_listening/active_list.dart';
+import 'package:eit_app/screens/active_listening/active_new.dart';
+import 'package:eit_app/screens/active_listening/active_detail.dart';
 import 'package:eit_app/screens/goaltracker/goal_detail.dart';
 import 'package:eit_app/screens/goaltracker/goal_list.dart';
 import 'package:eit_app/screens/home.dart';
@@ -24,6 +27,7 @@ class MyApp extends StatelessWidget {
         Provider(create: (_) => db.outputDao),
         Provider(create: (_) => db.journalDao),
         Provider(create: (_) => db.assessmentDao),
+        Provider(create: (_) => db.listenDao),
       ],
       child: MaterialApp(
         title: 'feelUP',
@@ -39,6 +43,9 @@ class MyApp extends StatelessWidget {
           JournalDetail.routeName: (context) => JournalDetail(),
           AssessmentsList.routeName: (context) => AssessmentsList(),
           TakeAssessment.routeName: (context) => TakeAssessment(),
+          ActiveListenList.routeName: (context) => ActiveListenList(),
+          ActiveListenNewForm.routeName: (context) => ActiveListenNewForm(),
+          ActiveListenDetail.routeName: (context) => ActiveListenDetail(),
         },
       ),
     );

@@ -58,7 +58,18 @@ class Questions extends Table {
   IntColumn get id => integer().customConstraint('REFERENCES assessments(id) ON DELETE CASCADE')();
   IntColumn get qId => integer()();
   IntColumn get score => integer().withDefault(Constant(0))();
-  class Listens extends Table{
+
+  @override
+  Set<Column> get primaryKey => {id, qId};
+}
+
+class AssessmentRecord {
+  final Assessment info;
+  final List<Question> question;
+  AssessmentRecord({this.info, this.question});
+}
+
+class Listens extends Table{
   IntColumn get id => integer().autoIncrement()();
   DateTimeColumn get dateCreated => dateTime()();
   TextColumn get actName => text()();
@@ -75,16 +86,6 @@ class Questions extends Table {
   BoolColumn get ididNot1 => boolean().withDefault(Constant(false))();
   BoolColumn get ididNot2 => boolean().withDefault(Constant(false))();
   BoolColumn get ididNot3 => boolean().withDefault(Constant(false))();
-  }
-
-  @override
-  Set<Column> get primaryKey => {id, qId};
-}
-
-class AssessmentRecord {
-  final Assessment info;
-  final List<Question> question;
-  AssessmentRecord({this.info, this.question});
 }
 
 
