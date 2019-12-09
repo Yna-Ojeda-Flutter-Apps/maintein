@@ -19,12 +19,6 @@ class JournalNewForm extends StatefulWidget {
 class _JournalNewFormState extends State<JournalNewForm> {
   PageController _pageController = PageController();
   int _pageIndex = 0;
-//  final GlobalKey<FormState> _descriptionFormKey = GlobalKey<FormState>();
-//  final GlobalKey<FormState> _feelingsFormKey = GlobalKey<FormState>();
-//  final GlobalKey<FormState> _evaluationFormKey = GlobalKey<FormState>();
-//  final GlobalKey<FormState> _analysisFormKey = GlobalKey<FormState>();
-//  final GlobalKey<FormState> _conclusionFormKey = GlobalKey<FormState>();
-//  final GlobalKey<FormState> _actionPlanFormKey = GlobalKey<FormState>();
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _feelingsController = TextEditingController();

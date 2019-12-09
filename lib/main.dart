@@ -1,3 +1,5 @@
+import 'package:eit_app/screens/assessments/assessments_form.dart';
+import 'package:eit_app/screens/assessments/assessments_list.dart';
 import 'package:eit_app/screens/goaltracker/goal_detail.dart';
 import 'package:eit_app/screens/goaltracker/goal_list.dart';
 import 'package:eit_app/screens/home.dart';
@@ -17,10 +19,11 @@ class MyApp extends StatelessWidget {
     final db = AppDatabase();
     return MultiProvider(
       providers: [
-        Provider(builder: (__) => db.goalDao),
-        Provider(builder: (_) => db.subTaskDao),
-        Provider(builder: (_) => db.outputDao),
-        Provider(builder: (_) => db.journalDao),
+        Provider(create: (__) => db.goalDao),
+        Provider(create: (_) => db.subTaskDao),
+        Provider(create: (_) => db.outputDao),
+        Provider(create: (_) => db.journalDao),
+        Provider(create: (_) => db.assessmentDao),
       ],
       child: MaterialApp(
         title: 'feelUP',
@@ -34,6 +37,8 @@ class MyApp extends StatelessWidget {
           JournalList.routeName: (context) => JournalList(),
           JournalNewForm.routeName: (context) => JournalNewForm(),
           JournalDetail.routeName: (context) => JournalDetail(),
+          AssessmentsList.routeName: (context) => AssessmentsList(),
+          TakeAssessment.routeName: (context) => TakeAssessment(),
         },
       ),
     );

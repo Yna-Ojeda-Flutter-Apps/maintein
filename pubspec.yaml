@@ -25,6 +25,7 @@ dependencies:
   flutter_slidable: ^0.5.4
   datetime_picker_formfield: ^0.4.3
   dots_indicator: ^1.1.0
+  fl_chart: ^0.5.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -70,24 +71,27 @@ flutter:
     # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
+    - family: EmojiIcons
+      fonts:
+        - asset: lib/icons/EmojiIcons.ttf
     - family: HomeIcons
       fonts:
         - asset: lib/icons/HomeIcons.ttf
     - family: Roboto
       fonts:
-        - asset: lib/icons/Roboto-Regular.ttf
+        - asset: lib/fonts/Roboto-Regular.ttf
           weight: 400
-        - asset: lib/icons/Roboto-Light.ttf
+        - asset: lib/fonts/Roboto-Light.ttf
           weight: 300
-        - asset: lib/icons/Roboto-Thin.ttf
+        - asset: lib/fonts/Roboto-Thin.ttf
           weight: 100
     - family: Raleway
       fonts:
-        - asset: lib/icons/Raleway-Regular.ttf
+        - asset: lib/fonts/Raleway-Regular.ttf
           weight: 400
-        - asset: lib/icons/Raleway-Medium.ttf
+        - asset: lib/fonts/Raleway-Medium.ttf
           weight: 500
-        - asset: lib/icons/Raleway-Bold.ttf
+        - asset: lib/fonts/Raleway-Bold.ttf
           weight: 700
   #   - family: Trajan Pro
   #     fonts:

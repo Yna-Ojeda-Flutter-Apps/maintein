@@ -1,5 +1,8 @@
+import 'package:eit_app/screens/assessments/assessments_list.dart';
+import 'package:eit_app/screens/goaltracker/goal_list.dart';
+import 'package:eit_app/screens/journal/journal_list.dart';
 import 'package:flutter/material.dart';
-import 'package:eit_app/home_icons_icons.dart';
+import 'package:eit_app/icons/home_icons_icons.dart';
 class MyHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,7 @@ class MyHome extends StatelessWidget {
               child: IconButton(
                 icon: Icon(HomeIcons.test, size: 50, color: Color(0xFF21BEDE),),
                 onPressed: () {
-//                  Navigator.pushNamed(context, '/goal_list');
+                  Navigator.pushNamed(context, AssessmentsList.routeName);
                 },
                 tooltip: 'Assessments',
               )
@@ -59,7 +62,7 @@ class MyHome extends StatelessWidget {
               child: IconButton(
                 icon: Icon(HomeIcons.diary, size: 50, color: Color(0xFF21BEDE),),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/journal_list');
+                  Navigator.pushNamed(context, JournalList.routeName);
                 },
                 tooltip: 'Reflective Journal',
               )
@@ -81,7 +84,7 @@ class MyHome extends StatelessWidget {
               child: IconButton(
                 icon: Icon(HomeIcons.target, size: 50, color: Color(0xFF21BEDE),),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/goal_list');
+                  Navigator.pushNamed(context, GoalList.routeName);
                 },
                 tooltip: 'Goal Tracker',
               )

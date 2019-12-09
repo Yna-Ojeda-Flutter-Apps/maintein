@@ -1156,6 +1156,393 @@ class $JournalsTable extends Journals with TableInfo<$JournalsTable, Journal> {
   }
 }
 
+class Assessment extends DataClass implements Insertable<Assessment> {
+  final int id;
+  final bool isMWB;
+  final DateTime dateCreated;
+  Assessment(
+      {@required this.id, @required this.isMWB, @required this.dateCreated});
+  factory Assessment.fromData(Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final intType = db.typeSystem.forDartType<int>();
+    final boolType = db.typeSystem.forDartType<bool>();
+    final dateTimeType = db.typeSystem.forDartType<DateTime>();
+    return Assessment(
+      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      isMWB:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}is_m_w_b']),
+      dateCreated: dateTimeType
+          .mapFromDatabaseResponse(data['${effectivePrefix}date_created']),
+    );
+  }
+  factory Assessment.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return Assessment(
+      id: serializer.fromJson<int>(json['id']),
+      isMWB: serializer.fromJson<bool>(json['isMWB']),
+      dateCreated: serializer.fromJson<DateTime>(json['dateCreated']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson(
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return {
+      'id': serializer.toJson<int>(id),
+      'isMWB': serializer.toJson<bool>(isMWB),
+      'dateCreated': serializer.toJson<DateTime>(dateCreated),
+    };
+  }
+
+  @override
+  AssessmentsCompanion createCompanion(bool nullToAbsent) {
+    return AssessmentsCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      isMWB:
+          isMWB == null && nullToAbsent ? const Value.absent() : Value(isMWB),
+      dateCreated: dateCreated == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateCreated),
+    );
+  }
+
+  Assessment copyWith({int id, bool isMWB, DateTime dateCreated}) => Assessment(
+        id: id ?? this.id,
+        isMWB: isMWB ?? this.isMWB,
+        dateCreated: dateCreated ?? this.dateCreated,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Assessment(')
+          ..write('id: $id, ')
+          ..write('isMWB: $isMWB, ')
+          ..write('dateCreated: $dateCreated')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      $mrjf($mrjc(id.hashCode, $mrjc(isMWB.hashCode, dateCreated.hashCode)));
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      (other is Assessment &&
+          other.id == this.id &&
+          other.isMWB == this.isMWB &&
+          other.dateCreated == this.dateCreated);
+}
+
+class AssessmentsCompanion extends UpdateCompanion<Assessment> {
+  final Value<int> id;
+  final Value<bool> isMWB;
+  final Value<DateTime> dateCreated;
+  const AssessmentsCompanion({
+    this.id = const Value.absent(),
+    this.isMWB = const Value.absent(),
+    this.dateCreated = const Value.absent(),
+  });
+  AssessmentsCompanion.insert({
+    this.id = const Value.absent(),
+    this.isMWB = const Value.absent(),
+    this.dateCreated = const Value.absent(),
+  });
+  AssessmentsCompanion copyWith(
+      {Value<int> id, Value<bool> isMWB, Value<DateTime> dateCreated}) {
+    return AssessmentsCompanion(
+      id: id ?? this.id,
+      isMWB: isMWB ?? this.isMWB,
+      dateCreated: dateCreated ?? this.dateCreated,
+    );
+  }
+}
+
+class $AssessmentsTable extends Assessments
+    with TableInfo<$AssessmentsTable, Assessment> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $AssessmentsTable(this._db, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  GeneratedIntColumn _id;
+  @override
+  GeneratedIntColumn get id => _id ??= _constructId();
+  GeneratedIntColumn _constructId() {
+    return GeneratedIntColumn('id', $tableName, false,
+        hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
+  final VerificationMeta _isMWBMeta = const VerificationMeta('isMWB');
+  GeneratedBoolColumn _isMWB;
+  @override
+  GeneratedBoolColumn get isMWB => _isMWB ??= _constructIsMWB();
+  GeneratedBoolColumn _constructIsMWB() {
+    return GeneratedBoolColumn('is_m_w_b', $tableName, false,
+        defaultValue: Constant(true));
+  }
+
+  final VerificationMeta _dateCreatedMeta =
+      const VerificationMeta('dateCreated');
+  GeneratedDateTimeColumn _dateCreated;
+  @override
+  GeneratedDateTimeColumn get dateCreated =>
+      _dateCreated ??= _constructDateCreated();
+  GeneratedDateTimeColumn _constructDateCreated() {
+    return GeneratedDateTimeColumn('date_created', $tableName, false,
+        defaultValue: Constant(DateTime.now()));
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [id, isMWB, dateCreated];
+  @override
+  $AssessmentsTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'assessments';
+  @override
+  final String actualTableName = 'assessments';
+  @override
+  VerificationContext validateIntegrity(AssessmentsCompanion d,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    if (d.id.present) {
+      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
+    } else if (id.isRequired && isInserting) {
+      context.missing(_idMeta);
+    }
+    if (d.isMWB.present) {
+      context.handle(
+          _isMWBMeta, isMWB.isAcceptableValue(d.isMWB.value, _isMWBMeta));
+    } else if (isMWB.isRequired && isInserting) {
+      context.missing(_isMWBMeta);
+    }
+    if (d.dateCreated.present) {
+      context.handle(_dateCreatedMeta,
+          dateCreated.isAcceptableValue(d.dateCreated.value, _dateCreatedMeta));
+    } else if (dateCreated.isRequired && isInserting) {
+      context.missing(_dateCreatedMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Assessment map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return Assessment.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  Map<String, Variable> entityToSql(AssessmentsCompanion d) {
+    final map = <String, Variable>{};
+    if (d.id.present) {
+      map['id'] = Variable<int, IntType>(d.id.value);
+    }
+    if (d.isMWB.present) {
+      map['is_m_w_b'] = Variable<bool, BoolType>(d.isMWB.value);
+    }
+    if (d.dateCreated.present) {
+      map['date_created'] =
+          Variable<DateTime, DateTimeType>(d.dateCreated.value);
+    }
+    return map;
+  }
+
+  @override
+  $AssessmentsTable createAlias(String alias) {
+    return $AssessmentsTable(_db, alias);
+  }
+}
+
+class Question extends DataClass implements Insertable<Question> {
+  final int id;
+  final int qId;
+  final int score;
+  Question({@required this.id, @required this.qId, @required this.score});
+  factory Question.fromData(Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final intType = db.typeSystem.forDartType<int>();
+    return Question(
+      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      qId: intType.mapFromDatabaseResponse(data['${effectivePrefix}q_id']),
+      score: intType.mapFromDatabaseResponse(data['${effectivePrefix}score']),
+    );
+  }
+  factory Question.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return Question(
+      id: serializer.fromJson<int>(json['id']),
+      qId: serializer.fromJson<int>(json['qId']),
+      score: serializer.fromJson<int>(json['score']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson(
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return {
+      'id': serializer.toJson<int>(id),
+      'qId': serializer.toJson<int>(qId),
+      'score': serializer.toJson<int>(score),
+    };
+  }
+
+  @override
+  QuestionsCompanion createCompanion(bool nullToAbsent) {
+    return QuestionsCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      qId: qId == null && nullToAbsent ? const Value.absent() : Value(qId),
+      score:
+          score == null && nullToAbsent ? const Value.absent() : Value(score),
+    );
+  }
+
+  Question copyWith({int id, int qId, int score}) => Question(
+        id: id ?? this.id,
+        qId: qId ?? this.qId,
+        score: score ?? this.score,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Question(')
+          ..write('id: $id, ')
+          ..write('qId: $qId, ')
+          ..write('score: $score')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      $mrjf($mrjc(id.hashCode, $mrjc(qId.hashCode, score.hashCode)));
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      (other is Question &&
+          other.id == this.id &&
+          other.qId == this.qId &&
+          other.score == this.score);
+}
+
+class QuestionsCompanion extends UpdateCompanion<Question> {
+  final Value<int> id;
+  final Value<int> qId;
+  final Value<int> score;
+  const QuestionsCompanion({
+    this.id = const Value.absent(),
+    this.qId = const Value.absent(),
+    this.score = const Value.absent(),
+  });
+  QuestionsCompanion.insert({
+    @required int id,
+    @required int qId,
+    this.score = const Value.absent(),
+  })  : id = Value(id),
+        qId = Value(qId);
+  QuestionsCompanion copyWith(
+      {Value<int> id, Value<int> qId, Value<int> score}) {
+    return QuestionsCompanion(
+      id: id ?? this.id,
+      qId: qId ?? this.qId,
+      score: score ?? this.score,
+    );
+  }
+}
+
+class $QuestionsTable extends Questions
+    with TableInfo<$QuestionsTable, Question> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $QuestionsTable(this._db, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  GeneratedIntColumn _id;
+  @override
+  GeneratedIntColumn get id => _id ??= _constructId();
+  GeneratedIntColumn _constructId() {
+    return GeneratedIntColumn('id', $tableName, false,
+        $customConstraints: 'REFERENCES assessments(id) ON DELETE CASCADE');
+  }
+
+  final VerificationMeta _qIdMeta = const VerificationMeta('qId');
+  GeneratedIntColumn _qId;
+  @override
+  GeneratedIntColumn get qId => _qId ??= _constructQId();
+  GeneratedIntColumn _constructQId() {
+    return GeneratedIntColumn(
+      'q_id',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _scoreMeta = const VerificationMeta('score');
+  GeneratedIntColumn _score;
+  @override
+  GeneratedIntColumn get score => _score ??= _constructScore();
+  GeneratedIntColumn _constructScore() {
+    return GeneratedIntColumn('score', $tableName, false,
+        defaultValue: Constant(0));
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [id, qId, score];
+  @override
+  $QuestionsTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'questions';
+  @override
+  final String actualTableName = 'questions';
+  @override
+  VerificationContext validateIntegrity(QuestionsCompanion d,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    if (d.id.present) {
+      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
+    } else if (id.isRequired && isInserting) {
+      context.missing(_idMeta);
+    }
+    if (d.qId.present) {
+      context.handle(_qIdMeta, qId.isAcceptableValue(d.qId.value, _qIdMeta));
+    } else if (qId.isRequired && isInserting) {
+      context.missing(_qIdMeta);
+    }
+    if (d.score.present) {
+      context.handle(
+          _scoreMeta, score.isAcceptableValue(d.score.value, _scoreMeta));
+    } else if (score.isRequired && isInserting) {
+      context.missing(_scoreMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id, qId};
+  @override
+  Question map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return Question.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  Map<String, Variable> entityToSql(QuestionsCompanion d) {
+    final map = <String, Variable>{};
+    if (d.id.present) {
+      map['id'] = Variable<int, IntType>(d.id.value);
+    }
+    if (d.qId.present) {
+      map['q_id'] = Variable<int, IntType>(d.qId.value);
+    }
+    if (d.score.present) {
+      map['score'] = Variable<int, IntType>(d.score.value);
+    }
+    return map;
+  }
+
+  @override
+  $QuestionsTable createAlias(String alias) {
+    return $QuestionsTable(_db, alias);
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $GoalsTable _goals;
@@ -1166,6 +1553,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $OutputsTable get outputs => _outputs ??= $OutputsTable(this);
   $JournalsTable _journals;
   $JournalsTable get journals => _journals ??= $JournalsTable(this);
+  $AssessmentsTable _assessments;
+  $AssessmentsTable get assessments => _assessments ??= $AssessmentsTable(this);
+  $QuestionsTable _questions;
+  $QuestionsTable get questions => _questions ??= $QuestionsTable(this);
   GoalDao _goalDao;
   GoalDao get goalDao => _goalDao ??= GoalDao(this as AppDatabase);
   SubTaskDao _subTaskDao;
@@ -1174,8 +1565,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   OutputDao get outputDao => _outputDao ??= OutputDao(this as AppDatabase);
   JournalDao _journalDao;
   JournalDao get journalDao => _journalDao ??= JournalDao(this as AppDatabase);
+  AssessmentDao _assessmentDao;
+  AssessmentDao get assessmentDao =>
+      _assessmentDao ??= AssessmentDao(this as AppDatabase);
   @override
-  List<TableInfo> get allTables => [goals, subTasks, outputs, journals];
+  List<TableInfo> get allTables =>
+      [goals, subTasks, outputs, journals, assessments, questions];
 }
 
 // **************************************************************************
@@ -1187,12 +1582,16 @@ mixin _$GoalDaoMixin on DatabaseAccessor<AppDatabase> {
   $SubTasksTable get subTasks => db.subTasks;
   $OutputsTable get outputs => db.outputs;
 }
-mixin _$JournalDaoMixin on DatabaseAccessor<AppDatabase> {
-  $JournalsTable get journals => db.journals;
-}
 mixin _$SubTaskDaoMixin on DatabaseAccessor<AppDatabase> {
   $SubTasksTable get subTasks => db.subTasks;
 }
 mixin _$OutputDaoMixin on DatabaseAccessor<AppDatabase> {
   $OutputsTable get outputs => db.outputs;
+}
+mixin _$JournalDaoMixin on DatabaseAccessor<AppDatabase> {
+  $JournalsTable get journals => db.journals;
+}
+mixin _$AssessmentDaoMixin on DatabaseAccessor<AppDatabase> {
+  $AssessmentsTable get assessments => db.assessments;
+  $QuestionsTable get questions => db.questions;
 }
