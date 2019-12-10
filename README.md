@@ -2,16 +2,17 @@
 
 Emotional Intelligence Training app that facilitates activities like Recflective Journal Writing, SMART Goal Tracking, and Active Listening to hone your EI skills.
 
-## Progress done
+## Functionalities done
 * Goal Tracking Feature
 * Reflective Journal Feature
 * Active Listening Screens
+* Breathing Exercise Screen
 
 ## Currently working on
-* Settings Screen
- * Local Notifications
+* Settings Screen & Local Notifications
  
 ## To do
-* Validations for Active Listening Screens
-* Assessment Screens
-* Breathing Exercise Screen
+* Some validations missing
+* Improve UI
+* Add hotlines in breathinge exercise screen
+
