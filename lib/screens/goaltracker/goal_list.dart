@@ -40,7 +40,7 @@ class _GoalListState extends State<GoalList> {
           ],
         ),
       ),
-      bottomNavigationBar: bottomNavBar(),
+      bottomNavigationBar: bottomNavBar(context),
       floatingActionButton: _addEntryButton(),
     );
 

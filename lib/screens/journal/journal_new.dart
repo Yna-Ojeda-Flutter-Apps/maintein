@@ -53,7 +53,7 @@ class _JournalNewFormState extends State<JournalNewForm> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             _pageNavigation(_pageIndex),
-            bottomNavBar(),
+            bottomNavBar(context),
           ],
         ),
       ),

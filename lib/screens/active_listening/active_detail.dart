@@ -26,6 +26,7 @@ class _ActiveListenDetailState extends State<ActiveListenDetail>{
   Widget build(BuildContext context) {
     final _id = ModalRoute.of(context).settings.arguments;
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -98,18 +99,22 @@ class _ActiveListenDetailState extends State<ActiveListenDetail>{
                           padding: EdgeInsets.only(top:15.0),
                           child: Text(activity.insights, style:TextStyle(fontSize: 16)),
                         ),
+                        _section('I had:'),
                         Padding(
                           padding:EdgeInsets.only(top:15.0),
                           child:iHadPrint(activity),
                         ),
+                        _section('I gave:'),
                         Padding(
                           padding:EdgeInsets.only(top:15.0),
                           child:iGavePrint(activity),
                         ),
+                        _section('I can:'),
                         Padding(
                           padding:EdgeInsets.only(top:15.0),
                           child:iCanPrint(activity),
                         ),
+                        _section('I did not:'),
                         Padding(
                           padding:EdgeInsets.only(top:15.0),
                           child:iDidNotPrint(activity),
@@ -220,6 +225,19 @@ class _ActiveListenDetailState extends State<ActiveListenDetail>{
         fontSize: 24,
         fontWeight: FontWeight.w300,
         color: Colors.blue[700]
+      ),
+    );
+  }
+
+  _section(String str) {
+    return Padding(
+      padding: EdgeInsets.only(top:20),
+      child: Text(
+        str,
+        style: TextStyle(
+          fontSize: 16,
+          color: Color(0xff21BEDE),
+        ),
       ),
     );
   }
@@ -560,10 +578,10 @@ class _ActiveListenDetailState extends State<ActiveListenDetail>{
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           _pageNavigation(_pageIndex),
-          bottomNavBar(),
+          bottomNavBar(context),
         ],
       ),
-    ) : bottomNavBar();
+    ) : bottomNavBar(context);
   }
 
   _pageNavigation(int currpage){

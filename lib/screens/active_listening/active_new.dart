@@ -31,6 +31,7 @@ class _ActiveListenNewState extends State<ActiveListenNewForm>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -53,7 +54,7 @@ class _ActiveListenNewState extends State<ActiveListenNewForm>{
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             _pageNavigation(_pageIndex),
-            bottomNavBar(),
+            bottomNavBar(context),
           ],
         ),
       ),

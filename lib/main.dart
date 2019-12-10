@@ -3,6 +3,7 @@ import 'package:eit_app/screens/assessments/assessments_list.dart';
 import 'package:eit_app/screens/active_listening/active_list.dart';
 import 'package:eit_app/screens/active_listening/active_new.dart';
 import 'package:eit_app/screens/active_listening/active_detail.dart';
+import 'package:eit_app/screens/breathing/breathing_exercise.dart';
 import 'package:eit_app/screens/goaltracker/goal_detail.dart';
 import 'package:eit_app/screens/goaltracker/goal_list.dart';
 import 'package:eit_app/screens/home.dart';
@@ -46,6 +47,8 @@ class MyApp extends StatelessWidget {
           ActiveListenList.routeName: (context) => ActiveListenList(),
           ActiveListenNewForm.routeName: (context) => ActiveListenNewForm(),
           ActiveListenDetail.routeName: (context) => ActiveListenDetail(),
+          MyHome.routeName: (context) => MyHome(),
+          BreathingExercise.routeName: (context) => BreathingExercise(),
         },
       ),
     );

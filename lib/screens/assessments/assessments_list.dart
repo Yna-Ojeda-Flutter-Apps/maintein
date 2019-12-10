@@ -1,4 +1,4 @@
-import 'package:eit_app/icons/emoji_icons_icons.dart';
+import 'package:eit_app/assets/icons/emoji_icons_icons.dart';
 import 'package:eit_app/screens/assessments/assessments_form.dart';
 import 'package:eit_app/screens/widgets/bottomnavbar.dart';
 import 'package:eit_app/utils/project_db.dart';
@@ -68,7 +68,7 @@ class _AssessmentsListState extends State<AssessmentsList> {
               ),
             ],
           ),
-          bottomNavigationBar: bottomNavBar(),
+          bottomNavigationBar: bottomNavBar(context),
           floatingActionButton: _takeQuizButton(context),
         );
       }),

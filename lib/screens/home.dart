@@ -2,8 +2,9 @@ import 'package:eit_app/screens/assessments/assessments_list.dart';
 import 'package:eit_app/screens/goaltracker/goal_list.dart';
 import 'package:eit_app/screens/journal/journal_list.dart';
 import 'package:flutter/material.dart';
-import 'package:eit_app/icons/home_icons_icons.dart';
+import 'package:eit_app/assets/icons/home_icons_icons.dart';
 class MyHome extends StatelessWidget {
+  static const routeName = '/my_home';
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

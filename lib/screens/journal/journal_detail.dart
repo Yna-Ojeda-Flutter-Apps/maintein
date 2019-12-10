@@ -367,9 +367,9 @@ class _JournalDetailState extends State<JournalDetail> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           _pageNavigation(_pageIndex),
-          bottomNavBar(),
+          bottomNavBar(context),
         ],
       ),
-    ) : bottomNavBar();
+    ) : bottomNavBar(context);
   }
 }

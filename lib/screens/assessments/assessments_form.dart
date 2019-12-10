@@ -7,7 +7,7 @@ import 'package:moor/moor.dart' as moorPackage;
 
 
 class TakeAssessment extends StatefulWidget {
-  static const routeName = 'take_assessment';
+  static const routeName = '/take_assessment';
   @override
   State<StatefulWidget> createState() {
     return _TakeAssessmentState();
@@ -54,7 +54,7 @@ class _TakeAssessmentState extends State<TakeAssessment> {
             _buildChoice(_pageIndex, 1),
             _submitAssessmentButton(),
             _pageNavigation(_pageIndex),
-            bottomNavBar(),
+            bottomNavBar(context),
           ],
         ),
       ),

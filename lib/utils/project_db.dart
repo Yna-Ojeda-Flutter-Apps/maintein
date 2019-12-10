@@ -93,18 +93,20 @@ class Listens extends Table{
 class AppDatabase extends _$AppDatabase {
   AppDatabase () : super(FlutterQueryExecutor.inDatabaseFolder(path: 'db.sqlite'));
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
   @override
   MigrationStrategy get migration => MigrationStrategy(
       beforeOpen: (details) async {
         await customStatement('PRAGMA foreign_keys = ON');
       },
       onUpgrade: (Migrator m, int from, int to) async {
-        if ( from == 3 ) {
+        if ( from == 4 ) {
           await m.deleteTable('goals');
           await m.deleteTable('subTasks');
           await m.deleteTable('outputs');
           await m.deleteTable('journals');
+          await m.deleteTable('assessments');
+          await m.deleteTable('questions');
           await m.createAllTables();
         }
       }

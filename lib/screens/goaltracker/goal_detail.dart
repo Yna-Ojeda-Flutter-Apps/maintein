@@ -56,7 +56,7 @@ class GoalDetailState extends State<GoalDetail> {
         padding: EdgeInsets.only(left: 40, right: 40, bottom: 10),
         child: _buildGoalForm(context, _idArg),
       ),
-      bottomNavigationBar: bottomNavBar(),
+      bottomNavigationBar: bottomNavBar(context),
     );
   }
 

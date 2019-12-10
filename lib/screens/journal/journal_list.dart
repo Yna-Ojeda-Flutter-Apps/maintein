@@ -33,7 +33,7 @@ class _JournalListState extends State<JournalList> {
           ],
         ),
       ),
-      bottomNavigationBar: bottomNavBar(),
+      bottomNavigationBar: bottomNavBar(context),
       floatingActionButton: _addEntryButton(),
     );
   }

@@ -22,7 +22,7 @@ class _ActiveListenListState extends State<ActiveListenList>{
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Padding(
-        padding: EdgeInsets.only(left:40, right: 40, bottom: 10),
+        padding: EdgeInsets.only(left:40, right: 40, top: 40, bottom: 10),
         child:Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,7 +32,7 @@ class _ActiveListenListState extends State<ActiveListenList>{
           ],
         ),
       ),
-      bottomNavigationBar: bottomNavBar(),
+      bottomNavigationBar: bottomNavBar(context),
       floatingActionButton: _addActivityButton(),
     );
   }

@@ -1543,6 +1543,723 @@ class $QuestionsTable extends Questions
   }
 }
 
+class Listen extends DataClass implements Insertable<Listen> {
+  final int id;
+  final DateTime dateCreated;
+  final String actName;
+  final String insights;
+  final bool iHad1;
+  final bool iHad2;
+  final bool iHad3;
+  final bool iHad4;
+  final bool iGave1;
+  final bool iGave2;
+  final bool iGave3;
+  final bool iCan1;
+  final bool iCan2;
+  final bool ididNot1;
+  final bool ididNot2;
+  final bool ididNot3;
+  Listen(
+      {@required this.id,
+      @required this.dateCreated,
+      @required this.actName,
+      @required this.insights,
+      @required this.iHad1,
+      @required this.iHad2,
+      @required this.iHad3,
+      @required this.iHad4,
+      @required this.iGave1,
+      @required this.iGave2,
+      @required this.iGave3,
+      @required this.iCan1,
+      @required this.iCan2,
+      @required this.ididNot1,
+      @required this.ididNot2,
+      @required this.ididNot3});
+  factory Listen.fromData(Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final intType = db.typeSystem.forDartType<int>();
+    final dateTimeType = db.typeSystem.forDartType<DateTime>();
+    final stringType = db.typeSystem.forDartType<String>();
+    final boolType = db.typeSystem.forDartType<bool>();
+    return Listen(
+      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      dateCreated: dateTimeType
+          .mapFromDatabaseResponse(data['${effectivePrefix}date_created']),
+      actName: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}act_name']),
+      insights: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}insights']),
+      iHad1: boolType.mapFromDatabaseResponse(data['${effectivePrefix}i_had1']),
+      iHad2: boolType.mapFromDatabaseResponse(data['${effectivePrefix}i_had2']),
+      iHad3: boolType.mapFromDatabaseResponse(data['${effectivePrefix}i_had3']),
+      iHad4: boolType.mapFromDatabaseResponse(data['${effectivePrefix}i_had4']),
+      iGave1:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}i_gave1']),
+      iGave2:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}i_gave2']),
+      iGave3:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}i_gave3']),
+      iCan1: boolType.mapFromDatabaseResponse(data['${effectivePrefix}i_can1']),
+      iCan2: boolType.mapFromDatabaseResponse(data['${effectivePrefix}i_can2']),
+      ididNot1:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}idid_not1']),
+      ididNot2:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}idid_not2']),
+      ididNot3:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}idid_not3']),
+    );
+  }
+  factory Listen.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return Listen(
+      id: serializer.fromJson<int>(json['id']),
+      dateCreated: serializer.fromJson<DateTime>(json['dateCreated']),
+      actName: serializer.fromJson<String>(json['actName']),
+      insights: serializer.fromJson<String>(json['insights']),
+      iHad1: serializer.fromJson<bool>(json['iHad1']),
+      iHad2: serializer.fromJson<bool>(json['iHad2']),
+      iHad3: serializer.fromJson<bool>(json['iHad3']),
+      iHad4: serializer.fromJson<bool>(json['iHad4']),
+      iGave1: serializer.fromJson<bool>(json['iGave1']),
+      iGave2: serializer.fromJson<bool>(json['iGave2']),
+      iGave3: serializer.fromJson<bool>(json['iGave3']),
+      iCan1: serializer.fromJson<bool>(json['iCan1']),
+      iCan2: serializer.fromJson<bool>(json['iCan2']),
+      ididNot1: serializer.fromJson<bool>(json['ididNot1']),
+      ididNot2: serializer.fromJson<bool>(json['ididNot2']),
+      ididNot3: serializer.fromJson<bool>(json['ididNot3']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson(
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return {
+      'id': serializer.toJson<int>(id),
+      'dateCreated': serializer.toJson<DateTime>(dateCreated),
+      'actName': serializer.toJson<String>(actName),
+      'insights': serializer.toJson<String>(insights),
+      'iHad1': serializer.toJson<bool>(iHad1),
+      'iHad2': serializer.toJson<bool>(iHad2),
+      'iHad3': serializer.toJson<bool>(iHad3),
+      'iHad4': serializer.toJson<bool>(iHad4),
+      'iGave1': serializer.toJson<bool>(iGave1),
+      'iGave2': serializer.toJson<bool>(iGave2),
+      'iGave3': serializer.toJson<bool>(iGave3),
+      'iCan1': serializer.toJson<bool>(iCan1),
+      'iCan2': serializer.toJson<bool>(iCan2),
+      'ididNot1': serializer.toJson<bool>(ididNot1),
+      'ididNot2': serializer.toJson<bool>(ididNot2),
+      'ididNot3': serializer.toJson<bool>(ididNot3),
+    };
+  }
+
+  @override
+  ListensCompanion createCompanion(bool nullToAbsent) {
+    return ListensCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      dateCreated: dateCreated == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateCreated),
+      actName: actName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actName),
+      insights: insights == null && nullToAbsent
+          ? const Value.absent()
+          : Value(insights),
+      iHad1:
+          iHad1 == null && nullToAbsent ? const Value.absent() : Value(iHad1),
+      iHad2:
+          iHad2 == null && nullToAbsent ? const Value.absent() : Value(iHad2),
+      iHad3:
+          iHad3 == null && nullToAbsent ? const Value.absent() : Value(iHad3),
+      iHad4:
+          iHad4 == null && nullToAbsent ? const Value.absent() : Value(iHad4),
+      iGave1:
+          iGave1 == null && nullToAbsent ? const Value.absent() : Value(iGave1),
+      iGave2:
+          iGave2 == null && nullToAbsent ? const Value.absent() : Value(iGave2),
+      iGave3:
+          iGave3 == null && nullToAbsent ? const Value.absent() : Value(iGave3),
+      iCan1:
+          iCan1 == null && nullToAbsent ? const Value.absent() : Value(iCan1),
+      iCan2:
+          iCan2 == null && nullToAbsent ? const Value.absent() : Value(iCan2),
+      ididNot1: ididNot1 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ididNot1),
+      ididNot2: ididNot2 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ididNot2),
+      ididNot3: ididNot3 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ididNot3),
+    );
+  }
+
+  Listen copyWith(
+          {int id,
+          DateTime dateCreated,
+          String actName,
+          String insights,
+          bool iHad1,
+          bool iHad2,
+          bool iHad3,
+          bool iHad4,
+          bool iGave1,
+          bool iGave2,
+          bool iGave3,
+          bool iCan1,
+          bool iCan2,
+          bool ididNot1,
+          bool ididNot2,
+          bool ididNot3}) =>
+      Listen(
+        id: id ?? this.id,
+        dateCreated: dateCreated ?? this.dateCreated,
+        actName: actName ?? this.actName,
+        insights: insights ?? this.insights,
+        iHad1: iHad1 ?? this.iHad1,
+        iHad2: iHad2 ?? this.iHad2,
+        iHad3: iHad3 ?? this.iHad3,
+        iHad4: iHad4 ?? this.iHad4,
+        iGave1: iGave1 ?? this.iGave1,
+        iGave2: iGave2 ?? this.iGave2,
+        iGave3: iGave3 ?? this.iGave3,
+        iCan1: iCan1 ?? this.iCan1,
+        iCan2: iCan2 ?? this.iCan2,
+        ididNot1: ididNot1 ?? this.ididNot1,
+        ididNot2: ididNot2 ?? this.ididNot2,
+        ididNot3: ididNot3 ?? this.ididNot3,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Listen(')
+          ..write('id: $id, ')
+          ..write('dateCreated: $dateCreated, ')
+          ..write('actName: $actName, ')
+          ..write('insights: $insights, ')
+          ..write('iHad1: $iHad1, ')
+          ..write('iHad2: $iHad2, ')
+          ..write('iHad3: $iHad3, ')
+          ..write('iHad4: $iHad4, ')
+          ..write('iGave1: $iGave1, ')
+          ..write('iGave2: $iGave2, ')
+          ..write('iGave3: $iGave3, ')
+          ..write('iCan1: $iCan1, ')
+          ..write('iCan2: $iCan2, ')
+          ..write('ididNot1: $ididNot1, ')
+          ..write('ididNot2: $ididNot2, ')
+          ..write('ididNot3: $ididNot3')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf($mrjc(
+      id.hashCode,
+      $mrjc(
+          dateCreated.hashCode,
+          $mrjc(
+              actName.hashCode,
+              $mrjc(
+                  insights.hashCode,
+                  $mrjc(
+                      iHad1.hashCode,
+                      $mrjc(
+                          iHad2.hashCode,
+                          $mrjc(
+                              iHad3.hashCode,
+                              $mrjc(
+                                  iHad4.hashCode,
+                                  $mrjc(
+                                      iGave1.hashCode,
+                                      $mrjc(
+                                          iGave2.hashCode,
+                                          $mrjc(
+                                              iGave3.hashCode,
+                                              $mrjc(
+                                                  iCan1.hashCode,
+                                                  $mrjc(
+                                                      iCan2.hashCode,
+                                                      $mrjc(
+                                                          ididNot1.hashCode,
+                                                          $mrjc(
+                                                              ididNot2.hashCode,
+                                                              ididNot3
+                                                                  .hashCode))))))))))))))));
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      (other is Listen &&
+          other.id == this.id &&
+          other.dateCreated == this.dateCreated &&
+          other.actName == this.actName &&
+          other.insights == this.insights &&
+          other.iHad1 == this.iHad1 &&
+          other.iHad2 == this.iHad2 &&
+          other.iHad3 == this.iHad3 &&
+          other.iHad4 == this.iHad4 &&
+          other.iGave1 == this.iGave1 &&
+          other.iGave2 == this.iGave2 &&
+          other.iGave3 == this.iGave3 &&
+          other.iCan1 == this.iCan1 &&
+          other.iCan2 == this.iCan2 &&
+          other.ididNot1 == this.ididNot1 &&
+          other.ididNot2 == this.ididNot2 &&
+          other.ididNot3 == this.ididNot3);
+}
+
+class ListensCompanion extends UpdateCompanion<Listen> {
+  final Value<int> id;
+  final Value<DateTime> dateCreated;
+  final Value<String> actName;
+  final Value<String> insights;
+  final Value<bool> iHad1;
+  final Value<bool> iHad2;
+  final Value<bool> iHad3;
+  final Value<bool> iHad4;
+  final Value<bool> iGave1;
+  final Value<bool> iGave2;
+  final Value<bool> iGave3;
+  final Value<bool> iCan1;
+  final Value<bool> iCan2;
+  final Value<bool> ididNot1;
+  final Value<bool> ididNot2;
+  final Value<bool> ididNot3;
+  const ListensCompanion({
+    this.id = const Value.absent(),
+    this.dateCreated = const Value.absent(),
+    this.actName = const Value.absent(),
+    this.insights = const Value.absent(),
+    this.iHad1 = const Value.absent(),
+    this.iHad2 = const Value.absent(),
+    this.iHad3 = const Value.absent(),
+    this.iHad4 = const Value.absent(),
+    this.iGave1 = const Value.absent(),
+    this.iGave2 = const Value.absent(),
+    this.iGave3 = const Value.absent(),
+    this.iCan1 = const Value.absent(),
+    this.iCan2 = const Value.absent(),
+    this.ididNot1 = const Value.absent(),
+    this.ididNot2 = const Value.absent(),
+    this.ididNot3 = const Value.absent(),
+  });
+  ListensCompanion.insert({
+    this.id = const Value.absent(),
+    @required DateTime dateCreated,
+    @required String actName,
+    @required String insights,
+    this.iHad1 = const Value.absent(),
+    this.iHad2 = const Value.absent(),
+    this.iHad3 = const Value.absent(),
+    this.iHad4 = const Value.absent(),
+    this.iGave1 = const Value.absent(),
+    this.iGave2 = const Value.absent(),
+    this.iGave3 = const Value.absent(),
+    this.iCan1 = const Value.absent(),
+    this.iCan2 = const Value.absent(),
+    this.ididNot1 = const Value.absent(),
+    this.ididNot2 = const Value.absent(),
+    this.ididNot3 = const Value.absent(),
+  })  : dateCreated = Value(dateCreated),
+        actName = Value(actName),
+        insights = Value(insights);
+  ListensCompanion copyWith(
+      {Value<int> id,
+      Value<DateTime> dateCreated,
+      Value<String> actName,
+      Value<String> insights,
+      Value<bool> iHad1,
+      Value<bool> iHad2,
+      Value<bool> iHad3,
+      Value<bool> iHad4,
+      Value<bool> iGave1,
+      Value<bool> iGave2,
+      Value<bool> iGave3,
+      Value<bool> iCan1,
+      Value<bool> iCan2,
+      Value<bool> ididNot1,
+      Value<bool> ididNot2,
+      Value<bool> ididNot3}) {
+    return ListensCompanion(
+      id: id ?? this.id,
+      dateCreated: dateCreated ?? this.dateCreated,
+      actName: actName ?? this.actName,
+      insights: insights ?? this.insights,
+      iHad1: iHad1 ?? this.iHad1,
+      iHad2: iHad2 ?? this.iHad2,
+      iHad3: iHad3 ?? this.iHad3,
+      iHad4: iHad4 ?? this.iHad4,
+      iGave1: iGave1 ?? this.iGave1,
+      iGave2: iGave2 ?? this.iGave2,
+      iGave3: iGave3 ?? this.iGave3,
+      iCan1: iCan1 ?? this.iCan1,
+      iCan2: iCan2 ?? this.iCan2,
+      ididNot1: ididNot1 ?? this.ididNot1,
+      ididNot2: ididNot2 ?? this.ididNot2,
+      ididNot3: ididNot3 ?? this.ididNot3,
+    );
+  }
+}
+
+class $ListensTable extends Listens with TableInfo<$ListensTable, Listen> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $ListensTable(this._db, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  GeneratedIntColumn _id;
+  @override
+  GeneratedIntColumn get id => _id ??= _constructId();
+  GeneratedIntColumn _constructId() {
+    return GeneratedIntColumn('id', $tableName, false,
+        hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
+  final VerificationMeta _dateCreatedMeta =
+      const VerificationMeta('dateCreated');
+  GeneratedDateTimeColumn _dateCreated;
+  @override
+  GeneratedDateTimeColumn get dateCreated =>
+      _dateCreated ??= _constructDateCreated();
+  GeneratedDateTimeColumn _constructDateCreated() {
+    return GeneratedDateTimeColumn(
+      'date_created',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _actNameMeta = const VerificationMeta('actName');
+  GeneratedTextColumn _actName;
+  @override
+  GeneratedTextColumn get actName => _actName ??= _constructActName();
+  GeneratedTextColumn _constructActName() {
+    return GeneratedTextColumn(
+      'act_name',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _insightsMeta = const VerificationMeta('insights');
+  GeneratedTextColumn _insights;
+  @override
+  GeneratedTextColumn get insights => _insights ??= _constructInsights();
+  GeneratedTextColumn _constructInsights() {
+    return GeneratedTextColumn(
+      'insights',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _iHad1Meta = const VerificationMeta('iHad1');
+  GeneratedBoolColumn _iHad1;
+  @override
+  GeneratedBoolColumn get iHad1 => _iHad1 ??= _constructIHad1();
+  GeneratedBoolColumn _constructIHad1() {
+    return GeneratedBoolColumn('i_had1', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
+  final VerificationMeta _iHad2Meta = const VerificationMeta('iHad2');
+  GeneratedBoolColumn _iHad2;
+  @override
+  GeneratedBoolColumn get iHad2 => _iHad2 ??= _constructIHad2();
+  GeneratedBoolColumn _constructIHad2() {
+    return GeneratedBoolColumn('i_had2', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
+  final VerificationMeta _iHad3Meta = const VerificationMeta('iHad3');
+  GeneratedBoolColumn _iHad3;
+  @override
+  GeneratedBoolColumn get iHad3 => _iHad3 ??= _constructIHad3();
+  GeneratedBoolColumn _constructIHad3() {
+    return GeneratedBoolColumn('i_had3', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
+  final VerificationMeta _iHad4Meta = const VerificationMeta('iHad4');
+  GeneratedBoolColumn _iHad4;
+  @override
+  GeneratedBoolColumn get iHad4 => _iHad4 ??= _constructIHad4();
+  GeneratedBoolColumn _constructIHad4() {
+    return GeneratedBoolColumn('i_had4', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
+  final VerificationMeta _iGave1Meta = const VerificationMeta('iGave1');
+  GeneratedBoolColumn _iGave1;
+  @override
+  GeneratedBoolColumn get iGave1 => _iGave1 ??= _constructIGave1();
+  GeneratedBoolColumn _constructIGave1() {
+    return GeneratedBoolColumn('i_gave1', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
+  final VerificationMeta _iGave2Meta = const VerificationMeta('iGave2');
+  GeneratedBoolColumn _iGave2;
+  @override
+  GeneratedBoolColumn get iGave2 => _iGave2 ??= _constructIGave2();
+  GeneratedBoolColumn _constructIGave2() {
+    return GeneratedBoolColumn('i_gave2', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
+  final VerificationMeta _iGave3Meta = const VerificationMeta('iGave3');
+  GeneratedBoolColumn _iGave3;
+  @override
+  GeneratedBoolColumn get iGave3 => _iGave3 ??= _constructIGave3();
+  GeneratedBoolColumn _constructIGave3() {
+    return GeneratedBoolColumn('i_gave3', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
+  final VerificationMeta _iCan1Meta = const VerificationMeta('iCan1');
+  GeneratedBoolColumn _iCan1;
+  @override
+  GeneratedBoolColumn get iCan1 => _iCan1 ??= _constructICan1();
+  GeneratedBoolColumn _constructICan1() {
+    return GeneratedBoolColumn('i_can1', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
+  final VerificationMeta _iCan2Meta = const VerificationMeta('iCan2');
+  GeneratedBoolColumn _iCan2;
+  @override
+  GeneratedBoolColumn get iCan2 => _iCan2 ??= _constructICan2();
+  GeneratedBoolColumn _constructICan2() {
+    return GeneratedBoolColumn('i_can2', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
+  final VerificationMeta _ididNot1Meta = const VerificationMeta('ididNot1');
+  GeneratedBoolColumn _ididNot1;
+  @override
+  GeneratedBoolColumn get ididNot1 => _ididNot1 ??= _constructIdidNot1();
+  GeneratedBoolColumn _constructIdidNot1() {
+    return GeneratedBoolColumn('idid_not1', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
+  final VerificationMeta _ididNot2Meta = const VerificationMeta('ididNot2');
+  GeneratedBoolColumn _ididNot2;
+  @override
+  GeneratedBoolColumn get ididNot2 => _ididNot2 ??= _constructIdidNot2();
+  GeneratedBoolColumn _constructIdidNot2() {
+    return GeneratedBoolColumn('idid_not2', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
+  final VerificationMeta _ididNot3Meta = const VerificationMeta('ididNot3');
+  GeneratedBoolColumn _ididNot3;
+  @override
+  GeneratedBoolColumn get ididNot3 => _ididNot3 ??= _constructIdidNot3();
+  GeneratedBoolColumn _constructIdidNot3() {
+    return GeneratedBoolColumn('idid_not3', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        dateCreated,
+        actName,
+        insights,
+        iHad1,
+        iHad2,
+        iHad3,
+        iHad4,
+        iGave1,
+        iGave2,
+        iGave3,
+        iCan1,
+        iCan2,
+        ididNot1,
+        ididNot2,
+        ididNot3
+      ];
+  @override
+  $ListensTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'listens';
+  @override
+  final String actualTableName = 'listens';
+  @override
+  VerificationContext validateIntegrity(ListensCompanion d,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    if (d.id.present) {
+      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
+    } else if (id.isRequired && isInserting) {
+      context.missing(_idMeta);
+    }
+    if (d.dateCreated.present) {
+      context.handle(_dateCreatedMeta,
+          dateCreated.isAcceptableValue(d.dateCreated.value, _dateCreatedMeta));
+    } else if (dateCreated.isRequired && isInserting) {
+      context.missing(_dateCreatedMeta);
+    }
+    if (d.actName.present) {
+      context.handle(_actNameMeta,
+          actName.isAcceptableValue(d.actName.value, _actNameMeta));
+    } else if (actName.isRequired && isInserting) {
+      context.missing(_actNameMeta);
+    }
+    if (d.insights.present) {
+      context.handle(_insightsMeta,
+          insights.isAcceptableValue(d.insights.value, _insightsMeta));
+    } else if (insights.isRequired && isInserting) {
+      context.missing(_insightsMeta);
+    }
+    if (d.iHad1.present) {
+      context.handle(
+          _iHad1Meta, iHad1.isAcceptableValue(d.iHad1.value, _iHad1Meta));
+    } else if (iHad1.isRequired && isInserting) {
+      context.missing(_iHad1Meta);
+    }
+    if (d.iHad2.present) {
+      context.handle(
+          _iHad2Meta, iHad2.isAcceptableValue(d.iHad2.value, _iHad2Meta));
+    } else if (iHad2.isRequired && isInserting) {
+      context.missing(_iHad2Meta);
+    }
+    if (d.iHad3.present) {
+      context.handle(
+          _iHad3Meta, iHad3.isAcceptableValue(d.iHad3.value, _iHad3Meta));
+    } else if (iHad3.isRequired && isInserting) {
+      context.missing(_iHad3Meta);
+    }
+    if (d.iHad4.present) {
+      context.handle(
+          _iHad4Meta, iHad4.isAcceptableValue(d.iHad4.value, _iHad4Meta));
+    } else if (iHad4.isRequired && isInserting) {
+      context.missing(_iHad4Meta);
+    }
+    if (d.iGave1.present) {
+      context.handle(
+          _iGave1Meta, iGave1.isAcceptableValue(d.iGave1.value, _iGave1Meta));
+    } else if (iGave1.isRequired && isInserting) {
+      context.missing(_iGave1Meta);
+    }
+    if (d.iGave2.present) {
+      context.handle(
+          _iGave2Meta, iGave2.isAcceptableValue(d.iGave2.value, _iGave2Meta));
+    } else if (iGave2.isRequired && isInserting) {
+      context.missing(_iGave2Meta);
+    }
+    if (d.iGave3.present) {
+      context.handle(
+          _iGave3Meta, iGave3.isAcceptableValue(d.iGave3.value, _iGave3Meta));
+    } else if (iGave3.isRequired && isInserting) {
+      context.missing(_iGave3Meta);
+    }
+    if (d.iCan1.present) {
+      context.handle(
+          _iCan1Meta, iCan1.isAcceptableValue(d.iCan1.value, _iCan1Meta));
+    } else if (iCan1.isRequired && isInserting) {
+      context.missing(_iCan1Meta);
+    }
+    if (d.iCan2.present) {
+      context.handle(
+          _iCan2Meta, iCan2.isAcceptableValue(d.iCan2.value, _iCan2Meta));
+    } else if (iCan2.isRequired && isInserting) {
+      context.missing(_iCan2Meta);
+    }
+    if (d.ididNot1.present) {
+      context.handle(_ididNot1Meta,
+          ididNot1.isAcceptableValue(d.ididNot1.value, _ididNot1Meta));
+    } else if (ididNot1.isRequired && isInserting) {
+      context.missing(_ididNot1Meta);
+    }
+    if (d.ididNot2.present) {
+      context.handle(_ididNot2Meta,
+          ididNot2.isAcceptableValue(d.ididNot2.value, _ididNot2Meta));
+    } else if (ididNot2.isRequired && isInserting) {
+      context.missing(_ididNot2Meta);
+    }
+    if (d.ididNot3.present) {
+      context.handle(_ididNot3Meta,
+          ididNot3.isAcceptableValue(d.ididNot3.value, _ididNot3Meta));
+    } else if (ididNot3.isRequired && isInserting) {
+      context.missing(_ididNot3Meta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Listen map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return Listen.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  Map<String, Variable> entityToSql(ListensCompanion d) {
+    final map = <String, Variable>{};
+    if (d.id.present) {
+      map['id'] = Variable<int, IntType>(d.id.value);
+    }
+    if (d.dateCreated.present) {
+      map['date_created'] =
+          Variable<DateTime, DateTimeType>(d.dateCreated.value);
+    }
+    if (d.actName.present) {
+      map['act_name'] = Variable<String, StringType>(d.actName.value);
+    }
+    if (d.insights.present) {
+      map['insights'] = Variable<String, StringType>(d.insights.value);
+    }
+    if (d.iHad1.present) {
+      map['i_had1'] = Variable<bool, BoolType>(d.iHad1.value);
+    }
+    if (d.iHad2.present) {
+      map['i_had2'] = Variable<bool, BoolType>(d.iHad2.value);
+    }
+    if (d.iHad3.present) {
+      map['i_had3'] = Variable<bool, BoolType>(d.iHad3.value);
+    }
+    if (d.iHad4.present) {
+      map['i_had4'] = Variable<bool, BoolType>(d.iHad4.value);
+    }
+    if (d.iGave1.present) {
+      map['i_gave1'] = Variable<bool, BoolType>(d.iGave1.value);
+    }
+    if (d.iGave2.present) {
+      map['i_gave2'] = Variable<bool, BoolType>(d.iGave2.value);
+    }
+    if (d.iGave3.present) {
+      map['i_gave3'] = Variable<bool, BoolType>(d.iGave3.value);
+    }
+    if (d.iCan1.present) {
+      map['i_can1'] = Variable<bool, BoolType>(d.iCan1.value);
+    }
+    if (d.iCan2.present) {
+      map['i_can2'] = Variable<bool, BoolType>(d.iCan2.value);
+    }
+    if (d.ididNot1.present) {
+      map['idid_not1'] = Variable<bool, BoolType>(d.ididNot1.value);
+    }
+    if (d.ididNot2.present) {
+      map['idid_not2'] = Variable<bool, BoolType>(d.ididNot2.value);
+    }
+    if (d.ididNot3.present) {
+      map['idid_not3'] = Variable<bool, BoolType>(d.ididNot3.value);
+    }
+    return map;
+  }
+
+  @override
+  $ListensTable createAlias(String alias) {
+    return $ListensTable(_db, alias);
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $GoalsTable _goals;
@@ -1557,6 +2274,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $AssessmentsTable get assessments => _assessments ??= $AssessmentsTable(this);
   $QuestionsTable _questions;
   $QuestionsTable get questions => _questions ??= $QuestionsTable(this);
+  $ListensTable _listens;
+  $ListensTable get listens => _listens ??= $ListensTable(this);
   GoalDao _goalDao;
   GoalDao get goalDao => _goalDao ??= GoalDao(this as AppDatabase);
   SubTaskDao _subTaskDao;
@@ -1568,9 +2287,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   AssessmentDao _assessmentDao;
   AssessmentDao get assessmentDao =>
       _assessmentDao ??= AssessmentDao(this as AppDatabase);
+  ListenDao _listenDao;
+  ListenDao get listenDao => _listenDao ??= ListenDao(this as AppDatabase);
   @override
   List<TableInfo> get allTables =>
-      [goals, subTasks, outputs, journals, assessments, questions];
+      [goals, subTasks, outputs, journals, assessments, questions, listens];
 }
 
 // **************************************************************************
@@ -1594,4 +2315,7 @@ mixin _$JournalDaoMixin on DatabaseAccessor<AppDatabase> {
 mixin _$AssessmentDaoMixin on DatabaseAccessor<AppDatabase> {
   $AssessmentsTable get assessments => db.assessments;
   $QuestionsTable get questions => db.questions;
+}
+mixin _$ListenDaoMixin on DatabaseAccessor<AppDatabase> {
+  $ListensTable get listens => db.listens;
 }
