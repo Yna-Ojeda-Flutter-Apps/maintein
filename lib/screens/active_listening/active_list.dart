@@ -51,11 +51,11 @@ class _ActiveListenListState extends State<ActiveListenList>{
     );
   }
 
-  StreamBuilder<List<Listen>> _buildActivityList(context){
+  StreamBuilder<List<ListenRecord>> _buildActivityList(context){
     final dao = Provider.of<ListenDao>(context);
     return StreamBuilder(
       stream: dao.watchActiveListenEntries(),
-      builder: (context, AsyncSnapshot<List<Listen>> snapshot){
+      builder: (context, AsyncSnapshot<List<ListenRecord>> snapshot){
         final listens = snapshot.data ?? List();
         return ListView.builder(
           itemCount: listens.length,
@@ -68,14 +68,14 @@ class _ActiveListenListState extends State<ActiveListenList>{
     );
   }
 
-  Widget _buildActivityItem(Listen listen, ListenDao dao){
+  Widget _buildActivityItem(ListenRecord listen, ListenDao dao){
     return Slidable(
       actionPane:SlidableDrawerActionPane(),
       secondaryActions: <Widget>[
         IconSlideAction(
           caption: 'Delete',
           icon: Icons.delete,
-          onTap: () =>  dao.deleteListenActivity(listen),
+          onTap: () =>  dao.deleteListenActivity(listen.detail),
         )
       ],
       child: Card(
@@ -85,7 +85,7 @@ class _ActiveListenListState extends State<ActiveListenList>{
             Navigator.pushNamed(
               context,
               ActiveListenDetail.routeName,
-              arguments: listen.id
+              arguments: listen.detail.id
             );
           },
           child: Padding(
@@ -99,14 +99,14 @@ class _ActiveListenListState extends State<ActiveListenList>{
                   child: Column(
                       children: <Widget>[
                           Text(
-                            DateFormat('MMM').format(listen.dateCreated),
+                            DateFormat('MMM').format(listen.detail.dateCreated),
                             style: TextStyle(
                               color:Color(0xff21BEDE),
                               fontSize: 18,
                             ),
                           ),
                           Text(
-                            DateFormat('dd').format(listen.dateCreated),
+                            DateFormat('dd').format(listen.detail.dateCreated),
                             style: TextStyle(
                               color:Color(0xff21BEDE),
                               fontSize: 30,
@@ -125,7 +125,7 @@ class _ActiveListenListState extends State<ActiveListenList>{
                       Padding(
                         padding: EdgeInsets.only(top:10),
                         child:Text(
-                          listen.actName,
+                          listen.detail.actName,
                           style: TextStyle(
                             fontFamily: 'Raleway',
                             fontSize: 20,
@@ -136,7 +136,7 @@ class _ActiveListenListState extends State<ActiveListenList>{
                       Padding(
                         padding: EdgeInsets.only(bottom: 5),
                         child: Text(
-                          DateFormat('hh:mm a').format(listen.dateCreated),
+                          DateFormat('hh:mm a').format(listen.detail.dateCreated),
                           style: TextStyle(
                             color:Colors.grey,
                           ),
@@ -144,7 +144,7 @@ class _ActiveListenListState extends State<ActiveListenList>{
                         ),
                       ),
                       Text(
-                        listen.insights,
+                        listen.detail.insights,
                         textAlign: TextAlign.justify,
                         style: TextStyle(
                           color: Colors.grey

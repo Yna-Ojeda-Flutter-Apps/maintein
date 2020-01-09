@@ -71,42 +71,45 @@ class AssessmentRecord {
 
 class Listens extends Table{
   IntColumn get id => integer().autoIncrement()();
-  DateTimeColumn get dateCreated => dateTime()();
+  DateTimeColumn get dateCreated => dateTime().withDefault(Constant(DateTime.now()))();
   TextColumn get actName => text()();
   TextColumn get insights => text()();
-  BoolColumn get iHad1 => boolean().withDefault(Constant(false))();
-  BoolColumn get iHad2 => boolean().withDefault(Constant(false))();
-  BoolColumn get iHad3 => boolean().withDefault(Constant(false))();
-  BoolColumn get iHad4 => boolean().withDefault(Constant(false))();
-  BoolColumn get iGave1 => boolean().withDefault(Constant(false))();
-  BoolColumn get iGave2 => boolean().withDefault(Constant(false))();
-  BoolColumn get iGave3 => boolean().withDefault(Constant(false))();
-  BoolColumn get iCan1 => boolean().withDefault(Constant(false))();
-  BoolColumn get iCan2 => boolean().withDefault(Constant(false))();
-  BoolColumn get ididNot1 => boolean().withDefault(Constant(false))();
-  BoolColumn get ididNot2 => boolean().withDefault(Constant(false))();
-  BoolColumn get ididNot3 => boolean().withDefault(Constant(false))();
 }
 
+class Descs extends Table{
+  IntColumn get id => integer().customConstraint('REFERENCES listens(id) ON DELETE CASCADE')();
+  IntColumn get cId => integer()();
+  BoolColumn get charVal => boolean().withDefault(Constant(false))();
 
-@UseMoor(tables: [Goals, SubTasks, Outputs, Journals, Assessments, Questions, Listens], daos: [GoalDao, SubTaskDao, OutputDao, JournalDao, AssessmentDao, ListenDao])
+  @override
+  Set<Column> get primaryKey => {id, cId};
+}
+
+class ListenRecord{
+  final Listen detail;
+  final List<Desc> desc;
+  ListenRecord({this.detail,this.desc});
+
+}
+@UseMoor(tables: [Goals, SubTasks, Outputs, Journals, Assessments, Questions, Listens, Descs], daos: [GoalDao, SubTaskDao, OutputDao, JournalDao, AssessmentDao, ListenDao])
 class AppDatabase extends _$AppDatabase {
   AppDatabase () : super(FlutterQueryExecutor.inDatabaseFolder(path: 'db.sqlite'));
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
   @override
   MigrationStrategy get migration => MigrationStrategy(
       beforeOpen: (details) async {
         await customStatement('PRAGMA foreign_keys = ON');
       },
       onUpgrade: (Migrator m, int from, int to) async {
-        if ( from == 4 ) {
+        if ( from == 5 ) {
           await m.deleteTable('goals');
           await m.deleteTable('subTasks');
           await m.deleteTable('outputs');
           await m.deleteTable('journals');
           await m.deleteTable('assessments');
           await m.deleteTable('questions');
+          await m.deleteTable('descs');
           await m.createAllTables();
         }
       }
@@ -345,21 +348,75 @@ class AssessmentDao extends DatabaseAccessor<AppDatabase> with _$AssessmentDaoMi
   Future deleteAssessment(Insertable<Assessment> info) => delete(assessments).delete(info);
 }
 
-@UseDao(tables: [Listens])
+@UseDao(tables: [Listens, Descs])
 class ListenDao extends DatabaseAccessor<AppDatabase> with _$ListenDaoMixin {
   final AppDatabase db;
   ListenDao(this.db) : super(db);
 
-  Stream<List<Listen>> watchActiveListenEntries() => select(listens).watch();
-  Stream<Listen> watchListenEntry(int id) {
-    final activityEntry = select(listens)..where((activity) => activity.id.equals(id));
-    return activityEntry.watchSingle();
+  Stream<List<ListenRecord>> watchActiveListenEntries(){
+      final entryStream = Observable(
+          (
+            select(listens)
+              ..orderBy([
+                (t) => OrderingTerm(expression: t.dateCreated, mode: OrderingMode.desc),
+              ])
+          ).watch()
+      );
+
+      return entryStream.switchMap((entries){
+        final idToEntry = { for (var entry in entries) entry.id : entry};
+        final ids = idToEntry.keys;
+        final entryQuery = select(listens).join([
+          leftOuterJoin(descs, descs.id.equalsExp(listens.id)),
+        ]);
+        return entryQuery.watch().map((rows){
+          final idToDescs = <int, List<Desc>>{};
+          for (var row in rows){
+            final desc = row.readTable(descs);
+            final id = row.readTable(listens).id;
+            idToDescs.putIfAbsent(id, ()=> []).add(desc);
+          }
+          return [
+            for (var id in ids)
+              ListenRecord(
+                detail: idToEntry[id],
+                desc: idToDescs[id] ?? []
+              )
+          ];
+        });
+
+      });
+  }
+
+  Stream<ListenRecord> watchListenEntry(int id) {
+    final listenQuery = select(listens)..where((entry) => entry.id.equals(id));
+    final descQuery = select(listens).join([leftOuterJoin(descs,descs.id.equalsExp(listens.id))],)
+      ..where(listens.id.equals(id));
+    final entryStream = listenQuery.watchSingle();
+    final descStream = descQuery.watch().map(
+        (rows){
+          return rows.map((row) => row.readTable(descs)).toList();
+        }
+    );
+
+    return Observable.combineLatest2(
+      entryStream,
+      descStream,
+        (Listen listen, List<Desc> descs){
+          return ListenRecord(
+            detail: listen,
+            desc: descs,
+          );
+        }
+    );
   }
 
   Future insertListenActivity(Insertable<Listen> activity) => into(listens).insert(activity);
   Future updateListenActivity(Insertable<Listen> activity) => update(listens).replace(activity);
   Future deleteListenActivity(Insertable<Listen> activity) => delete(listens).delete(activity);
 
+  Future insertDesc(Insertable<Desc> desc) => into(descs).insert(desc);
+  Future updateDesc(Insertable<Desc> desc) => update(descs).replace(desc);
 }
 
 

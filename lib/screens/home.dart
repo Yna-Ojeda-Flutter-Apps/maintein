@@ -1,6 +1,7 @@
 import 'package:eit_app/screens/assessments/assessments_list.dart';
 import 'package:eit_app/screens/goaltracker/goal_list.dart';
 import 'package:eit_app/screens/journal/journal_list.dart';
+import 'package:eit_app/screens/active_listening/active_list.dart';
 import 'package:flutter/material.dart';
 import 'package:eit_app/assets/icons/home_icons_icons.dart';
 class MyHome extends StatelessWidget {
@@ -74,7 +75,7 @@ class MyHome extends StatelessWidget {
               child: IconButton(
                 icon: Icon(HomeIcons.conversation, size: 50, color: Color(0xFF21BEDE),),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/listen_list');
+                  Navigator.pushNamed(context, ActiveListenList.routeName);
                 },
                 tooltip: 'Active Listening Checker',
               )
