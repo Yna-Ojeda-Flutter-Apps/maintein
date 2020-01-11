@@ -16,9 +16,10 @@ class ActiveListenDetail extends StatefulWidget{
 
 class _ActiveListenDetailState extends State<ActiveListenDetail>{
   PageController _pageController = PageController();
+  var _formKey = GlobalKey<FormState>();
   int _pageIndex = 0;
   bool _editMode = false;
-  TextEditingController _insights = TextEditingController();
+  List<bool> _charbool = [false,false,false,false,false,false,false,false,false,false,false,false];
   @override
   Widget build(BuildContext context) {
     final _id = ModalRoute.of(context).settings.arguments;
@@ -51,21 +52,24 @@ class _ActiveListenDetailState extends State<ActiveListenDetail>{
           return Center(child: Text("No data yet"),);
         }
         if (_editMode){
-          return PageView(
-            scrollDirection: Axis.horizontal,
-            onPageChanged: (value){
-              setState(() {
-                _pageIndex = value;
-              });
-            },
-            controller:_pageController,
-            children: <Widget>[
-              _inputField(context,activity,_insightsField(activity.detail,daoListen),'Insights'),
-              _inputField(context,activity,_printChecklist(activity.desc,daoListen,_iHad,0),'I had ...'),
-              _inputField(context,activity,_printChecklist(activity.desc,daoListen,_iGave,4),'I gave ...'),
-              _inputField(context,activity,_printChecklist(activity.desc,daoListen,_iCan,7),'I can ...'),
-              _inputField(context,activity,_printChecklist(activity.desc,daoListen,_iDidNot,9),'I did not ...'),
-            ],
+          return Form(
+            key:_formKey,
+            child:PageView(
+              scrollDirection: Axis.horizontal,
+              onPageChanged: (value){
+                setState(() {
+                  _pageIndex = value;
+                });
+              },
+              controller:_pageController,
+              children: <Widget>[
+                _inputField(context,activity,_insightsField(activity.detail,daoListen),'Insights'),
+                _inputField(context,activity,_printChecklist(activity.desc,daoListen,_iHad,0),'I had ...'),
+                _inputField(context,activity,_printChecklist(activity.desc,daoListen,_iGave,4),'I gave ...'),
+                _inputField(context,activity,_printChecklist(activity.desc,daoListen,_iCan,7),'I can ...'),
+                _inputField(context,activity,_printChecklist(activity.desc,daoListen,_iDidNot,9),'I did not ...'),
+              ],
+            )
           );
         }else {
           return Padding(
@@ -147,7 +151,8 @@ class _ActiveListenDetailState extends State<ActiveListenDetail>{
     final cleandesc = _cleanList(descs);
     List<String> _iHadOpt = [];
     for(int i = start; i <= end; i++){
-      debugPrint('${i} => ${cleandesc[i].charVal}');
+      _charbool[i] = cleandesc[i].charVal;
+      //debugPrint('${i} => ${cleandesc[i].charVal}');
       if ((start == 0) && (cleandesc[i].charVal)){
           _iHadOpt.add(_iHad[i-start]);
       }else if ((start == 4) && (cleandesc[i].charVal)){
@@ -197,25 +202,23 @@ class _ActiveListenDetailState extends State<ActiveListenDetail>{
   }
 
   _insightsField(Listen activity, ListenDao dao){
-    //_insights.text = activity.insights;
     return Padding(
       padding: EdgeInsets.only(bottom: 10),
       child: TextFormField(
-      validator: (value) {
+      //controller:_insights,
+      validator: (String value) {
         if (value.isEmpty) {
           return 'Please enter some text';
-        } else {
-          return null;
         }
       },
       initialValue: activity.insights,
       maxLines: null,
-        decoration: InputDecoration(
+      decoration:InputDecoration(
         hintText: 'Consider the what, who, when, where, why and how.',
         hintMaxLines: 10,
         border: InputBorder.none,
       ),
-      onChanged: (value) => ( value.isNotEmpty) ?  dao.updateListenActivity(activity.copyWith(insights: value)) : null,
+      onChanged: (value) => (value.isNotEmpty) ? dao.updateListenActivity(activity.copyWith(insights:value)) : null,
       ),
     );
   }
@@ -224,11 +227,10 @@ class _ActiveListenDetailState extends State<ActiveListenDetail>{
     return Padding(
       padding: EdgeInsets.only(bottom: 10),
       child: TextFormField(
-        validator: (value){
+        //controller: _actName,
+        validator: (String value){
           if (value.isEmpty){
             return 'Pleae enter some text';
-          } else {
-            return null;
           }
         },
         style:TextStyle(
@@ -238,6 +240,7 @@ class _ActiveListenDetailState extends State<ActiveListenDetail>{
           color: Colors.blue[700],
         ),
         initialValue: activity.actName,
+        //controller:_actName,
         maxLines:null,
         decoration: InputDecoration(
           hintText: 'Enter Activity Name',
@@ -277,7 +280,10 @@ class _ActiveListenDetailState extends State<ActiveListenDetail>{
                   value:cleandesc[_newindex].charVal,
                   title: Text(printdesc[index]),
                   controlAffinity: ListTileControlAffinity.leading,
-                  onChanged: (value) => dao.updateDesc(descs[_newindex].copyWith(charVal: value))
+                  onChanged: (value){
+                    _charbool[_newindex] = value;
+                    dao.updateDesc(descs[_newindex].copyWith(charVal: value));
+                  }
                 ),
               ],
             ),
@@ -291,11 +297,38 @@ class _ActiveListenDetailState extends State<ActiveListenDetail>{
     return FloatingActionButton(
         child: (_editMode) ? Icon(Icons.remove_red_eye) : Icon(Icons.edit),
         onPressed:(){
-          setState(() {
-            _editMode = !_editMode;
-          });
-        }
-    );
+          if (_editMode == false) {
+                _pressState();
+          } else if (_editMode) {
+            if (_validateform()){
+                _pressState();
+            }
+          }
+        });
+  }
+
+  _pressState(){
+    setState(() {
+      _editMode = !_editMode;
+    });
+  }
+
+  _validateform(){
+    return (_formKey.currentState.validate() && countTrue(_charbool,0,3) && countTrue(_charbool,4,6) && countTrue(_charbool,7,8) && countTrue(_charbool,9,11));
+  }
+
+  countTrue(List<bool> _charVal, int start, int end){
+    int count = 0;
+    for(int i = start; i<= end; i++){
+      if (_charVal[i]){
+        count+=1;
+      }
+    }
+    if (count == 0){
+      return false;
+    }else{
+      return true;
+    }
   }
 
   _bottomNavBar() {

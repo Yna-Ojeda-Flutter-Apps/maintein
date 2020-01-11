@@ -18,6 +18,7 @@ class _JournalDetailState extends State<JournalDetail> {
   PageController _pageController = PageController();
   int _pageIndex = 0;
   bool _editMode = false;
+  var _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final _id = ModalRoute.of(context).settings.arguments;
@@ -51,22 +52,25 @@ class _JournalDetailState extends State<JournalDetail> {
           return Center(child: Text("No data yet"),);
         }
         if ( _editMode ) {
-          return PageView(
-            scrollDirection: Axis.horizontal,
-            onPageChanged: (value) {
-              setState(() {
-                _pageIndex = value;
-              });
-            },
-            controller: _pageController,
-            children: <Widget>[
-              _inputField(context, entry, _descriptionField(entry, dao), 'Describe the situation'),
-              _inputField(context, entry, _feelingsField(entry, dao), 'What were you thinking or feeling?'),
-              _inputField(context, entry, _evaluationField(entry, dao), 'What was good or bad about it?'),
-              _inputField(context, entry, _analysisField(entry, dao), 'What can you make sense of it?'),
-              _inputField(context, entry, _conclusionField(entry, dao), 'What else could you have done?'),
-              _inputField(context, entry, _actionPlanField(entry, dao), 'What will you do for next time?'),
-            ],
+          return Form(
+            key: _formKey,
+            child: PageView(
+              scrollDirection: Axis.horizontal,
+              onPageChanged: (value) {
+                setState(() {
+                  _pageIndex = value;
+                });
+              },
+              controller: _pageController,
+              children: <Widget>[
+                _inputField(context, entry, _descriptionField(entry, dao), 'Describe the situation'),
+                _inputField(context, entry, _feelingsField(entry, dao), 'What were you thinking or feeling?'),
+                _inputField(context, entry, _evaluationField(entry, dao), 'What was good or bad about it?'),
+                _inputField(context, entry, _analysisField(entry, dao), 'What can you make sense of it?'),
+                _inputField(context, entry, _conclusionField(entry, dao), 'What else could you have done?'),
+                _inputField(context, entry, _actionPlanField(entry, dao), 'What will you do for next time?'),
+              ],
+            ),
           );
         } else {
           return Padding(
@@ -352,9 +356,13 @@ class _JournalDetailState extends State<JournalDetail> {
     return FloatingActionButton(
       child: (_editMode) ? Icon(Icons.remove_red_eye) : Icon(Icons.edit),
       onPressed: () {
-        setState(() {
-          _editMode = !_editMode;
-        });
+        if (_editMode == false){
+          _pressState();
+        }else{
+          if (_formKey.currentState.validate()){
+            _pressState();
+          }
+        }
       },
     );
   }
@@ -371,5 +379,11 @@ class _JournalDetailState extends State<JournalDetail> {
         ],
       ),
     ) : bottomNavBar(context);
+  }
+
+  _pressState(){
+    setState(() {
+      _editMode = !_editMode;
+    });
   }
 }
