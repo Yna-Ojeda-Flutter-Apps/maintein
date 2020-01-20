@@ -72,8 +72,8 @@ class AssessmentRecord {
 class Listens extends Table{
   IntColumn get id => integer().autoIncrement()();
   DateTimeColumn get dateCreated => dateTime().withDefault(Constant(DateTime.now()))();
-  TextColumn get actName => text()();
-  TextColumn get insights => text()();
+  TextColumn get actName => text().withLength(min:1)();
+  TextColumn get insights => text().withLength(min:1)();
 }
 
 class Descs extends Table{

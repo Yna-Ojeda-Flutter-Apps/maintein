@@ -263,13 +263,28 @@ class _ActiveListenNewState extends State<ActiveListenNewForm>{
   }
 
   _validateAllForms(){
-    return (_insights.text.isNotEmpty && _actName.text.isNotEmpty);
+    return (_insights.text.isNotEmpty && _actName.text.isNotEmpty && countTrue(_charBool,0,3) && countTrue(_charBool,4,6) && countTrue(_charBool,7,8) && countTrue(_charBool,9,11));
+  }
+
+  countTrue(List<bool> _charVal, int start, int end){
+    int count = 0;
+    for(int i = start; i<=end; i++){
+      if (_charVal[i]){
+        count+=1;
+      }
+    }
+    if (count == 0){
+      return false;
+    }else{
+      return true;
+    }
   }
 
   _resetFields(){
     setState(() {
       _insights.clear();
       _actName.clear();
+      _charBool = [false,false,false,false,false,false,false,false,false,false,false,false];
     });
     Navigator.pushNamed(context, ActiveListenList.routeName);
   }
