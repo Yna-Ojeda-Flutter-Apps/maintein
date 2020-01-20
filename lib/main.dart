@@ -11,13 +11,20 @@ import 'package:eit_app/screens/journal/journal_detail.dart';
 import 'package:eit_app/screens/journal/journal_list.dart';
 import 'package:eit_app/screens/journal/journal_new.dart';
 import 'package:eit_app/themes/apptheme.dart';
+import 'package:eit_app/utils/my_observer.dart';
+import 'package:eit_app/utils/notification_helper.dart';
 import 'package:eit_app/utils/project_db.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  final NotificationManager notifications = NotificationManager();
+
   @override
   Widget build(BuildContext context) {
     final db = AppDatabase();
@@ -34,11 +41,12 @@ class MyApp extends StatelessWidget {
         title: 'feelUP',
         debugShowCheckedModeBanner: false,
         theme: appTheme(),
+        navigatorObservers: [MyRouteObserver()],
         home: MyHome(),
         initialRoute: '/',
         routes: {
-          GoalList.routeName: (context) => GoalList(),
-          GoalDetail.routeName: (context) => GoalDetail(),
+          GoalList.routeName: (context) => GoalList(notifications),
+          GoalDetail.routeName: (context) => GoalDetail(notifications),
           JournalList.routeName: (context) => JournalList(),
           JournalNewForm.routeName: (context) => JournalNewForm(),
           JournalDetail.routeName: (context) => JournalDetail(),

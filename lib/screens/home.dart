@@ -4,6 +4,7 @@ import 'package:eit_app/screens/journal/journal_list.dart';
 import 'package:eit_app/screens/active_listening/active_list.dart';
 import 'package:flutter/material.dart';
 import 'package:eit_app/assets/icons/home_icons_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class MyHome extends StatelessWidget {
   static const routeName = '/my_home';
   @override

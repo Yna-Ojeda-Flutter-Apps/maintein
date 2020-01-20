@@ -1,6 +1,7 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:eit_app/screens/goaltracker/goal_detail.dart';
 import 'package:eit_app/screens/widgets/bottomnavbar.dart';
+import 'package:eit_app/utils/notification_helper.dart';
 import 'package:eit_app/utils/project_db.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -13,6 +14,10 @@ import 'package:intl/intl.dart';
 
 class GoalList extends StatefulWidget {
   static const routeName = '/goal_list';
+  final NotificationManager notifications;
+
+  GoalList(this.notifications);
+
 
   @override
   State<StatefulWidget> createState() {
@@ -43,7 +48,6 @@ class _GoalListState extends State<GoalList> {
       bottomNavigationBar: bottomNavBar(context),
       floatingActionButton: _addEntryButton(),
     );
-
   }
 
 
@@ -117,112 +121,82 @@ class _GoalListState extends State<GoalList> {
     );
   }
   void _newEntryForm() {
-    Padding _buildTaskField() {
-      return Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: TextFormField(
-          validator: (value) {
-            if (value.isEmpty) {
-              return 'Please enter some text';
-            } else {
-              return null;
-            }
-          },
-          style: TextStyle(fontSize: 24),
-          controller: taskController,
-          decoration: InputDecoration(
-            hintText: 'New Task',
-            hintStyle: TextStyle(fontFamily: 'Roboto', fontSize: 20),
-            border: InputBorder.none,
-          ),
-        ),
-      );
-    }
-
-    Row _buildDateAndSubmitField() {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            child: IconButton(
-              icon: Icon(Icons.calendar_today, color: Colors.blue,),
-              onPressed: () async {
-                newTaskDate = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2019),
-                    lastDate: DateTime(2050)
-                );
-                if ( newTaskDate != null ) {
-                  final time = await showTimePicker(
-                    context: context,
-                      initialTime: TimeOfDay.fromDateTime(DateTime.now())
-                  );
-                  newTaskDate = DateTimeField.combine(newTaskDate, time);
-                }
-              },
-            ),
-          ),
-
-          Flexible(
-//            width: 70,
-            child: FlatButton(
-              textColor: Colors.blue,
-              disabledTextColor: Colors.grey,
-              splashColor: Colors.blueAccent,
-              onPressed: () {
-                if ( _formKey.currentState.validate() ){
-                  final dao = Provider.of<GoalDao>(context);
-                  final goal = GoalsCompanion(
-                      task: moorPackage.Value(taskController.text),
-                      urgency: moorPackage.Value(1),
-                      dueDate: moorPackage.Value(newTaskDate)
-                  );
-                  dao.insertGoal(goal);
-                  setState(() {
-                    newTaskDate = null;
-                    taskController.clear();
-                  });
-                }
-              },
-              child: Text('Save', style: TextStyle(fontSize: 16),),
-            ),
-          )
-        ],
-      );
-    }
-//    Row
-
-
-    showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
-        ),
-        context: (context),
-//        isScrollControlled: true,
-        builder: (context){
-          return Padding(
-            padding: EdgeInsets.all(40.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    _buildTaskField(),
-                    _buildDateAndSubmitField()
-                  ],
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Form(
+            key: _formKey,
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0),),
+              elevation: 0.0,
+              title: TextFormField(
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter some text';
+                  } else {
+                    return null;
+                  }
+                },
+                style: TextStyle(fontSize: 24),
+                controller: taskController,
+                decoration: InputDecoration(
+                  hintText: 'New Task',
+                  hintStyle: TextStyle(fontFamily: 'Roboto', fontSize: 20),
+                  border: InputBorder.none,
                 ),
-              )],
+                maxLines: null,
+              ),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.calendar_today, color: Colors.blue,),
+                  onPressed: () async {
+                    newTaskDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2019),
+                        lastDate: DateTime(2050)
+                    );
+                    if ( newTaskDate != null ) {
+                      final time = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.fromDateTime(DateTime.now())
+                      );
+                      newTaskDate = DateTimeField.combine(newTaskDate, time);
+                    }
+                  },
+                ),
+                FlatButton(
+                  textColor: Colors.blue,
+                  disabledTextColor: Colors.grey,
+                  splashColor: Colors.blueAccent,
+                  onPressed: () async {
+                    if ( _formKey.currentState.validate() ){
+                      final dao = Provider.of<GoalDao>(context);
+                      final goal = GoalsCompanion(
+                          task: moorPackage.Value(taskController.text),
+                          urgency: moorPackage.Value(1),
+                          dueDate: moorPackage.Value(newTaskDate)
+                      );
+                      int id = await dao.insertGoal(goal);
+                      if ( newTaskDate != null ){
+                        widget.notifications.scheduleGoalDueDate(id, taskController.text, "Your task is due.", newTaskDate);
+                      }
+                      setState(() {
+                        newTaskDate = null;
+                        taskController.clear();
+                      });
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: Text('Save', style: TextStyle(fontSize: 16),),
+                )
+
+              ],
             ),
           );
         }
     );
+
 
   }
 }

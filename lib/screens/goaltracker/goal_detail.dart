@@ -1,6 +1,7 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:eit_app/screens/goaltracker/goal_list.dart';
 import 'package:eit_app/screens/widgets/bottomnavbar.dart';
+import 'package:eit_app/utils/notification_helper.dart';
 //import 'package:eit_app/screens/widgets/screen_arguments.dart';
 import 'package:eit_app/utils/project_db.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,9 @@ import 'package:moor/moor.dart' as moorPackage;
 
 class GoalDetail extends StatefulWidget {
   static const routeName = '/goal_detail';
-  GoalDetail();
+  final NotificationManager notifications;
+  GoalDetail(this.notifications);
+
   @override
   State<StatefulWidget> createState() {
     return GoalDetailState();
@@ -202,7 +205,8 @@ class GoalDetailState extends State<GoalDetail> {
                     );
                     _dueDate = DateTimeField.combine(_dueDate, time);
                   }
-                  daoGoal.updateGoal(goal.copyWith(dueDate: _dueDate));
+                  await daoGoal.updateGoal(goal.copyWith(dueDate: _dueDate));
+                  widget.notifications.scheduleGoalDueDate(goal.id, goal.task, "Your task is due.", _dueDate);
                 },
               )
           ),
@@ -226,7 +230,8 @@ class GoalDetailState extends State<GoalDetail> {
                   );
                   _dueDate = DateTimeField.combine(_dueDate, time);
                 }
-                daoGoal.updateGoal(goal.copyWith(dueDate: _dueDate));
+                await daoGoal.updateGoal(goal.copyWith(dueDate: _dueDate));
+                widget.notifications.scheduleGoalDueDate(goal.id, goal.task, "Your task is due.", _dueDate);
 
               },
             ),
@@ -235,15 +240,17 @@ class GoalDetailState extends State<GoalDetail> {
             flex: 1,
             child: Row(
               children: <Widget>[
-//                Container(width: 40, child: IconButton(
-//                  icon: Icon(Icons.clear),
-//                  onPressed: () {
-//                    setState(() {
-//                      _dueDate = null;
-//                    });
-//                    daoGoal.updateGoal(goal.copyWith(dueDate: null));
-//                  },
-//                ),),
+                Container(width: 40, child: IconButton(
+                  icon: Icon(Icons.clear),
+                  onPressed: () async {
+                    setState(() {
+                      _dueDate = null;
+                    });
+                    Goal tempGaol = Goal(id: goal.id, urgency: goal.urgency, task: goal.task, completed: goal.completed, dueDate: null);
+                    await daoGoal.updateGoal(tempGaol);
+                    widget.notifications.cancelGoalDueDate(goal.id);
+                  },
+                ),),
                 Expanded(
                   flex: 1,
                   child: OutlineButton(
@@ -267,8 +274,8 @@ class GoalDetailState extends State<GoalDetail> {
                         );
                         _dueDate = DateTimeField.combine(_dueDate, time);
                       }
-                      daoGoal.updateGoal(goal.copyWith(dueDate: _dueDate));
-                      debugPrint(goal.toString());
+                      await daoGoal.updateGoal(goal.copyWith(dueDate: _dueDate));
+                      widget.notifications.scheduleGoalDueDate(goal.id, goal.task, "Your task is due.", _dueDate);
                     },
                   ),
                 ),
