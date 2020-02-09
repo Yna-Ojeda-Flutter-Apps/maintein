@@ -1,7 +1,9 @@
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:eit_app/screens/journal/journal_list.dart';
-import 'package:eit_app/screens/widgets/bottomnavbar.dart';
+import 'package:eit_app/widgets/bottomnavbar.dart';
+import 'package:eit_app/themes/apptheme.dart';
 import 'package:eit_app/utils/project_db.dart';
+import 'package:eit_app/widgets/journal/journal_form.dart';
+import 'package:eit_app/widgets/my_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:moor/moor.dart' as moorPackage;
@@ -19,257 +21,96 @@ class JournalNewForm extends StatefulWidget {
 class _JournalNewFormState extends State<JournalNewForm> {
   PageController _pageController = PageController();
   int _pageIndex = 0;
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
-  TextEditingController _feelingsController = TextEditingController();
-  TextEditingController _evaluationController = TextEditingController();
-  TextEditingController _analysisController = TextEditingController();
-  TextEditingController _conclusionController = TextEditingController();
-  TextEditingController _actionPlanController = TextEditingController();
+  String _title;
+  String _description;
+  String _feelings;
+  String _evaluation;
+  String _analysis;
+  String _conclusion;
+  String _actionPlan;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(
-          color: Colors.grey,
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushNamed(context, JournalList.routeName);
+      resizeToAvoidBottomPadding: true,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50.0),
+        child: MyAppBar(appBarBottom: _pageNavigation(_pageIndex),),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: _saveFormButton(),
+      bottomNavigationBar: BottomNavBar(),
+      body: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: PageView(
+          scrollDirection: Axis.horizontal,
+          controller: _pageController,
+          children: <Widget>[
+            JournalForm(
+              titleInitialValue: _title,
+              titleOnChanged: (value) { setState(() { _title = value; });},
+              header: "Describe the Situation",
+              textFieldInitialValue: _description,
+              textFieldHint: "Consider the what, who, when, where, why, and why.",
+              textFieldOnChanged: (value) { setState(() { _description = value; });},
+            ),
+            JournalForm(
+              titleInitialValue: _title,
+              titleOnChanged: (value) { setState(() { _title = value; });},
+              header: "What where you thinking or feeling?",
+              textFieldInitialValue: _feelings,
+              textFieldHint: "Consider the before, during, and after.",
+              textFieldOnChanged: (value) { setState(() { _feelings = value; });},
+            ),
+            JournalForm(
+              titleInitialValue: _title,
+              titleOnChanged: (value) { setState(() { _title = value; });},
+              header: "What was good or bad about it?",
+              textFieldInitialValue: _evaluation,
+              textFieldHint: "Consider the things you and other people contributed to the situation..",
+              textFieldOnChanged: (value) { setState(() { _evaluation = value; });},
+            ),
+            JournalForm(
+              titleInitialValue: _title,
+              titleOnChanged: (value) { setState(() { _title = value; });},
+              header: "What can you make sense of it?",
+              textFieldInitialValue: _analysis,
+              textFieldHint: "Consider the things that helped or worsened the situation.",
+              textFieldOnChanged: (value) { setState(() { _analysis = value; });},
+            ),
+            JournalForm(
+              titleInitialValue: _title,
+              titleOnChanged: (value) { setState(() { _title = value; });},
+              header: "What else could you have done?",
+              textFieldInitialValue: _conclusion,
+              textFieldHint: "Consider whether you could and/or should have responded in a different way.",
+              textFieldOnChanged: (value) { setState(() { _conclusion = value; });},
+            ),
+            JournalForm(
+              titleInitialValue: _title,
+              titleOnChanged: (value) { setState(() { _title = value; });},
+              header: "What will you do for next time?",
+              textFieldInitialValue: _actionPlan,
+              textFieldHint: "Consider the what, who, when, where, why, and why.",
+              textFieldOnChanged: (value) { setState(() { _actionPlan = value; });},
+            ),
+          ],
+          onPageChanged: (value){
+            setState(() {
+              _pageIndex = value;
+            });
           },
         ),
       ),
-//      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: _saveFormButton(),
-      bottomNavigationBar: BottomAppBar(
-        elevation: 0,
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            _pageNavigation(_pageIndex),
-            bottomNavBar(context),
-          ],
-        ),
-      ),
-      body: PageView(
-        scrollDirection: Axis.horizontal,
-        controller: _pageController,
-        children: <Widget>[
-          _inputField(context, _descriptionField(), 'Describe the situation'),
-          _inputField(context, _feelingsField(), 'What were you thinking or feeling?'),
-          _inputField(context, _evaluationField(), 'What was good or bad about it?'),
-          _inputField(context, _analysisField(), 'What can you make sense of it?'),
-          _inputField(context, _conclusionField(),'What else could you have done?'),
-          _inputField(context, _actionPlanField(),'What will you do for next time?')
-        ],
-        onPageChanged: (value) {
-          setState(() {
-            _pageIndex = value;
-          });
-        },
-      ),
     );
   }
 
-  _inputField(BuildContext context, field, String str) {
-//    final dao = Provider.of<JournalDao>(context);
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(left: 40, right: 40, bottom: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          _titleField(),
-          _headerText(str),
-          field,
-        ],
-      ),
-    );
+  bool _validateAll() {
+    _title = _title ?? "";
+    _description = _description ?? "";
+    return ( (_title.length > 0) && (_description.length > 0) );
+  }
 
-
-  }
-  _titleField() {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 10),
-      child: TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter some text';
-          } else {
-            return null;
-          }
-        },
-        style: TextStyle(
-            fontFamily: 'Raleway',
-            fontSize: 30,
-            fontWeight: FontWeight.w500,
-            color: Colors.blue[700]
-        ),
-        controller: _titleController,
-        maxLines: null,
-        decoration: InputDecoration(
-          hintText: 'Enter entry title',
-          hintStyle: TextStyle(fontSize: 20),
-          border: InputBorder.none,
-        ),
-      ),
-    );
-  }
-  _headerText(String str) {
-    return Text(
-      str,
-      style: TextStyle(
-          fontFamily: 'Raleway',
-          fontSize: 24,
-          fontWeight: FontWeight.w300,
-          color: Colors.blue[700]
-      ),
-    );
-  }
-  _descriptionField() {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 10),
-      child: TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter some text';
-          } else {
-            return null;
-          }
-        },
-        controller: _descriptionController,
-        maxLines: null,
-        decoration: InputDecoration(
-          hintText: 'Consider the what, who, when, where, why and how.',
-          hintMaxLines: 10,
-          border: InputBorder.none,
-        ),
-      ),
-    );
-  }
-  _feelingsField() {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 10),
-      child: TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter some text';
-          } else {
-            return null;
-          }
-        },
-        controller: _feelingsController,
-        maxLines: null,
-        decoration: InputDecoration(
-          hintText: 'Consider the before, during, and after.',
-          hintMaxLines: 10,
-          border: InputBorder.none,
-        ),
-      ),
-    );
-  }
-  _evaluationField() {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 10),
-      child: TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter some text';
-          } else {
-            return null;
-          }
-        },
-        controller: _evaluationController,
-        maxLines: null,
-        decoration: InputDecoration(
-          hintText: 'Consider the things you and other people contributed to the situation.',
-          hintMaxLines: 10,
-          border: InputBorder.none,
-        ),
-      ),
-    );
-  }
-  _analysisField() {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 10),
-      child: TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter some text';
-          } else {
-            return null;
-          }
-        },
-        controller: _analysisController,
-        maxLines: null,
-        decoration: InputDecoration(
-          hintText: 'Consider the things that helped or worsened the situation.',
-          hintMaxLines: 10,
-          border: InputBorder.none,
-        ),
-      ),
-    );
-  }
-  _conclusionField() {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 10),
-      child: TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter some text';
-          } else {
-            return null;
-          }
-        },
-        controller: _conclusionController,
-        maxLines: null,
-        decoration: InputDecoration(
-          hintText: 'Consider whether you could and/or should have responded in a different way.',
-          hintMaxLines: 10,
-          border: InputBorder.none,
-        ),
-      ),
-    );
-  }
-  _actionPlanField() {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 10),
-      child: TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter some text';
-          } else {
-            return null;
-          }
-        },
-        controller: _actionPlanController,
-        maxLines: null,
-        decoration: InputDecoration(
-          hintText: 'Consider the things you need to know and/or do to improve for next time.',
-          hintMaxLines: 10,
-          border: InputBorder.none,
-        ),
-      ),
-    );
-  }
-  _validateAllForms() {
-    return (
-        _titleController.text.isNotEmpty &&
-            _analysisController.text.isNotEmpty &&
-            _conclusionController.text.isNotEmpty &&
-            _evaluationController.text.isNotEmpty &&
-            _feelingsController.text.isNotEmpty &&
-            _descriptionController.text.isNotEmpty &&
-            _actionPlanController.text.isNotEmpty
-    );
-  }
   _pageNavigation(int curr) {
     int _next;
     int _back;
@@ -295,6 +136,7 @@ class _JournalNewFormState extends State<JournalNewForm> {
           DotsIndicator(
             dotsCount: 6,
             position: curr.toDouble(),
+            decorator: DotsDecorator(activeColor: MyBlue.seagull),
           ),
           IconButton(
             icon: Icon(Icons.navigate_next),
@@ -304,39 +146,57 @@ class _JournalNewFormState extends State<JournalNewForm> {
       ),
     );
   }
-  _resetFields() {
-    setState(() {
-      _titleController.clear();
-      _descriptionController.clear();
-      _feelingsController.clear();
-      _evaluationController.clear();
-      _analysisController.clear();
-      _conclusionController.clear();
-      _actionPlanController.clear();
-    });
-    Navigator.pushNamed(context, JournalList.routeName);
-  }
+
   _saveFormButton() {
     return FloatingActionButton(
+      backgroundColor: (_validateAll()) ? MyBlue.picton : Colors.grey,
+      foregroundColor: Colors.white,
       child: const Icon(Icons.done,),
-      onPressed: ( _validateAllForms() ) ? () {
-        final dao = Provider.of<JournalDao>(context);
-        final entry = JournalsCompanion(
-            title: moorPackage.Value(_titleController.text),
-            dateCreated: moorPackage.Value(DateTime.now()),
-            description: moorPackage.Value(_descriptionController.text),
-            feelings: moorPackage.Value(_feelingsController.text),
-            evaluation: moorPackage.Value(_evaluationController.text),
-            analysis: moorPackage.Value(_analysisController.text),
-            conclusion: moorPackage.Value(_conclusionController.text),
-            actionPlan: moorPackage.Value(_analysisController.text)
-        );
-        dao.insertJournalEntry(entry);
+      onPressed: () async {
+        if ( _validateAll() ) {
+          final dao = Provider.of<JournalDao>(context);
+          final entry = JournalsCompanion(
+              title: moorPackage.Value(_title),
+              dateCreated: moorPackage.Value(DateTime.now()),
+              description: moorPackage.Value(_description),
+              feelings: moorPackage.Value(_feelings),
+              evaluation: moorPackage.Value(_evaluation),
+              analysis: moorPackage.Value(_analysis),
+              conclusion: moorPackage.Value(_conclusion),
+              actionPlan: moorPackage.Value(_actionPlan)
+          );
+          await dao.insertJournalEntry(entry);
+        }
         setState(() {
-          _resetFields();
+          _title = "";
+          _description = "";
+          _feelings = "";
+          _evaluation = "";
+          _analysis = "";
+          _conclusion = "";
+          _actionPlan = "";
           _pageIndex = 0;
         });
-      } : null,
+        Navigator.of(context).pop();
+        _newEntryFeedback(context);
+      },
     );
   }
+
+  void _newEntryFeedback(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+            title: Text("Nice one, a new entry!"),
+            content: Text("Each entry is a step deeper into learning about and expressing yourself."),
+            actions: <Widget>[
+              FlatButton(child: Text("Okay"), onPressed: () => Navigator.of(context).pop())
+            ],
+          );
+        }
+    );
+  }
+
 }

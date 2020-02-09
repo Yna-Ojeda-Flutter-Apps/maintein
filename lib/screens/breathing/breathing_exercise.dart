@@ -1,4 +1,4 @@
-import 'package:eit_app/screens/widgets/bottomnavbar.dart';
+import 'package:eit_app/widgets/bottomnavbar.dart';
 import 'package:flutter/material.dart';
 
 class BreathingExercise extends StatelessWidget {
@@ -14,7 +14,7 @@ class BreathingExercise extends StatelessWidget {
           
         ),
       ),
-      bottomNavigationBar: bottomNavBar(context),
+      bottomNavigationBar: BottomNavBar(),
     );
   }
 

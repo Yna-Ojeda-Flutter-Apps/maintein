@@ -11,30 +11,34 @@ class Goal extends DataClass implements Insertable<Goal> {
   final int id;
   final int urgency;
   final String task;
-  final DateTime dueDate;
   final bool completed;
+  final DateTime dueDate;
+  final DateTime dateCompleted;
   Goal(
       {@required this.id,
       @required this.urgency,
-      @required this.task,
+      this.task,
+      @required this.completed,
       this.dueDate,
-      @required this.completed});
+      this.dateCompleted});
   factory Goal.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final intType = db.typeSystem.forDartType<int>();
     final stringType = db.typeSystem.forDartType<String>();
-    final dateTimeType = db.typeSystem.forDartType<DateTime>();
     final boolType = db.typeSystem.forDartType<bool>();
+    final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return Goal(
       id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       urgency:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}urgency']),
       task: stringType.mapFromDatabaseResponse(data['${effectivePrefix}task']),
-      dueDate: dateTimeType
-          .mapFromDatabaseResponse(data['${effectivePrefix}due_date']),
       completed:
           boolType.mapFromDatabaseResponse(data['${effectivePrefix}completed']),
+      dueDate: dateTimeType
+          .mapFromDatabaseResponse(data['${effectivePrefix}due_date']),
+      dateCompleted: dateTimeType
+          .mapFromDatabaseResponse(data['${effectivePrefix}date_completed']),
     );
   }
   factory Goal.fromJson(Map<String, dynamic> json,
@@ -43,8 +47,9 @@ class Goal extends DataClass implements Insertable<Goal> {
       id: serializer.fromJson<int>(json['id']),
       urgency: serializer.fromJson<int>(json['urgency']),
       task: serializer.fromJson<String>(json['task']),
-      dueDate: serializer.fromJson<DateTime>(json['dueDate']),
       completed: serializer.fromJson<bool>(json['completed']),
+      dueDate: serializer.fromJson<DateTime>(json['dueDate']),
+      dateCompleted: serializer.fromJson<DateTime>(json['dateCompleted']),
     );
   }
   @override
@@ -54,8 +59,9 @@ class Goal extends DataClass implements Insertable<Goal> {
       'id': serializer.toJson<int>(id),
       'urgency': serializer.toJson<int>(urgency),
       'task': serializer.toJson<String>(task),
-      'dueDate': serializer.toJson<DateTime>(dueDate),
       'completed': serializer.toJson<bool>(completed),
+      'dueDate': serializer.toJson<DateTime>(dueDate),
+      'dateCompleted': serializer.toJson<DateTime>(dateCompleted),
     };
   }
 
@@ -67,12 +73,15 @@ class Goal extends DataClass implements Insertable<Goal> {
           ? const Value.absent()
           : Value(urgency),
       task: task == null && nullToAbsent ? const Value.absent() : Value(task),
-      dueDate: dueDate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(dueDate),
       completed: completed == null && nullToAbsent
           ? const Value.absent()
           : Value(completed),
+      dueDate: dueDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dueDate),
+      dateCompleted: dateCompleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateCompleted),
     );
   }
 
@@ -80,14 +89,16 @@ class Goal extends DataClass implements Insertable<Goal> {
           {int id,
           int urgency,
           String task,
+          bool completed,
           DateTime dueDate,
-          bool completed}) =>
+          DateTime dateCompleted}) =>
       Goal(
         id: id ?? this.id,
         urgency: urgency ?? this.urgency,
         task: task ?? this.task,
-        dueDate: dueDate ?? this.dueDate,
         completed: completed ?? this.completed,
+        dueDate: dueDate ?? this.dueDate,
+        dateCompleted: dateCompleted ?? this.dateCompleted,
       );
   @override
   String toString() {
@@ -95,8 +106,9 @@ class Goal extends DataClass implements Insertable<Goal> {
           ..write('id: $id, ')
           ..write('urgency: $urgency, ')
           ..write('task: $task, ')
+          ..write('completed: $completed, ')
           ..write('dueDate: $dueDate, ')
-          ..write('completed: $completed')
+          ..write('dateCompleted: $dateCompleted')
           ..write(')'))
         .toString();
   }
@@ -104,8 +116,12 @@ class Goal extends DataClass implements Insertable<Goal> {
   @override
   int get hashCode => $mrjf($mrjc(
       id.hashCode,
-      $mrjc(urgency.hashCode,
-          $mrjc(task.hashCode, $mrjc(dueDate.hashCode, completed.hashCode)))));
+      $mrjc(
+          urgency.hashCode,
+          $mrjc(
+              task.hashCode,
+              $mrjc(completed.hashCode,
+                  $mrjc(dueDate.hashCode, dateCompleted.hashCode))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -113,43 +129,48 @@ class Goal extends DataClass implements Insertable<Goal> {
           other.id == this.id &&
           other.urgency == this.urgency &&
           other.task == this.task &&
+          other.completed == this.completed &&
           other.dueDate == this.dueDate &&
-          other.completed == this.completed);
+          other.dateCompleted == this.dateCompleted);
 }
 
 class GoalsCompanion extends UpdateCompanion<Goal> {
   final Value<int> id;
   final Value<int> urgency;
   final Value<String> task;
-  final Value<DateTime> dueDate;
   final Value<bool> completed;
+  final Value<DateTime> dueDate;
+  final Value<DateTime> dateCompleted;
   const GoalsCompanion({
     this.id = const Value.absent(),
     this.urgency = const Value.absent(),
     this.task = const Value.absent(),
-    this.dueDate = const Value.absent(),
     this.completed = const Value.absent(),
+    this.dueDate = const Value.absent(),
+    this.dateCompleted = const Value.absent(),
   });
   GoalsCompanion.insert({
     this.id = const Value.absent(),
     @required int urgency,
-    @required String task,
-    this.dueDate = const Value.absent(),
+    this.task = const Value.absent(),
     this.completed = const Value.absent(),
-  })  : urgency = Value(urgency),
-        task = Value(task);
+    this.dueDate = const Value.absent(),
+    this.dateCompleted = const Value.absent(),
+  }) : urgency = Value(urgency);
   GoalsCompanion copyWith(
       {Value<int> id,
       Value<int> urgency,
       Value<String> task,
+      Value<bool> completed,
       Value<DateTime> dueDate,
-      Value<bool> completed}) {
+      Value<DateTime> dateCompleted}) {
     return GoalsCompanion(
       id: id ?? this.id,
       urgency: urgency ?? this.urgency,
       task: task ?? this.task,
-      dueDate: dueDate ?? this.dueDate,
       completed: completed ?? this.completed,
+      dueDate: dueDate ?? this.dueDate,
+      dateCompleted: dateCompleted ?? this.dateCompleted,
     );
   }
 }
@@ -187,8 +208,17 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
     return GeneratedTextColumn(
       'task',
       $tableName,
-      false,
+      true,
     );
+  }
+
+  final VerificationMeta _completedMeta = const VerificationMeta('completed');
+  GeneratedBoolColumn _completed;
+  @override
+  GeneratedBoolColumn get completed => _completed ??= _constructCompleted();
+  GeneratedBoolColumn _constructCompleted() {
+    return GeneratedBoolColumn('completed', $tableName, false,
+        defaultValue: Constant(false));
   }
 
   final VerificationMeta _dueDateMeta = const VerificationMeta('dueDate');
@@ -203,17 +233,23 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
     );
   }
 
-  final VerificationMeta _completedMeta = const VerificationMeta('completed');
-  GeneratedBoolColumn _completed;
+  final VerificationMeta _dateCompletedMeta =
+      const VerificationMeta('dateCompleted');
+  GeneratedDateTimeColumn _dateCompleted;
   @override
-  GeneratedBoolColumn get completed => _completed ??= _constructCompleted();
-  GeneratedBoolColumn _constructCompleted() {
-    return GeneratedBoolColumn('completed', $tableName, false,
-        defaultValue: Constant(false));
+  GeneratedDateTimeColumn get dateCompleted =>
+      _dateCompleted ??= _constructDateCompleted();
+  GeneratedDateTimeColumn _constructDateCompleted() {
+    return GeneratedDateTimeColumn(
+      'date_completed',
+      $tableName,
+      true,
+    );
   }
 
   @override
-  List<GeneratedColumn> get $columns => [id, urgency, task, dueDate, completed];
+  List<GeneratedColumn> get $columns =>
+      [id, urgency, task, completed, dueDate, dateCompleted];
   @override
   $GoalsTable get asDslTable => this;
   @override
@@ -241,17 +277,25 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
     } else if (task.isRequired && isInserting) {
       context.missing(_taskMeta);
     }
+    if (d.completed.present) {
+      context.handle(_completedMeta,
+          completed.isAcceptableValue(d.completed.value, _completedMeta));
+    } else if (completed.isRequired && isInserting) {
+      context.missing(_completedMeta);
+    }
     if (d.dueDate.present) {
       context.handle(_dueDateMeta,
           dueDate.isAcceptableValue(d.dueDate.value, _dueDateMeta));
     } else if (dueDate.isRequired && isInserting) {
       context.missing(_dueDateMeta);
     }
-    if (d.completed.present) {
-      context.handle(_completedMeta,
-          completed.isAcceptableValue(d.completed.value, _completedMeta));
-    } else if (completed.isRequired && isInserting) {
-      context.missing(_completedMeta);
+    if (d.dateCompleted.present) {
+      context.handle(
+          _dateCompletedMeta,
+          dateCompleted.isAcceptableValue(
+              d.dateCompleted.value, _dateCompletedMeta));
+    } else if (dateCompleted.isRequired && isInserting) {
+      context.missing(_dateCompletedMeta);
     }
     return context;
   }
@@ -276,11 +320,15 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
     if (d.task.present) {
       map['task'] = Variable<String, StringType>(d.task.value);
     }
+    if (d.completed.present) {
+      map['completed'] = Variable<bool, BoolType>(d.completed.value);
+    }
     if (d.dueDate.present) {
       map['due_date'] = Variable<DateTime, DateTimeType>(d.dueDate.value);
     }
-    if (d.completed.present) {
-      map['completed'] = Variable<bool, BoolType>(d.completed.value);
+    if (d.dateCompleted.present) {
+      map['date_completed'] =
+          Variable<DateTime, DateTimeType>(d.dateCompleted.value);
     }
     return map;
   }
@@ -292,10 +340,15 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
 }
 
 class SubTask extends DataClass implements Insertable<SubTask> {
+  final int sId;
   final int id;
   final String task;
   final bool completed;
-  SubTask({@required this.id, @required this.task, @required this.completed});
+  SubTask(
+      {@required this.sId,
+      @required this.id,
+      this.task,
+      @required this.completed});
   factory SubTask.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -303,6 +356,7 @@ class SubTask extends DataClass implements Insertable<SubTask> {
     final stringType = db.typeSystem.forDartType<String>();
     final boolType = db.typeSystem.forDartType<bool>();
     return SubTask(
+      sId: intType.mapFromDatabaseResponse(data['${effectivePrefix}s_id']),
       id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       task: stringType.mapFromDatabaseResponse(data['${effectivePrefix}task']),
       completed:
@@ -312,6 +366,7 @@ class SubTask extends DataClass implements Insertable<SubTask> {
   factory SubTask.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return SubTask(
+      sId: serializer.fromJson<int>(json['sId']),
       id: serializer.fromJson<int>(json['id']),
       task: serializer.fromJson<String>(json['task']),
       completed: serializer.fromJson<bool>(json['completed']),
@@ -321,6 +376,7 @@ class SubTask extends DataClass implements Insertable<SubTask> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
+      'sId': serializer.toJson<int>(sId),
       'id': serializer.toJson<int>(id),
       'task': serializer.toJson<String>(task),
       'completed': serializer.toJson<bool>(completed),
@@ -330,6 +386,7 @@ class SubTask extends DataClass implements Insertable<SubTask> {
   @override
   SubTasksCompanion createCompanion(bool nullToAbsent) {
     return SubTasksCompanion(
+      sId: sId == null && nullToAbsent ? const Value.absent() : Value(sId),
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       task: task == null && nullToAbsent ? const Value.absent() : Value(task),
       completed: completed == null && nullToAbsent
@@ -338,7 +395,8 @@ class SubTask extends DataClass implements Insertable<SubTask> {
     );
   }
 
-  SubTask copyWith({int id, String task, bool completed}) => SubTask(
+  SubTask copyWith({int sId, int id, String task, bool completed}) => SubTask(
+        sId: sId ?? this.sId,
         id: id ?? this.id,
         task: task ?? this.task,
         completed: completed ?? this.completed,
@@ -346,6 +404,7 @@ class SubTask extends DataClass implements Insertable<SubTask> {
   @override
   String toString() {
     return (StringBuffer('SubTask(')
+          ..write('sId: $sId, ')
           ..write('id: $id, ')
           ..write('task: $task, ')
           ..write('completed: $completed')
@@ -354,35 +413,42 @@ class SubTask extends DataClass implements Insertable<SubTask> {
   }
 
   @override
-  int get hashCode =>
-      $mrjf($mrjc(id.hashCode, $mrjc(task.hashCode, completed.hashCode)));
+  int get hashCode => $mrjf($mrjc(sId.hashCode,
+      $mrjc(id.hashCode, $mrjc(task.hashCode, completed.hashCode))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is SubTask &&
+          other.sId == this.sId &&
           other.id == this.id &&
           other.task == this.task &&
           other.completed == this.completed);
 }
 
 class SubTasksCompanion extends UpdateCompanion<SubTask> {
+  final Value<int> sId;
   final Value<int> id;
   final Value<String> task;
   final Value<bool> completed;
   const SubTasksCompanion({
+    this.sId = const Value.absent(),
     this.id = const Value.absent(),
     this.task = const Value.absent(),
     this.completed = const Value.absent(),
   });
   SubTasksCompanion.insert({
+    this.sId = const Value.absent(),
     @required int id,
-    @required String task,
+    this.task = const Value.absent(),
     this.completed = const Value.absent(),
-  })  : id = Value(id),
-        task = Value(task);
+  }) : id = Value(id);
   SubTasksCompanion copyWith(
-      {Value<int> id, Value<String> task, Value<bool> completed}) {
+      {Value<int> sId,
+      Value<int> id,
+      Value<String> task,
+      Value<bool> completed}) {
     return SubTasksCompanion(
+      sId: sId ?? this.sId,
       id: id ?? this.id,
       task: task ?? this.task,
       completed: completed ?? this.completed,
@@ -394,6 +460,15 @@ class $SubTasksTable extends SubTasks with TableInfo<$SubTasksTable, SubTask> {
   final GeneratedDatabase _db;
   final String _alias;
   $SubTasksTable(this._db, [this._alias]);
+  final VerificationMeta _sIdMeta = const VerificationMeta('sId');
+  GeneratedIntColumn _sId;
+  @override
+  GeneratedIntColumn get sId => _sId ??= _constructSId();
+  GeneratedIntColumn _constructSId() {
+    return GeneratedIntColumn('s_id', $tableName, false,
+        hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
   final VerificationMeta _idMeta = const VerificationMeta('id');
   GeneratedIntColumn _id;
   @override
@@ -411,7 +486,7 @@ class $SubTasksTable extends SubTasks with TableInfo<$SubTasksTable, SubTask> {
     return GeneratedTextColumn(
       'task',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -425,7 +500,7 @@ class $SubTasksTable extends SubTasks with TableInfo<$SubTasksTable, SubTask> {
   }
 
   @override
-  List<GeneratedColumn> get $columns => [id, task, completed];
+  List<GeneratedColumn> get $columns => [sId, id, task, completed];
   @override
   $SubTasksTable get asDslTable => this;
   @override
@@ -436,6 +511,11 @@ class $SubTasksTable extends SubTasks with TableInfo<$SubTasksTable, SubTask> {
   VerificationContext validateIntegrity(SubTasksCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
+    if (d.sId.present) {
+      context.handle(_sIdMeta, sId.isAcceptableValue(d.sId.value, _sIdMeta));
+    } else if (sId.isRequired && isInserting) {
+      context.missing(_sIdMeta);
+    }
     if (d.id.present) {
       context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
     } else if (id.isRequired && isInserting) {
@@ -457,7 +537,7 @@ class $SubTasksTable extends SubTasks with TableInfo<$SubTasksTable, SubTask> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id, task};
+  Set<GeneratedColumn> get $primaryKey => {sId};
   @override
   SubTask map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -467,6 +547,9 @@ class $SubTasksTable extends SubTasks with TableInfo<$SubTasksTable, SubTask> {
   @override
   Map<String, Variable> entityToSql(SubTasksCompanion d) {
     final map = <String, Variable>{};
+    if (d.sId.present) {
+      map['s_id'] = Variable<int, IntType>(d.sId.value);
+    }
     if (d.id.present) {
       map['id'] = Variable<int, IntType>(d.id.value);
     }
@@ -486,10 +569,15 @@ class $SubTasksTable extends SubTasks with TableInfo<$SubTasksTable, SubTask> {
 }
 
 class Output extends DataClass implements Insertable<Output> {
+  final int oId;
   final int id;
   final String item;
   final bool completed;
-  Output({@required this.id, @required this.item, @required this.completed});
+  Output(
+      {@required this.oId,
+      @required this.id,
+      this.item,
+      @required this.completed});
   factory Output.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -497,6 +585,7 @@ class Output extends DataClass implements Insertable<Output> {
     final stringType = db.typeSystem.forDartType<String>();
     final boolType = db.typeSystem.forDartType<bool>();
     return Output(
+      oId: intType.mapFromDatabaseResponse(data['${effectivePrefix}o_id']),
       id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       item: stringType.mapFromDatabaseResponse(data['${effectivePrefix}item']),
       completed:
@@ -506,6 +595,7 @@ class Output extends DataClass implements Insertable<Output> {
   factory Output.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return Output(
+      oId: serializer.fromJson<int>(json['oId']),
       id: serializer.fromJson<int>(json['id']),
       item: serializer.fromJson<String>(json['item']),
       completed: serializer.fromJson<bool>(json['completed']),
@@ -515,6 +605,7 @@ class Output extends DataClass implements Insertable<Output> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
+      'oId': serializer.toJson<int>(oId),
       'id': serializer.toJson<int>(id),
       'item': serializer.toJson<String>(item),
       'completed': serializer.toJson<bool>(completed),
@@ -524,6 +615,7 @@ class Output extends DataClass implements Insertable<Output> {
   @override
   OutputsCompanion createCompanion(bool nullToAbsent) {
     return OutputsCompanion(
+      oId: oId == null && nullToAbsent ? const Value.absent() : Value(oId),
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       item: item == null && nullToAbsent ? const Value.absent() : Value(item),
       completed: completed == null && nullToAbsent
@@ -532,7 +624,8 @@ class Output extends DataClass implements Insertable<Output> {
     );
   }
 
-  Output copyWith({int id, String item, bool completed}) => Output(
+  Output copyWith({int oId, int id, String item, bool completed}) => Output(
+        oId: oId ?? this.oId,
         id: id ?? this.id,
         item: item ?? this.item,
         completed: completed ?? this.completed,
@@ -540,6 +633,7 @@ class Output extends DataClass implements Insertable<Output> {
   @override
   String toString() {
     return (StringBuffer('Output(')
+          ..write('oId: $oId, ')
           ..write('id: $id, ')
           ..write('item: $item, ')
           ..write('completed: $completed')
@@ -548,35 +642,42 @@ class Output extends DataClass implements Insertable<Output> {
   }
 
   @override
-  int get hashCode =>
-      $mrjf($mrjc(id.hashCode, $mrjc(item.hashCode, completed.hashCode)));
+  int get hashCode => $mrjf($mrjc(oId.hashCode,
+      $mrjc(id.hashCode, $mrjc(item.hashCode, completed.hashCode))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is Output &&
+          other.oId == this.oId &&
           other.id == this.id &&
           other.item == this.item &&
           other.completed == this.completed);
 }
 
 class OutputsCompanion extends UpdateCompanion<Output> {
+  final Value<int> oId;
   final Value<int> id;
   final Value<String> item;
   final Value<bool> completed;
   const OutputsCompanion({
+    this.oId = const Value.absent(),
     this.id = const Value.absent(),
     this.item = const Value.absent(),
     this.completed = const Value.absent(),
   });
   OutputsCompanion.insert({
+    this.oId = const Value.absent(),
     @required int id,
-    @required String item,
+    this.item = const Value.absent(),
     this.completed = const Value.absent(),
-  })  : id = Value(id),
-        item = Value(item);
+  }) : id = Value(id);
   OutputsCompanion copyWith(
-      {Value<int> id, Value<String> item, Value<bool> completed}) {
+      {Value<int> oId,
+      Value<int> id,
+      Value<String> item,
+      Value<bool> completed}) {
     return OutputsCompanion(
+      oId: oId ?? this.oId,
       id: id ?? this.id,
       item: item ?? this.item,
       completed: completed ?? this.completed,
@@ -588,6 +689,15 @@ class $OutputsTable extends Outputs with TableInfo<$OutputsTable, Output> {
   final GeneratedDatabase _db;
   final String _alias;
   $OutputsTable(this._db, [this._alias]);
+  final VerificationMeta _oIdMeta = const VerificationMeta('oId');
+  GeneratedIntColumn _oId;
+  @override
+  GeneratedIntColumn get oId => _oId ??= _constructOId();
+  GeneratedIntColumn _constructOId() {
+    return GeneratedIntColumn('o_id', $tableName, false,
+        hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
   final VerificationMeta _idMeta = const VerificationMeta('id');
   GeneratedIntColumn _id;
   @override
@@ -605,7 +715,7 @@ class $OutputsTable extends Outputs with TableInfo<$OutputsTable, Output> {
     return GeneratedTextColumn(
       'item',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -619,7 +729,7 @@ class $OutputsTable extends Outputs with TableInfo<$OutputsTable, Output> {
   }
 
   @override
-  List<GeneratedColumn> get $columns => [id, item, completed];
+  List<GeneratedColumn> get $columns => [oId, id, item, completed];
   @override
   $OutputsTable get asDslTable => this;
   @override
@@ -630,6 +740,11 @@ class $OutputsTable extends Outputs with TableInfo<$OutputsTable, Output> {
   VerificationContext validateIntegrity(OutputsCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
+    if (d.oId.present) {
+      context.handle(_oIdMeta, oId.isAcceptableValue(d.oId.value, _oIdMeta));
+    } else if (oId.isRequired && isInserting) {
+      context.missing(_oIdMeta);
+    }
     if (d.id.present) {
       context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
     } else if (id.isRequired && isInserting) {
@@ -651,7 +766,7 @@ class $OutputsTable extends Outputs with TableInfo<$OutputsTable, Output> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id, item};
+  Set<GeneratedColumn> get $primaryKey => {oId};
   @override
   Output map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -661,6 +776,9 @@ class $OutputsTable extends Outputs with TableInfo<$OutputsTable, Output> {
   @override
   Map<String, Variable> entityToSql(OutputsCompanion d) {
     final map = <String, Variable>{};
+    if (d.oId.present) {
+      map['o_id'] = Variable<int, IntType>(d.oId.value);
+    }
     if (d.id.present) {
       map['id'] = Variable<int, IntType>(d.id.value);
     }
@@ -694,11 +812,11 @@ class Journal extends DataClass implements Insertable<Journal> {
       @required this.dateCreated,
       @required this.title,
       @required this.description,
-      @required this.feelings,
-      @required this.evaluation,
-      @required this.analysis,
-      @required this.conclusion,
-      @required this.actionPlan});
+      this.feelings,
+      this.evaluation,
+      this.analysis,
+      this.conclusion,
+      this.actionPlan});
   factory Journal.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -880,19 +998,14 @@ class JournalsCompanion extends UpdateCompanion<Journal> {
     @required DateTime dateCreated,
     @required String title,
     @required String description,
-    @required String feelings,
-    @required String evaluation,
-    @required String analysis,
-    @required String conclusion,
-    @required String actionPlan,
+    this.feelings = const Value.absent(),
+    this.evaluation = const Value.absent(),
+    this.analysis = const Value.absent(),
+    this.conclusion = const Value.absent(),
+    this.actionPlan = const Value.absent(),
   })  : dateCreated = Value(dateCreated),
         title = Value(title),
-        description = Value(description),
-        feelings = Value(feelings),
-        evaluation = Value(evaluation),
-        analysis = Value(analysis),
-        conclusion = Value(conclusion),
-        actionPlan = Value(actionPlan);
+        description = Value(description);
   JournalsCompanion copyWith(
       {Value<int> id,
       Value<DateTime> dateCreated,
@@ -978,7 +1091,7 @@ class $JournalsTable extends Journals with TableInfo<$JournalsTable, Journal> {
     return GeneratedTextColumn(
       'feelings',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -990,7 +1103,7 @@ class $JournalsTable extends Journals with TableInfo<$JournalsTable, Journal> {
     return GeneratedTextColumn(
       'evaluation',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1002,7 +1115,7 @@ class $JournalsTable extends Journals with TableInfo<$JournalsTable, Journal> {
     return GeneratedTextColumn(
       'analysis',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1014,7 +1127,7 @@ class $JournalsTable extends Journals with TableInfo<$JournalsTable, Journal> {
     return GeneratedTextColumn(
       'conclusion',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1026,7 +1139,7 @@ class $JournalsTable extends Journals with TableInfo<$JournalsTable, Journal> {
     return GeneratedTextColumn(
       'action_plan',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1159,9 +1272,13 @@ class $JournalsTable extends Journals with TableInfo<$JournalsTable, Journal> {
 class Assessment extends DataClass implements Insertable<Assessment> {
   final int id;
   final bool isMWB;
+  final int score;
   final DateTime dateCreated;
   Assessment(
-      {@required this.id, @required this.isMWB, @required this.dateCreated});
+      {@required this.id,
+      @required this.isMWB,
+      @required this.score,
+      @required this.dateCreated});
   factory Assessment.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -1172,6 +1289,7 @@ class Assessment extends DataClass implements Insertable<Assessment> {
       id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       isMWB:
           boolType.mapFromDatabaseResponse(data['${effectivePrefix}is_m_w_b']),
+      score: intType.mapFromDatabaseResponse(data['${effectivePrefix}score']),
       dateCreated: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}date_created']),
     );
@@ -1181,6 +1299,7 @@ class Assessment extends DataClass implements Insertable<Assessment> {
     return Assessment(
       id: serializer.fromJson<int>(json['id']),
       isMWB: serializer.fromJson<bool>(json['isMWB']),
+      score: serializer.fromJson<int>(json['score']),
       dateCreated: serializer.fromJson<DateTime>(json['dateCreated']),
     );
   }
@@ -1190,6 +1309,7 @@ class Assessment extends DataClass implements Insertable<Assessment> {
     return {
       'id': serializer.toJson<int>(id),
       'isMWB': serializer.toJson<bool>(isMWB),
+      'score': serializer.toJson<int>(score),
       'dateCreated': serializer.toJson<DateTime>(dateCreated),
     };
   }
@@ -1200,15 +1320,19 @@ class Assessment extends DataClass implements Insertable<Assessment> {
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       isMWB:
           isMWB == null && nullToAbsent ? const Value.absent() : Value(isMWB),
+      score:
+          score == null && nullToAbsent ? const Value.absent() : Value(score),
       dateCreated: dateCreated == null && nullToAbsent
           ? const Value.absent()
           : Value(dateCreated),
     );
   }
 
-  Assessment copyWith({int id, bool isMWB, DateTime dateCreated}) => Assessment(
+  Assessment copyWith({int id, bool isMWB, int score, DateTime dateCreated}) =>
+      Assessment(
         id: id ?? this.id,
         isMWB: isMWB ?? this.isMWB,
+        score: score ?? this.score,
         dateCreated: dateCreated ?? this.dateCreated,
       );
   @override
@@ -1216,42 +1340,51 @@ class Assessment extends DataClass implements Insertable<Assessment> {
     return (StringBuffer('Assessment(')
           ..write('id: $id, ')
           ..write('isMWB: $isMWB, ')
+          ..write('score: $score, ')
           ..write('dateCreated: $dateCreated')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      $mrjf($mrjc(id.hashCode, $mrjc(isMWB.hashCode, dateCreated.hashCode)));
+  int get hashCode => $mrjf($mrjc(id.hashCode,
+      $mrjc(isMWB.hashCode, $mrjc(score.hashCode, dateCreated.hashCode))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is Assessment &&
           other.id == this.id &&
           other.isMWB == this.isMWB &&
+          other.score == this.score &&
           other.dateCreated == this.dateCreated);
 }
 
 class AssessmentsCompanion extends UpdateCompanion<Assessment> {
   final Value<int> id;
   final Value<bool> isMWB;
+  final Value<int> score;
   final Value<DateTime> dateCreated;
   const AssessmentsCompanion({
     this.id = const Value.absent(),
     this.isMWB = const Value.absent(),
+    this.score = const Value.absent(),
     this.dateCreated = const Value.absent(),
   });
   AssessmentsCompanion.insert({
     this.id = const Value.absent(),
     this.isMWB = const Value.absent(),
+    this.score = const Value.absent(),
     this.dateCreated = const Value.absent(),
   });
   AssessmentsCompanion copyWith(
-      {Value<int> id, Value<bool> isMWB, Value<DateTime> dateCreated}) {
+      {Value<int> id,
+      Value<bool> isMWB,
+      Value<int> score,
+      Value<DateTime> dateCreated}) {
     return AssessmentsCompanion(
       id: id ?? this.id,
       isMWB: isMWB ?? this.isMWB,
+      score: score ?? this.score,
       dateCreated: dateCreated ?? this.dateCreated,
     );
   }
@@ -1280,6 +1413,15 @@ class $AssessmentsTable extends Assessments
         defaultValue: Constant(true));
   }
 
+  final VerificationMeta _scoreMeta = const VerificationMeta('score');
+  GeneratedIntColumn _score;
+  @override
+  GeneratedIntColumn get score => _score ??= _constructScore();
+  GeneratedIntColumn _constructScore() {
+    return GeneratedIntColumn('score', $tableName, false,
+        defaultValue: Constant(1));
+  }
+
   final VerificationMeta _dateCreatedMeta =
       const VerificationMeta('dateCreated');
   GeneratedDateTimeColumn _dateCreated;
@@ -1292,7 +1434,7 @@ class $AssessmentsTable extends Assessments
   }
 
   @override
-  List<GeneratedColumn> get $columns => [id, isMWB, dateCreated];
+  List<GeneratedColumn> get $columns => [id, isMWB, score, dateCreated];
   @override
   $AssessmentsTable get asDslTable => this;
   @override
@@ -1313,6 +1455,12 @@ class $AssessmentsTable extends Assessments
           _isMWBMeta, isMWB.isAcceptableValue(d.isMWB.value, _isMWBMeta));
     } else if (isMWB.isRequired && isInserting) {
       context.missing(_isMWBMeta);
+    }
+    if (d.score.present) {
+      context.handle(
+          _scoreMeta, score.isAcceptableValue(d.score.value, _scoreMeta));
+    } else if (score.isRequired && isInserting) {
+      context.missing(_scoreMeta);
     }
     if (d.dateCreated.present) {
       context.handle(_dateCreatedMeta,
@@ -1339,6 +1487,9 @@ class $AssessmentsTable extends Assessments
     }
     if (d.isMWB.present) {
       map['is_m_w_b'] = Variable<bool, BoolType>(d.isMWB.value);
+    }
+    if (d.score.present) {
+      map['score'] = Variable<int, IntType>(d.score.value);
     }
     if (d.dateCreated.present) {
       map['date_created'] =
@@ -1548,11 +1699,13 @@ class Listen extends DataClass implements Insertable<Listen> {
   final DateTime dateCreated;
   final String actName;
   final String insights;
+  final int descriptionCount;
   Listen(
       {@required this.id,
       @required this.dateCreated,
       @required this.actName,
-      @required this.insights});
+      @required this.insights,
+      this.descriptionCount});
   factory Listen.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -1567,6 +1720,8 @@ class Listen extends DataClass implements Insertable<Listen> {
           .mapFromDatabaseResponse(data['${effectivePrefix}act_name']),
       insights: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}insights']),
+      descriptionCount: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}description_count']),
     );
   }
   factory Listen.fromJson(Map<String, dynamic> json,
@@ -1576,6 +1731,7 @@ class Listen extends DataClass implements Insertable<Listen> {
       dateCreated: serializer.fromJson<DateTime>(json['dateCreated']),
       actName: serializer.fromJson<String>(json['actName']),
       insights: serializer.fromJson<String>(json['insights']),
+      descriptionCount: serializer.fromJson<int>(json['descriptionCount']),
     );
   }
   @override
@@ -1586,6 +1742,7 @@ class Listen extends DataClass implements Insertable<Listen> {
       'dateCreated': serializer.toJson<DateTime>(dateCreated),
       'actName': serializer.toJson<String>(actName),
       'insights': serializer.toJson<String>(insights),
+      'descriptionCount': serializer.toJson<int>(descriptionCount),
     };
   }
 
@@ -1602,16 +1759,24 @@ class Listen extends DataClass implements Insertable<Listen> {
       insights: insights == null && nullToAbsent
           ? const Value.absent()
           : Value(insights),
+      descriptionCount: descriptionCount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionCount),
     );
   }
 
   Listen copyWith(
-          {int id, DateTime dateCreated, String actName, String insights}) =>
+          {int id,
+          DateTime dateCreated,
+          String actName,
+          String insights,
+          int descriptionCount}) =>
       Listen(
         id: id ?? this.id,
         dateCreated: dateCreated ?? this.dateCreated,
         actName: actName ?? this.actName,
         insights: insights ?? this.insights,
+        descriptionCount: descriptionCount ?? this.descriptionCount,
       );
   @override
   String toString() {
@@ -1619,14 +1784,19 @@ class Listen extends DataClass implements Insertable<Listen> {
           ..write('id: $id, ')
           ..write('dateCreated: $dateCreated, ')
           ..write('actName: $actName, ')
-          ..write('insights: $insights')
+          ..write('insights: $insights, ')
+          ..write('descriptionCount: $descriptionCount')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(id.hashCode,
-      $mrjc(dateCreated.hashCode, $mrjc(actName.hashCode, insights.hashCode))));
+  int get hashCode => $mrjf($mrjc(
+      id.hashCode,
+      $mrjc(
+          dateCreated.hashCode,
+          $mrjc(actName.hashCode,
+              $mrjc(insights.hashCode, descriptionCount.hashCode)))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -1634,7 +1804,8 @@ class Listen extends DataClass implements Insertable<Listen> {
           other.id == this.id &&
           other.dateCreated == this.dateCreated &&
           other.actName == this.actName &&
-          other.insights == this.insights);
+          other.insights == this.insights &&
+          other.descriptionCount == this.descriptionCount);
 }
 
 class ListensCompanion extends UpdateCompanion<Listen> {
@@ -1642,29 +1813,34 @@ class ListensCompanion extends UpdateCompanion<Listen> {
   final Value<DateTime> dateCreated;
   final Value<String> actName;
   final Value<String> insights;
+  final Value<int> descriptionCount;
   const ListensCompanion({
     this.id = const Value.absent(),
     this.dateCreated = const Value.absent(),
     this.actName = const Value.absent(),
     this.insights = const Value.absent(),
+    this.descriptionCount = const Value.absent(),
   });
   ListensCompanion.insert({
     this.id = const Value.absent(),
     this.dateCreated = const Value.absent(),
     @required String actName,
     @required String insights,
+    this.descriptionCount = const Value.absent(),
   })  : actName = Value(actName),
         insights = Value(insights);
   ListensCompanion copyWith(
       {Value<int> id,
       Value<DateTime> dateCreated,
       Value<String> actName,
-      Value<String> insights}) {
+      Value<String> insights,
+      Value<int> descriptionCount}) {
     return ListensCompanion(
       id: id ?? this.id,
       dateCreated: dateCreated ?? this.dateCreated,
       actName: actName ?? this.actName,
       insights: insights ?? this.insights,
+      descriptionCount: descriptionCount ?? this.descriptionCount,
     );
   }
 }
@@ -1717,8 +1893,23 @@ class $ListensTable extends Listens with TableInfo<$ListensTable, Listen> {
     );
   }
 
+  final VerificationMeta _descriptionCountMeta =
+      const VerificationMeta('descriptionCount');
+  GeneratedIntColumn _descriptionCount;
   @override
-  List<GeneratedColumn> get $columns => [id, dateCreated, actName, insights];
+  GeneratedIntColumn get descriptionCount =>
+      _descriptionCount ??= _constructDescriptionCount();
+  GeneratedIntColumn _constructDescriptionCount() {
+    return GeneratedIntColumn(
+      'description_count',
+      $tableName,
+      true,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, dateCreated, actName, insights, descriptionCount];
   @override
   $ListensTable get asDslTable => this;
   @override
@@ -1752,6 +1943,14 @@ class $ListensTable extends Listens with TableInfo<$ListensTable, Listen> {
     } else if (insights.isRequired && isInserting) {
       context.missing(_insightsMeta);
     }
+    if (d.descriptionCount.present) {
+      context.handle(
+          _descriptionCountMeta,
+          descriptionCount.isAcceptableValue(
+              d.descriptionCount.value, _descriptionCountMeta));
+    } else if (descriptionCount.isRequired && isInserting) {
+      context.missing(_descriptionCountMeta);
+    }
     return context;
   }
 
@@ -1778,6 +1977,10 @@ class $ListensTable extends Listens with TableInfo<$ListensTable, Listen> {
     }
     if (d.insights.present) {
       map['insights'] = Variable<String, StringType>(d.insights.value);
+    }
+    if (d.descriptionCount.present) {
+      map['description_count'] =
+          Variable<int, IntType>(d.descriptionCount.value);
     }
     return map;
   }
@@ -1980,6 +2183,240 @@ class $DescsTable extends Descs with TableInfo<$DescsTable, Desc> {
   }
 }
 
+class Reminder extends DataClass implements Insertable<Reminder> {
+  final int id;
+  final String type;
+  final DateTime time;
+  final bool isDaily;
+  Reminder(
+      {@required this.id,
+      @required this.type,
+      @required this.time,
+      @required this.isDaily});
+  factory Reminder.fromData(Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final intType = db.typeSystem.forDartType<int>();
+    final stringType = db.typeSystem.forDartType<String>();
+    final dateTimeType = db.typeSystem.forDartType<DateTime>();
+    final boolType = db.typeSystem.forDartType<bool>();
+    return Reminder(
+      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      type: stringType.mapFromDatabaseResponse(data['${effectivePrefix}type']),
+      time:
+          dateTimeType.mapFromDatabaseResponse(data['${effectivePrefix}time']),
+      isDaily:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}is_daily']),
+    );
+  }
+  factory Reminder.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return Reminder(
+      id: serializer.fromJson<int>(json['id']),
+      type: serializer.fromJson<String>(json['type']),
+      time: serializer.fromJson<DateTime>(json['time']),
+      isDaily: serializer.fromJson<bool>(json['isDaily']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson(
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return {
+      'id': serializer.toJson<int>(id),
+      'type': serializer.toJson<String>(type),
+      'time': serializer.toJson<DateTime>(time),
+      'isDaily': serializer.toJson<bool>(isDaily),
+    };
+  }
+
+  @override
+  RemindersCompanion createCompanion(bool nullToAbsent) {
+    return RemindersCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      time: time == null && nullToAbsent ? const Value.absent() : Value(time),
+      isDaily: isDaily == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDaily),
+    );
+  }
+
+  Reminder copyWith({int id, String type, DateTime time, bool isDaily}) =>
+      Reminder(
+        id: id ?? this.id,
+        type: type ?? this.type,
+        time: time ?? this.time,
+        isDaily: isDaily ?? this.isDaily,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Reminder(')
+          ..write('id: $id, ')
+          ..write('type: $type, ')
+          ..write('time: $time, ')
+          ..write('isDaily: $isDaily')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf($mrjc(id.hashCode,
+      $mrjc(type.hashCode, $mrjc(time.hashCode, isDaily.hashCode))));
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      (other is Reminder &&
+          other.id == this.id &&
+          other.type == this.type &&
+          other.time == this.time &&
+          other.isDaily == this.isDaily);
+}
+
+class RemindersCompanion extends UpdateCompanion<Reminder> {
+  final Value<int> id;
+  final Value<String> type;
+  final Value<DateTime> time;
+  final Value<bool> isDaily;
+  const RemindersCompanion({
+    this.id = const Value.absent(),
+    this.type = const Value.absent(),
+    this.time = const Value.absent(),
+    this.isDaily = const Value.absent(),
+  });
+  RemindersCompanion.insert({
+    this.id = const Value.absent(),
+    @required String type,
+    this.time = const Value.absent(),
+    this.isDaily = const Value.absent(),
+  }) : type = Value(type);
+  RemindersCompanion copyWith(
+      {Value<int> id,
+      Value<String> type,
+      Value<DateTime> time,
+      Value<bool> isDaily}) {
+    return RemindersCompanion(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      time: time ?? this.time,
+      isDaily: isDaily ?? this.isDaily,
+    );
+  }
+}
+
+class $RemindersTable extends Reminders
+    with TableInfo<$RemindersTable, Reminder> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $RemindersTable(this._db, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  GeneratedIntColumn _id;
+  @override
+  GeneratedIntColumn get id => _id ??= _constructId();
+  GeneratedIntColumn _constructId() {
+    return GeneratedIntColumn('id', $tableName, false,
+        hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
+  final VerificationMeta _typeMeta = const VerificationMeta('type');
+  GeneratedTextColumn _type;
+  @override
+  GeneratedTextColumn get type => _type ??= _constructType();
+  GeneratedTextColumn _constructType() {
+    return GeneratedTextColumn(
+      'type',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _timeMeta = const VerificationMeta('time');
+  GeneratedDateTimeColumn _time;
+  @override
+  GeneratedDateTimeColumn get time => _time ??= _constructTime();
+  GeneratedDateTimeColumn _constructTime() {
+    return GeneratedDateTimeColumn('time', $tableName, false,
+        defaultValue: Constant(DateTime(1, 1, 1, 8)));
+  }
+
+  final VerificationMeta _isDailyMeta = const VerificationMeta('isDaily');
+  GeneratedBoolColumn _isDaily;
+  @override
+  GeneratedBoolColumn get isDaily => _isDaily ??= _constructIsDaily();
+  GeneratedBoolColumn _constructIsDaily() {
+    return GeneratedBoolColumn('is_daily', $tableName, false,
+        defaultValue: Constant(true));
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [id, type, time, isDaily];
+  @override
+  $RemindersTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'reminders';
+  @override
+  final String actualTableName = 'reminders';
+  @override
+  VerificationContext validateIntegrity(RemindersCompanion d,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    if (d.id.present) {
+      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
+    } else if (id.isRequired && isInserting) {
+      context.missing(_idMeta);
+    }
+    if (d.type.present) {
+      context.handle(
+          _typeMeta, type.isAcceptableValue(d.type.value, _typeMeta));
+    } else if (type.isRequired && isInserting) {
+      context.missing(_typeMeta);
+    }
+    if (d.time.present) {
+      context.handle(
+          _timeMeta, time.isAcceptableValue(d.time.value, _timeMeta));
+    } else if (time.isRequired && isInserting) {
+      context.missing(_timeMeta);
+    }
+    if (d.isDaily.present) {
+      context.handle(_isDailyMeta,
+          isDaily.isAcceptableValue(d.isDaily.value, _isDailyMeta));
+    } else if (isDaily.isRequired && isInserting) {
+      context.missing(_isDailyMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Reminder map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return Reminder.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  Map<String, Variable> entityToSql(RemindersCompanion d) {
+    final map = <String, Variable>{};
+    if (d.id.present) {
+      map['id'] = Variable<int, IntType>(d.id.value);
+    }
+    if (d.type.present) {
+      map['type'] = Variable<String, StringType>(d.type.value);
+    }
+    if (d.time.present) {
+      map['time'] = Variable<DateTime, DateTimeType>(d.time.value);
+    }
+    if (d.isDaily.present) {
+      map['is_daily'] = Variable<bool, BoolType>(d.isDaily.value);
+    }
+    return map;
+  }
+
+  @override
+  $RemindersTable createAlias(String alias) {
+    return $RemindersTable(_db, alias);
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $GoalsTable _goals;
@@ -1998,6 +2435,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $ListensTable get listens => _listens ??= $ListensTable(this);
   $DescsTable _descs;
   $DescsTable get descs => _descs ??= $DescsTable(this);
+  $RemindersTable _reminders;
+  $RemindersTable get reminders => _reminders ??= $RemindersTable(this);
   GoalDao _goalDao;
   GoalDao get goalDao => _goalDao ??= GoalDao(this as AppDatabase);
   SubTaskDao _subTaskDao;
@@ -2011,6 +2450,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       _assessmentDao ??= AssessmentDao(this as AppDatabase);
   ListenDao _listenDao;
   ListenDao get listenDao => _listenDao ??= ListenDao(this as AppDatabase);
+  ReminderDao _reminderDao;
+  ReminderDao get reminderDao =>
+      _reminderDao ??= ReminderDao(this as AppDatabase);
   @override
   List<TableInfo> get allTables => [
         goals,
@@ -2020,7 +2462,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         assessments,
         questions,
         listens,
-        descs
+        descs,
+        reminders
       ];
 }
 
@@ -2049,4 +2492,7 @@ mixin _$AssessmentDaoMixin on DatabaseAccessor<AppDatabase> {
 mixin _$ListenDaoMixin on DatabaseAccessor<AppDatabase> {
   $ListensTable get listens => db.listens;
   $DescsTable get descs => db.descs;
+}
+mixin _$ReminderDaoMixin on DatabaseAccessor<AppDatabase> {
+  $RemindersTable get reminders => db.reminders;
 }

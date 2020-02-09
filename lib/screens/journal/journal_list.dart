@@ -1,11 +1,15 @@
-import 'package:eit_app/screens/journal/journal_detail.dart';
 import 'package:eit_app/screens/journal/journal_new.dart';
-import 'package:eit_app/screens/widgets/bottomnavbar.dart';
-import 'package:eit_app/utils/project_db.dart';
+import 'package:eit_app/utils/const_list_and_enum.dart';
+import 'package:eit_app/widgets/bottomnavbar.dart';
+import 'package:eit_app/widgets/journal/journal_record_list.dart';
+import 'package:eit_app/widgets/my_add_entry_button.dart';
+import 'package:eit_app/widgets/my_app_bar.dart';
+import 'package:eit_app/widgets/praise_section.dart';
+import 'package:eit_app/widgets/prompt_generator.dart';
+import 'package:eit_app/themes/apptheme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+
 
 
 class JournalList extends StatefulWidget {
@@ -18,152 +22,78 @@ class JournalList extends StatefulWidget {
 }
 
 class _JournalListState extends State<JournalList> {
+  String _currentFilterString;
+  DateFilter _currentFilter;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       resizeToAvoidBottomPadding: false,
-      body: Padding(
-        padding: EdgeInsets.only(left: 40, right: 40, top: 40, bottom: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _headline(),
-            Expanded(child: _buildEntryList(context),),
-          ],
-        ),
-      ),
-      bottomNavigationBar: bottomNavBar(context),
-      floatingActionButton: _addEntryButton(),
-    );
-  }
-  Padding _headline() {
-    return Padding(
-      padding: EdgeInsets.only(top:40),
-      child: Text(
-        'Entries',
-        style: TextStyle(
-          fontFamily: 'Raleway',
-          fontSize: 45,
-          fontWeight: FontWeight.w500
-        ),
-      ),
-    );
-  }
-  StreamBuilder<List<Journal>> _buildEntryList(BuildContext context) {
-    final dao = Provider.of<JournalDao>(context);
-    return StreamBuilder(
-      stream: dao.watchJournalEntries(),
-      builder: (context, AsyncSnapshot<List<Journal>> snapshot) {
-        final entries = snapshot.data ?? List();
-        return ListView.builder(
-          itemCount: entries.length,
-          itemBuilder: (_, index) {
-            final entry = entries[index];
-            return _buildEntryItem(entry, dao);
-          },
-        );
-      },
-    );
-  }
-  Widget _buildEntryItem(Journal entry, JournalDao dao) {
-    return Slidable(
-      actionPane: SlidableDrawerActionPane(),
-      secondaryActions: <Widget>[
-        IconSlideAction(
-          caption: 'Delete',
-          icon: Icons.delete,
-          onTap: () => dao.deleteJournalEntry(entry),
-        )
-      ],
-      child: Card(
-        color: Colors.white,
-        child: InkWell(
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              JournalDetail.routeName,
-              arguments: entry.id
-            );
-          },
-          child: Padding(
-            padding: EdgeInsets.only(right: 20, bottom: 10, top: 10),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        DateFormat('MMM').format(entry.dateCreated),
-                        style: TextStyle(
-                            color: Color(0xff21BEDE),
-                            fontSize: 18
-                        ),
-                      ),
-                      Text(
-                        DateFormat('dd').format(entry.dateCreated),
-                        style: TextStyle(
-                          color: Color(0xff21BEDE),
-                          fontSize: 30,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: Text(
-                          entry.title,
-                          style: TextStyle(
-                              fontFamily: 'Raleway',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 5),
-                        child: Text(
-                          DateFormat('hh:mm a').format(entry.dateCreated),
-                          style: TextStyle(
-                            color: Colors.grey,
-                          ),
-                          textAlign: TextAlign.left,
-                        ),
-                      ),
-                      Text(
-                        entry.description,
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                            color: Colors.grey
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50.0),
+        child: MyAppBar(
+          flexibleSpaceChild: FlatButton(
+            child: Text(_currentFilterString ?? "Today", style: Theme.of(context).textTheme.title.copyWith(color: MyBlue.light),),
+            onPressed: () => _showFilterOptions(context),
           ),
         ),
       ),
+      body: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverPadding(padding: EdgeInsets.all(10), sliver: SliverList(delegate: SliverChildListDelegate([
+              PromptGenerator(reflectionPrompts, journalPromptHeader),
+              PraiseSection(isJournal: true,),
+            ]),),),
+            JournalRecordList(currentFilter: _currentFilter ?? DateFilter.Today,),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavBar(),
+      floatingActionButton: AddEntryButton(onPressed: () => Navigator.pushNamed(context, JournalNewForm.routeName),),
     );
   }
-  FloatingActionButton _addEntryButton() {
-    return FloatingActionButton(
-      backgroundColor: Color(0xff21BEDE),
-      onPressed: () => Navigator.pushNamed(context, JournalNewForm.routeName),
-      tooltip: 'Add journal entry',
-      child: Icon(Icons.add),
+
+
+  void _showFilterOptions(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+            title: Text("Show entries from:"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                _createFilterOption("Today", DateFilter.Today),
+                _createFilterOption("This Week", DateFilter.Week),
+                _createFilterOption("This Month", DateFilter.Month),
+                _createFilterOption("All Entries", DateFilter.All),
+              ],
+            ),
+          );
+        }
     );
   }
+  RadioListTile _createFilterOption(String title, DateFilter option) {
+    return RadioListTile<DateFilter>(
+      title: Text(title),
+      value: option,
+      groupValue: _currentFilter ?? DateFilter.Today,
+      onChanged: (DateFilter value) {
+        setState(() {
+          _currentFilter = value;
+          if ( title == 'This Month' ){
+            _currentFilterString = DateFormat('MMMM').format(DateTime.now());
+          } else {
+            _currentFilterString = title;
+          }
+          Navigator.of(context).pop();
+        });
+      },
+    );
+  }
+
 }

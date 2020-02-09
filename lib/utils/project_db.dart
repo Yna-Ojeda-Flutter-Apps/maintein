@@ -1,38 +1,33 @@
+import 'package:eit_app/utils/const_list_and_enum.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:moor/moor.dart' as moorPackage;
 part 'project_db.g.dart';
-
 
 class Goals extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get urgency => integer()();
-  TextColumn get task => text()();
+  TextColumn get task => text().nullable()();
+  BoolColumn get completed => boolean().withDefault(Constant(false))();
   DateTimeColumn get dueDate => dateTime().nullable()();
-  BoolColumn get completed => boolean().withDefault(Constant(false))();
+  DateTimeColumn get dateCompleted => dateTime().nullable()();
 }
-
 class SubTasks extends Table {
+  IntColumn get sId => integer().autoIncrement()();
   IntColumn get id => integer().customConstraint('REFERENCES goals(id) ON DELETE CASCADE')();
-  TextColumn get task => text()();
+  TextColumn get task => text().nullable()();
   BoolColumn get completed => boolean().withDefault(Constant(false))();
-
-  @override
-  Set<Column> get primaryKey => {id, task};
 }
 class Outputs extends Table {
+  IntColumn get oId => integer().autoIncrement()();
   IntColumn get id => integer().customConstraint('REFERENCES goals(id) ON DELETE CASCADE')();
-  TextColumn get item => text()();
+  TextColumn get item => text().nullable()();
   BoolColumn get completed => boolean().withDefault(Constant(false))();
-
-  @override
-  Set<Column> get primaryKey => {id, item};
 }
-
 class SmartGoal {
   final Goal goal;
   final List<SubTask> subTask;
   final List<Output> output;
-
   SmartGoal({this.goal, this.subTask, this.output});
 }
 
@@ -41,19 +36,19 @@ class Journals extends Table {
   DateTimeColumn get dateCreated => dateTime()();
   TextColumn get title => text()();
   TextColumn get description => text()();
-  TextColumn get feelings =>  text()();
-  TextColumn get evaluation => text()();
-  TextColumn get analysis => text()();
-  TextColumn get conclusion => text()();
-  TextColumn get actionPlan  => text()();
+  TextColumn get feelings =>  text().nullable()();
+  TextColumn get evaluation => text().nullable()();
+  TextColumn get analysis => text().nullable()();
+  TextColumn get conclusion => text().nullable()();
+  TextColumn get actionPlan  => text().nullable()();
 }
 
 class Assessments extends Table {
   IntColumn get id => integer().autoIncrement()();
   BoolColumn get isMWB => boolean().withDefault(Constant(true))();
+  IntColumn get score => integer().withDefault(Constant(1))();
   DateTimeColumn get dateCreated => dateTime().withDefault(Constant(DateTime.now()))();
 }
-
 class Questions extends Table {
   IntColumn get id => integer().customConstraint('REFERENCES assessments(id) ON DELETE CASCADE')();
   IntColumn get qId => integer()();
@@ -62,7 +57,6 @@ class Questions extends Table {
   @override
   Set<Column> get primaryKey => {id, qId};
 }
-
 class AssessmentRecord {
   final Assessment info;
   final List<Question> question;
@@ -72,10 +66,10 @@ class AssessmentRecord {
 class Listens extends Table{
   IntColumn get id => integer().autoIncrement()();
   DateTimeColumn get dateCreated => dateTime().withDefault(Constant(DateTime.now()))();
-  TextColumn get actName => text().withLength(min:1)();
-  TextColumn get insights => text().withLength(min:1)();
+  TextColumn get actName => text()();
+  TextColumn get insights => text()();
+  IntColumn get descriptionCount => integer().nullable()();
 }
-
 class Descs extends Table{
   IntColumn get id => integer().customConstraint('REFERENCES listens(id) ON DELETE CASCADE')();
   IntColumn get cId => integer()();
@@ -84,35 +78,31 @@ class Descs extends Table{
   @override
   Set<Column> get primaryKey => {id, cId};
 }
-
 class ListenRecord{
   final Listen detail;
   final List<Desc> desc;
   ListenRecord({this.detail,this.desc});
-
 }
-@UseMoor(tables: [Goals, SubTasks, Outputs, Journals, Assessments, Questions, Listens, Descs], daos: [GoalDao, SubTaskDao, OutputDao, JournalDao, AssessmentDao, ListenDao])
+
+class Reminders extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get type => text()();
+  DateTimeColumn get time => dateTime().withDefault(Constant(DateTime(1,1,1,8)))();
+  BoolColumn get isDaily => boolean().withDefault(Constant(true))();
+}
+
+
+
+@UseMoor(tables: [Goals, SubTasks, Outputs, Journals, Assessments, Questions, Listens, Descs, Reminders], daos: [GoalDao, SubTaskDao, OutputDao, JournalDao, AssessmentDao, ListenDao, ReminderDao])
 class AppDatabase extends _$AppDatabase {
   AppDatabase () : super(FlutterQueryExecutor.inDatabaseFolder(path: 'db.sqlite'));
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 1;
   @override
   MigrationStrategy get migration => MigrationStrategy(
       beforeOpen: (details) async {
         await customStatement('PRAGMA foreign_keys = ON');
       },
-      onUpgrade: (Migrator m, int from, int to) async {
-        if ( from == 5 ) {
-          await m.deleteTable('goals');
-          await m.deleteTable('subTasks');
-          await m.deleteTable('outputs');
-          await m.deleteTable('journals');
-          await m.deleteTable('assessments');
-          await m.deleteTable('questions');
-          await m.deleteTable('descs');
-          await m.createAllTables();
-        }
-      }
   );
 }
 
@@ -122,48 +112,18 @@ class GoalDao extends DatabaseAccessor<AppDatabase> with _$GoalDaoMixin {
 
   GoalDao(this.db) : super(db);
 
-  Stream<List<SmartGoal>> watchAllGoals() {
-    final goalStream = Observable(
-        (select(goals)
-          ..orderBy(
-            ([
-                  (t) =>
-                  OrderingTerm(expression: t.dueDate, mode: OrderingMode.desc),
-                  (t) =>
-                  OrderingTerm(expression: t.urgency, mode: OrderingMode.desc),
-                  (t) => OrderingTerm(expression: t.task),
-            ]),
-          )).watch());
-    return goalStream.switchMap((entries) {
-      final idToEntry = { for (var entry in entries) entry.id: entry};
-      final ids = idToEntry.keys;
-
-      final entryQuery = select(goals).join([
-        leftOuterJoin(subTasks, subTasks.id.equalsExp(goals.id)),
-        leftOuterJoin(outputs, outputs.id.equalsExp(goals.id)),
-      ]);
-      return entryQuery.watch().map((rows) {
-        final idToSubTasks = <int, List<SubTask>>{};
-        final idToOutputs = <int, List<Output>>{};
-        for (var row in rows) {
-          final subTask = row.readTable(subTasks);
-          final output = row.readTable(outputs);
-          final id = row
-              .readTable(goals)
-              .id;
-          idToSubTasks.putIfAbsent(id, () => []).add(subTask);
-          idToOutputs.putIfAbsent(id, () => []).add(output);
-        }
-        return [
-          for (var id in ids )
-            SmartGoal(goal: idToEntry[id],
-                subTask: idToSubTasks[id] ?? [],
-                output: idToOutputs[id] ?? []),
-        ];
-      });
-    });
+  Stream<List<Goal>> watchAllEntries() {
+    return (select(goals)
+      ..orderBy(
+        ([
+              (t) =>
+              OrderingTerm(expression: t.dueDate, mode: OrderingMode.desc),
+              (t) =>
+              OrderingTerm(expression: t.urgency, mode: OrderingMode.desc),
+              (t) => OrderingTerm(expression: t.task),
+        ]),
+      )).watch();
   }
-
   Stream<SmartGoal> watchGoal(int id) {
     final goalQuery = select(goals)..where((goal) => goal.id.equals(id));
     final subTaskQuery = select(goals).join(
@@ -229,7 +189,15 @@ class JournalDao extends DatabaseAccessor<AppDatabase> with _$JournalDaoMixin {
   final AppDatabase db;
   JournalDao(this.db) : super(db);
 
-  Stream<List<Journal>> watchJournalEntries() => select(journals).watch();
+  Stream<List<Journal>> watchAllEntries() {
+    return (
+        select(journals)
+          ..orderBy([
+                (t) => OrderingTerm(expression: t.dateCreated, mode: OrderingMode.desc),
+          ])
+    ).watch();
+  }
+
   Stream<Journal> watchJournalEntry(int id) {
     final entryQuery =  select(journals)..where((entry) => entry.id.equals(id));
     return entryQuery.watchSingle();
@@ -238,7 +206,6 @@ class JournalDao extends DatabaseAccessor<AppDatabase> with _$JournalDaoMixin {
   Future insertJournalEntry(Insertable<Journal> entry) => into(journals).insert(entry);
   Future updateJournalEntry(Insertable<Journal> entry) => update(journals).replace(entry);
   Future deleteJournalEntry(Insertable<Journal> entry) => delete(journals).delete(entry);
-
 }
 
 @UseDao (tables: [Assessments, Questions])
@@ -247,77 +214,23 @@ class AssessmentDao extends DatabaseAccessor<AppDatabase> with _$AssessmentDaoMi
 
   AssessmentDao(this.db) : super(db);
 
-  Stream<List<AssessmentRecord>> watchAllMWB() {
-    final recordStream = Observable(
-        (
-            select(assessments)
-              ..orderBy([
-                    (t) =>
-                    OrderingTerm(expression: t.dateCreated, mode: OrderingMode.desc),
-              ])
-              ..where((assessment) => assessment.isMWB)
-        ).watch()
-    );
-    return recordStream.switchMap((records) {
-      final idToRecord = { for ( var record in records ) record.id: record };
-      final ids = idToRecord.keys;
-      final recordQuery = select(assessments).join([
-        leftOuterJoin(questions, questions.id.equalsExp(assessments.id)),
-      ]);
-      return recordQuery.watch().map((rows) {
-        final idToQuestions = <int, List<Question>>{};
-        for ( var row in rows ) {
-          final question = row.readTable(questions);
-          final id = row
-              .readTable(assessments)
-              .id;
-          idToQuestions.putIfAbsent(id, () => []).add(question);
-        }
-        return [
-          for ( var id in ids )
-            AssessmentRecord(
-                info: idToRecord[id],
-                question: idToQuestions[id] ?? []
-            )
-        ];
-      });
-    });
+  Stream<List<Assessment>> watchAllMWB() {
+    return (
+        select(assessments)
+          ..orderBy([
+                (t) => OrderingTerm(expression: t.dateCreated, mode: OrderingMode.desc),
+          ])
+        ..where((t) => t.isMWB.equals(true))
+    ).watch();
   }
-  Stream<List<AssessmentRecord>> watchAllEIS() {
-    final recordStream = Observable(
-        (
-            select(assessments)
-              ..orderBy([
-                    (t) =>
-                    OrderingTerm(expression: t.dateCreated, mode: OrderingMode.desc),
-              ])
-              ..where((assessment) => assessment.isMWB.equals(false))
-        ).watch()
-    );
-    return recordStream.switchMap((records) {
-      final idToRecord = { for ( var record in records ) record.id: record };
-      final ids = idToRecord.keys;
-      final recordQuery = select(assessments).join([
-        leftOuterJoin(questions, questions.id.equalsExp(assessments.id)),
-      ]);
-      return recordQuery.watch().map((rows) {
-        final idToQuestions = <int, List<Question>>{};
-        for ( var row in rows ) {
-          final question = row.readTable(questions);
-          final id = row
-              .readTable(assessments)
-              .id;
-          idToQuestions.putIfAbsent(id, () => []).add(question);
-        }
-        return [
-          for ( var id in ids )
-            AssessmentRecord(
-                info: idToRecord[id],
-                question: idToQuestions[id] ?? []
-            )
-        ];
-      });
-    });
+  Stream<List<Assessment>> watchAllEIS() {
+    return (
+        select(assessments)
+          ..orderBy([
+                (t) => OrderingTerm(expression: t.dateCreated, mode: OrderingMode.desc),
+          ])
+          ..where((t) => t.isMWB.equals(false))
+    ).watch();
   }
   Stream<AssessmentRecord> watchAssessment(int id) {
     final assessmentQuery = select(assessments)..where((record) => record.id.equals(id));
@@ -348,44 +261,19 @@ class AssessmentDao extends DatabaseAccessor<AppDatabase> with _$AssessmentDaoMi
   Future deleteAssessment(Insertable<Assessment> info) => delete(assessments).delete(info);
 }
 
-@UseDao(tables: [Listens, Descs])
+@UseDao(tables: [Listens, Descs],)
 class ListenDao extends DatabaseAccessor<AppDatabase> with _$ListenDaoMixin {
   final AppDatabase db;
   ListenDao(this.db) : super(db);
 
-  Stream<List<ListenRecord>> watchActiveListenEntries(){
-      final entryStream = Observable(
-          (
-            select(listens)
-              ..orderBy([
+
+  Stream<List<Listen>> watchAll() {
+    return (
+        select(listens)
+          ..orderBy([
                 (t) => OrderingTerm(expression: t.dateCreated, mode: OrderingMode.desc),
-              ])
-          ).watch()
-      );
-
-      return entryStream.switchMap((entries){
-        final idToEntry = { for (var entry in entries) entry.id : entry};
-        final ids = idToEntry.keys;
-        final entryQuery = select(listens).join([
-          leftOuterJoin(descs, descs.id.equalsExp(listens.id)),
-        ]);
-        return entryQuery.watch().map((rows){
-          final idToDescs = <int, List<Desc>>{};
-          for (var row in rows){
-            final desc = row.readTable(descs);
-            final id = row.readTable(listens).id;
-            idToDescs.putIfAbsent(id, ()=> []).add(desc);
-          }
-          return [
-            for (var id in ids)
-              ListenRecord(
-                detail: idToEntry[id],
-                desc: idToDescs[id] ?? []
-              )
-          ];
-        });
-
-      });
+          ])
+    ).watch();
   }
 
   Stream<ListenRecord> watchListenEntry(int id) {
@@ -402,10 +290,10 @@ class ListenDao extends DatabaseAccessor<AppDatabase> with _$ListenDaoMixin {
     return Observable.combineLatest2(
       entryStream,
       descStream,
-        (Listen listen, List<Desc> descs){
+        (Listen listen, List<Desc> description){
           return ListenRecord(
             detail: listen,
-            desc: descs,
+            desc: description,
           );
         }
     );
@@ -419,4 +307,30 @@ class ListenDao extends DatabaseAccessor<AppDatabase> with _$ListenDaoMixin {
   Future updateDesc(Insertable<Desc> desc) => update(descs).replace(desc);
 }
 
+
+@UseDao(tables: [Reminders],)
+class ReminderDao extends DatabaseAccessor<AppDatabase> with _$ReminderDaoMixin {
+  final AppDatabase db;
+  ReminderDao(this.db) : super(db);
+
+  Stream<List<Reminder>> watchAllEntries() => select(reminders).watch();
+
+  void initializeReminders() async {
+    final assessmentReminder = RemindersCompanion(
+      type: moorPackage.Value(reminderTypes[0]),
+      isDaily: moorPackage.Value(false),
+    );
+    await into(reminders).insert(assessmentReminder);
+    for (int i = 1; i < reminderTypes.length; i++) {
+      final record = RemindersCompanion(
+        type: moorPackage.Value(reminderTypes[i]),
+      );
+      await into(reminders).insert(record);
+    }
+  }
+
+  Future insertReminder(Insertable<Reminder> entry) => into(reminders).insert(entry);
+  Future updateReminder(Insertable<Reminder> entry) => update(reminders).replace(entry);
+  Future deleteReminder(Insertable<Reminder> entry) => delete(reminders).delete(entry);
+}
 

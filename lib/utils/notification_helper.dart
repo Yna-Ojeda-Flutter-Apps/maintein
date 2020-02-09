@@ -1,8 +1,9 @@
+import 'package:eit_app/utils/const_list_and_enum.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import "dart:math";
 
 class NotificationManager {
-  var notificationsPlugin;
+  FlutterLocalNotificationsPlugin notificationsPlugin;
   final _random = new Random();
 
   NotificationManager() {
@@ -52,84 +53,135 @@ class NotificationManager {
   void cancelNotification(int id) {
     notificationsPlugin.cancel(id);
   }
+  
+  void switchNotificationPeriod(List<int> ids, Time time, String reminderType, bool isDaily) async {
+    var requests = await notificationsPlugin.pendingNotificationRequests();
+    List<int> pendingIds = [];
+    for ( var request in requests ) {
+      pendingIds.add(request.id);
+    }
+    ids.forEach((id){
+      if ( pendingIds.contains(id)) {
+        notificationsPlugin.cancel(id);
+      }
+    });
+    if ( isDaily ) {
+      showNotificationDaily(ids[0], reminderType, time);
+    } else {
+      ids.forEach((id) {
+        int index = id % 7;
+        showNotificationWeekly(id, reminderType, weekday[index], time);
+      });
+    }
+  }
+
+  Future<List<bool>> checkIfInPending(List<int> ids) async {
+    var requests = await notificationsPlugin.pendingNotificationRequests();
+    List<int> _pendingIds = [];
+    List<bool> _idsInPending = [];
+    for ( var request in requests ) {
+      _pendingIds.add(request.id);
+    }
+    ids.forEach((id) {
+      _idsInPending.add(_pendingIds.contains(id));
+    });
+    return _idsInPending;
+  }
+
+  void changeNotificationTime(List<int> ids, Time time, String reminderType, bool isDaily) async {
+    var requests = await notificationsPlugin.pendingNotificationRequests();
+    List<int> pendingIds = [];
+    List<int> affectedIds = [];
+    for ( var request in requests ) {
+      pendingIds.add(request.id);
+    }
+    ids.forEach((id){
+      if ( pendingIds.contains(id)) {
+        affectedIds.add(id);
+        notificationsPlugin.cancel(id);
+      }
+    });
+    if ( isDaily ) {
+      showNotificationDaily(ids[0], reminderType, time);
+    } else {
+      affectedIds.forEach((id) {
+        showNotificationDaily(id, reminderType, time);
+      });
+    }
+  }
+
+  Future<bool> changeNotificationDayOfWeekly(List<int> ids, int id, Day day, Time time, String reminderType) async {
+    var requests = await notificationsPlugin.pendingNotificationRequests();
+    List<int> pendingIds = [];
+    int idsInPending = 0;
+    bool pendingStatus = pendingIds.contains(id);
+    for ( var request in requests ) {
+      pendingIds.add(request.id);
+    }
+
+    if ( pendingIds.contains(id) ) {
+      ids.forEach((i) {
+        if ( pendingIds.contains(i)) {
+          idsInPending++;
+        }
+      });
+      if ( idsInPending > 1 ) {
+        notificationsPlugin.cancel(id);
+        pendingStatus = false;
+      }
+    } else {
+      showNotificationWeekly(id, reminderType, day, time);
+      pendingStatus = true;
+    }
+    return pendingStatus;
+  }
 
   void showNotificationDaily(
       int id, String reminderType, Time time
       ) async {
     await notificationsPlugin.showDailyAtTime(
-      id, _getNotificationTitle(reminderType), _getNotificationBody(reminderType), time, _getPlatformChannelSpecifics()
+        id, _getNotificationTitle(reminderType), _getNotificationBody(reminderType), time, _getPlatformChannelSpecifics()
     );
   }
 
   void showNotificationWeekly(
       int id, String reminderType, Day day, Time time
       ) async {
-    await notificationsPlugin.showWeeklyAtDayandTime(
-      id, _getNotificationTitle(reminderType), _getNotificationBody(reminderType), day, time, _getPlatformChannelSpecifics()
+    await notificationsPlugin.showWeeklyAtDayAndTime(
+        id, _getNotificationTitle(reminderType), _getNotificationBody(reminderType), day, time, _getPlatformChannelSpecifics()
     );
   }
 
+
+  void setInitialNotifications() {
+    showNotificationWeekly(0, reminderTypes[0], weekday[0], Time(8,0,0));
+    for ( int i = 1; i < reminderTypes.length; i++ ) {
+      showNotificationDaily(i*7, reminderTypes[i], Time(8,0,0));
+    }
+  }
+
   String _getNotificationTitle(String reminderType) {
-    if (reminderType == 'RJW') {
-      return _randomElement(_journalReminderTitles);
-    } else if (reminderType == 'AL') {
+    if (reminderType == reminderTypes[1]) {
+      return _randomElement(journalReminderTitles);
+    } else if (reminderType == reminderTypes[2]) {
       return "Listen to somebody today, and write about it";
-    } else if (reminderType == 'GT') {
-      return _randomElement(_goalTrackingReminderTitles);
+    } else if (reminderType == reminderTypes[3]) {
+      return _randomElement(goalTrackingReminderTitles);
     } else {
       return "Your bi-mothly assessments are ready now";
     }
   }
 
   String _getNotificationBody(String reminderType) {
-    if (reminderType == 'RJW') {
+    if (reminderType == reminderTypes[1]) {
       return "Put it in your journal";
-    } else if (reminderType == 'AL') {
-      return _randomElement(_activeListeningReminderBodies);
-    } else if (reminderType == 'GT') {
+    } else if (reminderType == reminderTypes[2]) {
+      return _randomElement(activeListeningReminderBodies);
+    } else if (reminderType == reminderTypes[3]) {
       return "Let's break them down the smart way.";
     } else {
       return "Take them today";
     }
   }
 }
-
-final _journalReminderTitles = [
-  "What's happened recently?",
-  "What's the most interesting thing you've done recently?",
-  "How has your day been?",
-  "How has your week been?",
-  "Share some of your thoughts recently",
-  "Share what you've been feeling as of late",
-  "Write about something that made you feel recently",
-  "What have you been doing lately?",
-  "Share something you want to do differently",
-  "Write anything about your day",
-  "What could make tomorrow better?",
-  "How could have today been better?",
-  "How have you been making others feel lately?",
-  "How stressful have you been recently?"
-];
-
-final _activeListeningReminderBodies = [
-  "Remember to be mindful of your postures when listening",
-  "Remember to use nods and gestures to show engagement",
-  "Remember to use appropriate facial expression",
-  "Remember to check if you've understood by paraphrasing",
-  "Remember to give minimal verbal encouragers",
-  "Remember to ask infrequent and considered questions",
-  "Remember to allow attentive silences",
-  "Try to pick up on the speaker's feelings when you do",
-  "Remember to summarize the speaker's major issues or points",
-  "Avoid judging or criticizing the speaker when you do",
-  "Don't avoid the speaker's concern when you do",
-  "Avoid moralizing or advising the speaker when you do"
-];
-
-final _goalTrackingReminderTitles = [
-  "What are your plans for today?",
-  "What are your plans for the week?",
-  "What do you want to achieve today?",
-  "What do you want to achieve this week?"
-];
 

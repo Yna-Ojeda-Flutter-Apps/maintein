@@ -1,15 +1,19 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:eit_app/screens/goaltracker/goal_detail.dart';
-import 'package:eit_app/screens/widgets/bottomnavbar.dart';
+import 'package:eit_app/utils/const_list_and_enum.dart';
+import 'package:eit_app/widgets/bottomnavbar.dart';
+import 'package:eit_app/widgets/custom_checkbox_tile.dart';
+import 'package:eit_app/themes/apptheme.dart';
+import 'package:eit_app/utils/list_filters.dart';
 import 'package:eit_app/utils/notification_helper.dart';
 import 'package:eit_app/utils/project_db.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:moor/moor.dart' as moorPackage;
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+
 
 
 class GoalList extends StatefulWidget {
@@ -26,6 +30,7 @@ class GoalList extends StatefulWidget {
 }
 
 class _GoalListState extends State<GoalList> {
+  DateFilter _currentDateFilter = DateFilter.All;
   TextEditingController taskController = TextEditingController();
   DateTime newTaskDate;
   final _formKey = GlobalKey<FormState>();
@@ -33,88 +38,47 @@ class _GoalListState extends State<GoalList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomPadding: true,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50.0),
+        child: AppBar(
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          elevation: 5.0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(20.0))),
+          flexibleSpace: FlexibleSpaceBar(
+            titlePadding: EdgeInsets.zero,
+            centerTitle: true,
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                FlatButton(
+                  child: Text("Task List", style: Theme.of(context).textTheme.title.copyWith(color: MyBlue.light),),
+                  onPressed: () => null,
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
       body: Padding(
-        padding: EdgeInsets.all(40.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _headline(),
-            Expanded(child: _buildTaskList(context),),
+        padding: EdgeInsets.only(top: 20, right: 10, left: 10, bottom: 10),
+        child: CustomScrollView(
+          slivers: <Widget>[
+            _buildDateFilterButton(),
+            _buildTaskList(context),
           ],
         ),
       ),
-      bottomNavigationBar: bottomNavBar(context),
+      bottomNavigationBar: BottomNavBar(),
       floatingActionButton: _addEntryButton(),
     );
   }
-
-
-
-  Padding _headline() {
-    return Padding(
-        padding: EdgeInsets.only(top: 40,),
-        child: Text(
-          'Tasks',
-          style: TextStyle(
-              fontFamily: 'Raleway',
-              fontSize: 45,
-              fontWeight: FontWeight.w500
-          ),
-        )
-    );
-  }
-
-  StreamBuilder<List<SmartGoal>> _buildTaskList(BuildContext context) {
-    final dao = Provider.of<GoalDao>(context);
-    return StreamBuilder(
-      stream: dao.watchAllGoals(),
-      builder: (context, AsyncSnapshot<List<SmartGoal>> snapshot) {
-        final tasks = snapshot.data ?? List();
-        return ListView.builder(
-            itemCount: tasks.length,
-            itemBuilder: (_, index) {
-              final item = tasks[index];
-              return _buildTaskItem(item, dao);
-            }
-        );
-      },
-    );
-  }
-  Widget _buildTaskItem(SmartGoal item, GoalDao dao) {
-    return Slidable(
-      actionPane: SlidableDrawerActionPane(),
-      secondaryActions: <Widget>[
-        IconSlideAction(
-          caption: 'Delete',
-          color: Colors.red,
-          icon: Icons.delete,
-          onTap: () => dao.deleteGoal(item.goal),
-        )
-      ],
-      child: CheckboxListTile(
-        title: Text(item.goal.task),
-        subtitle: Text( (item.goal.dueDate != null) ? DateFormat("E, MMM d HH:MM a").format(item.goal.dueDate) : 'No deadline set'),
-        secondary: IconButton(
-          icon: Icon(Icons.edit),
-          onPressed: () {
-            Navigator.pushNamed(
-              context,
-              GoalDetail.routeName,
-              arguments: item.goal.id,
-            );
-          },
-        ),
-        value: item.goal.completed,
-        onChanged: (newValue) => dao.updateGoal(item.goal.copyWith(completed: newValue)),
-      ),
-    );
-  }
-
   FloatingActionButton _addEntryButton() {
     return FloatingActionButton(
-      backgroundColor: Color(0xff21BEDE),
+      foregroundColor: Colors.white,
+      backgroundColor: MyBlue.picton,
       onPressed: () => _newEntryForm(),
       tooltip: 'Add Goal',
       child: Icon(Icons.add),
@@ -127,7 +91,7 @@ class _GoalListState extends State<GoalList> {
           return Form(
             key: _formKey,
             child: AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0),),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
               elevation: 0.0,
               title: TextFormField(
                 validator: (value) {
@@ -148,7 +112,7 @@ class _GoalListState extends State<GoalList> {
               ),
               actions: <Widget>[
                 IconButton(
-                  icon: Icon(Icons.calendar_today, color: Colors.blue,),
+                  icon: Icon(Icons.calendar_today, color: MyBlue.picton,),
                   onPressed: () async {
                     newTaskDate = await showDatePicker(
                         context: context,
@@ -166,9 +130,9 @@ class _GoalListState extends State<GoalList> {
                   },
                 ),
                 FlatButton(
-                  textColor: Colors.blue,
+                  textColor: MyBlue.picton,
                   disabledTextColor: Colors.grey,
-                  splashColor: Colors.blueAccent,
+                  splashColor: MyBlue.seagull,
                   onPressed: () async {
                     if ( _formKey.currentState.validate() ){
                       final dao = Provider.of<GoalDao>(context);
@@ -196,9 +160,137 @@ class _GoalListState extends State<GoalList> {
           );
         }
     );
-
-
   }
+
+  SliverList _buildDateFilterButton() {
+    return SliverList(delegate: SliverChildListDelegate([SizedBox(
+      width: double.infinity,
+      child: FlatButton(
+        color: MyBlue.picton,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: Text(
+          dateFilterToString(_currentDateFilter),
+          style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.white),
+          textAlign: TextAlign.justify,
+        ),
+        onPressed: () => _showFilterOptions(context),
+      ),
+    )]));
+  }
+  void _showFilterOptions(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+            title: Text("Show entries from:"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                _createFilterItem(DateFilter.Today),
+                _createFilterItem(DateFilter.All),
+                _createFilterItem(DateFilter.Month),
+                _createFilterItem(DateFilter.Week),
+                _createFilterItem(DateFilter.Null),
+              ],
+            ),
+          );
+        }
+    );
+  }
+  RadioListTile _createFilterItem(DateFilter filter) {
+    return RadioListTile<DateFilter>(
+      title: Text(dateFilterToString(filter)),
+      value: filter,
+      groupValue: _currentDateFilter,
+      onChanged: (DateFilter value) {
+        setState(() {
+          _currentDateFilter = value;
+        });
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  StreamBuilder<List<Goal>> _buildTaskList(BuildContext context) {
+    final dao = Provider.of<GoalDao>(context);
+    return StreamBuilder(
+      stream: dao.watchAllEntries(),
+      builder: (context, AsyncSnapshot<List<Goal>> snapshot) {
+        final tasks = snapshot.data ?? List();
+        final _filteredOnGoingTasks = filterOnGoingGoals(tasks, _currentDateFilter);
+        final _filteredCompletedTasks = filterCompletedGoals(tasks, _currentDateFilter);
+        return SliverPadding(
+          padding: EdgeInsets.only(right: 10, left: 10, bottom: 10),
+          sliver: SliverList(delegate: SliverChildListDelegate(_getTaskListChildren(dao, _filteredOnGoingTasks, _filteredCompletedTasks)),),
+        );
+      },
+    );
+  }
+
+  List<dynamic> _getTaskListChildren(GoalDao dao, List<Goal> onGoingGoals, List<Goal> completedGoals) {
+    bool _noFilteredTasks = ( onGoingGoals.length < 1 ) && (completedGoals.length < 1);
+    bool _allTasksCompleted = ( onGoingGoals.length < 1 ) && (completedGoals.length >= 1);
+    List<Widget> taskListChildren = [];
+    List<Widget> completedListChildren = [];
+    if ( _noFilteredTasks ) {
+      taskListChildren.add(Image(
+        image: AssetImage('lib/assets/images/data/goals.png'),
+        height: 300,
+      ));
+      taskListChildren.add(Text("Got any goals? Let's plan it the smart way.", style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.grey[600]), textAlign: TextAlign.center));
+    } else if ( _allTasksCompleted ) {
+      taskListChildren.add(Image(
+        image: AssetImage('lib/assets/images/data/completed.png',),
+        height: 300,
+      ));
+      taskListChildren.add(Text("Excellent work! You've finished all tasks.", style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.grey[600]), textAlign: TextAlign.center));
+      completedGoals.forEach((item) {
+        completedListChildren.add(
+            GoalCheckboxListTile(
+              dao: dao,
+              title: Text(item.task),
+              subtitle: Text( (item.dueDate != null) ? DateFormat("E, MMM d h:m a").format(item.dueDate) : 'No deadline set'),
+              item: item,
+            )
+        );
+      });
+      taskListChildren.add(Padding(padding: EdgeInsets.only(top: 20.0), child: ExpansionTile(
+        title: Text("Completed Tasks", style: Theme.of(context).textTheme.display1.copyWith(color: Colors.grey),),
+        children: completedListChildren,
+      ),));
+    } else {
+      onGoingGoals.forEach((item) {
+        taskListChildren.add(
+            GoalCheckboxListTile(
+              dao: dao,
+              title: Text(item.task),
+              subtitle: Text( (item.dueDate != null) ? DateFormat("E, MMM d h:m a").format(item.dueDate) : 'No deadline set'),
+              item: item,
+            )
+        );
+      });
+      if ( completedGoals.length > 0 ) {
+        completedGoals.forEach((item) {
+          completedListChildren.add(
+              GoalCheckboxListTile(
+                dao: dao,
+                title: Text(item.task),
+                subtitle: Text( (item.dueDate != null) ? DateFormat("E, MMM d h:m a").format(item.dueDate) : 'No deadline set'),
+                item: item,
+              )
+          );
+        });
+        taskListChildren.add(Padding(padding: EdgeInsets.only(top: 20.0), child: ExpansionTile(
+          title: Text("Completed Tasks", style: Theme.of(context).textTheme.display1.copyWith(color: Colors.grey),),
+          children: completedListChildren,
+        ),));
+      }
+
+    }
+    return taskListChildren;
+  }
+
 }
 
 

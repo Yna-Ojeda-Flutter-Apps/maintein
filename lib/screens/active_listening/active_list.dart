@@ -1,11 +1,15 @@
-import 'package:eit_app/screens/active_listening/active_detail.dart';
 import 'package:eit_app/screens/active_listening/active_new.dart';
-import 'package:eit_app/screens/widgets/bottomnavbar.dart';
-import 'package:eit_app/utils/project_db.dart';
+import 'package:eit_app/utils/const_list_and_enum.dart';
+import 'package:eit_app/widgets/active_listening/active_listening_record_list.dart';
+import 'package:eit_app/widgets/bottomnavbar.dart';
+import 'package:eit_app/widgets/my_add_entry_button.dart';
+import 'package:eit_app/widgets/my_app_bar.dart';
+import 'package:eit_app/widgets/praise_section.dart';
+import 'package:eit_app/widgets/prompt_generator.dart';
+import 'package:eit_app/themes/apptheme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+
 
 class ActiveListenList extends StatefulWidget{
   static const routeName = '/listen_list';
@@ -17,156 +21,80 @@ class ActiveListenList extends StatefulWidget{
 }
 
 class _ActiveListenListState extends State<ActiveListenList>{
+  String _currentFilterString;
+  DateFilter _currentFilter;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50.0),
+        child: MyAppBar(
+          flexibleSpaceChild: FlatButton(
+            child: Text(_currentFilterString ?? "Today", style: Theme.of(context).textTheme.title.copyWith(color: MyBlue.light),),
+            onPressed: () {
+              _showFilterOptions(context);
+            },
+          ),
+        ),
+      ),
       body: Padding(
-        padding: EdgeInsets.only(left:40, right: 40, top: 40, bottom: 10),
-        child:Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _headline(),
-            Expanded(child: _buildActivityList(context),),
+        padding: EdgeInsets.all(10.0),
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverPadding(padding: EdgeInsets.all(10), sliver: SliverList(delegate: SliverChildListDelegate([
+              PromptGenerator(conversationPrompts, conversationPromptHeader),
+              PraiseSection(isJournal: false,),
+            ]),),),
+            ActiveListeningRecordList(currentFilter: _currentFilter ?? DateFilter.Today,),
           ],
         ),
       ),
-      bottomNavigationBar: bottomNavBar(context),
-      floatingActionButton: _addActivityButton(),
+      bottomNavigationBar: BottomNavBar(),
+      floatingActionButton: AddEntryButton(onPressed: () => Navigator.pushNamed(context, ActiveListenNewForm.routeName),),
     );
   }
 
-  Padding _headline(){
-    return Padding(
-      padding:EdgeInsets.only(top:40),
-      child: Text(
-        'Listens to',
-        style: TextStyle(
-          fontFamily: 'Raleway',
-          fontSize: 45,
-          fontWeight: FontWeight.w500,
-        ),
-      )
-    );
-  }
-
-  StreamBuilder<List<ListenRecord>> _buildActivityList(context){
-    final dao = Provider.of<ListenDao>(context);
-    return StreamBuilder(
-      stream: dao.watchActiveListenEntries(),
-      builder: (context, AsyncSnapshot<List<ListenRecord>> snapshot){
-        final listens = snapshot.data ?? List();
-        return ListView.builder(
-          itemCount: listens.length,
-          itemBuilder: (_, index){
-            final listen = listens[index];
-            return _buildActivityItem(listen, dao);
-          },
+  void _showFilterOptions(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: Text("Show entries from:"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              _createFilterOption("Today", DateFilter.Today),
+              _createFilterOption("This Week", DateFilter.Week),
+              _createFilterOption("This Month", DateFilter.Month),
+              _createFilterOption("All Entries", DateFilter.All),
+            ],
+          ),
         );
+      }
+    );
+  }
+  RadioListTile _createFilterOption(String title, DateFilter option) {
+    return RadioListTile<DateFilter>(
+      title: Text(title),
+      value: option,
+      groupValue: _currentFilter ?? DateFilter.Today,
+      onChanged: (DateFilter value) {
+        setState(() {
+          _currentFilter = value;
+          if ( title == 'This Month' ){
+            _currentFilterString = DateFormat('MMMM').format(DateTime.now());
+          } else {
+            _currentFilterString = title;
+          }
+          Navigator.of(context).pop();
+        });
       },
     );
   }
 
-  Widget _buildActivityItem(ListenRecord listen, ListenDao dao){
-    return Slidable(
-      actionPane:SlidableDrawerActionPane(),
-      secondaryActions: <Widget>[
-        IconSlideAction(
-          caption: 'Delete',
-          icon: Icons.delete,
-          onTap: () =>  dao.deleteListenActivity(listen.detail),
-        )
-      ],
-      child: Card(
-        color: Colors.white,
-        child: InkWell(
-          onTap: (){
-            Navigator.pushNamed(
-              context,
-              ActiveListenDetail.routeName,
-              arguments: listen.detail.id
-            );
-          },
-          child: Padding(
-            padding: EdgeInsets.only(right:20, bottom: 10, top:10),
-            child: Row(
-              mainAxisSize: MainAxisSize.min ,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  child: Column(
-                      children: <Widget>[
-                          Text(
-                            DateFormat('MMM').format(listen.detail.dateCreated),
-                            style: TextStyle(
-                              color:Color(0xff21BEDE),
-                              fontSize: 18,
-                            ),
-                          ),
-                          Text(
-                            DateFormat('dd').format(listen.detail.dateCreated),
-                            style: TextStyle(
-                              color:Color(0xff21BEDE),
-                              fontSize: 30,
-                            ),
-                          ),
-                      ],
-                  ),
-                ),
-                Expanded(
-                  flex:1,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top:10),
-                        child:Text(
-                          listen.detail.actName,
-                          style: TextStyle(
-                            fontFamily: 'Raleway',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 5),
-                        child: Text(
-                          DateFormat('hh:mm a').format(listen.detail.dateCreated),
-                          style: TextStyle(
-                            color:Colors.grey,
-                          ),
-                          textAlign: TextAlign.left,
-                        ),
-                      ),
-                      Text(
-                        listen.detail.insights,
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                          color: Colors.grey
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        )
-      ),
-    );
-  }
 
-  FloatingActionButton _addActivityButton(){
-    return FloatingActionButton(
-      backgroundColor: Color(0xff21BEDE),
-      onPressed: () => Navigator.pushNamed(context, ActiveListenNewForm.routeName),
-      tooltip: 'Add Activity',
-      child: Icon(Icons.add),
-    );
-  }
 }

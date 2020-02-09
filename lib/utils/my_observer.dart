@@ -17,7 +17,6 @@ class MyRouteObserver extends RouteObserver<PageRoute<dynamic>> {
 
   @override
   void didPush(Route route, Route previousRoute) {
-    // TODO: implement didPush
     super.didPush(route, previousRoute);
     if ( route is PageRoute ) {
       _sendScreenView(route);
@@ -26,7 +25,6 @@ class MyRouteObserver extends RouteObserver<PageRoute<dynamic>> {
 
   @override
   void didReplace({Route newRoute, Route oldRoute}) {
-    // TODO: implement didReplace
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
     if ( newRoute is PageRoute ) {
       _sendScreenView(newRoute);
