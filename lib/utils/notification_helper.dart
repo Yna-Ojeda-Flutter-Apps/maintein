@@ -153,7 +153,7 @@ class NotificationManager {
   }
 
 
-  void setInitialNotifications() {
+  void setInitialNotifications() async {
     showNotificationWeekly(0, reminderTypes[0], weekday[0], Time(8,0,0));
     for ( int i = 1; i < reminderTypes.length; i++ ) {
       showNotificationDaily(i*7, reminderTypes[i], Time(8,0,0));

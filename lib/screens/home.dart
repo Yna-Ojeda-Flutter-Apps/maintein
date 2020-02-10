@@ -48,21 +48,23 @@ class _MyHomeState extends State<MyHome> {
           ),
         ),
       ),
-      body: StreamBuilder(
-        stream: dao.watchAllEntries(),
-        builder: (context, AsyncSnapshot<List<Reminder>> snapshot) {
+      body: FutureBuilder(
+        future: Future.wait([
+          dao.getAllEntries()
+        ]),
+        builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           if ( !snapshot.hasData ) {
             return Image(
               image: AssetImage('lib/assets/images/data/loading.png'),
               height: 300,
             );
           }
-          List<Reminder> rows = snapshot.data;
+          List<Reminder> rows = snapshot.data[0];
           if ( rows.length < 1 ) {
             dao.initializeReminders();
             widget.notifications.setInitialNotifications();
-            debugPrint("I still got in");
           }
+          debugPrint(rows.toString());
           return _appMenu(context);
         },
       ),

@@ -57,7 +57,7 @@ class _NotificationCardState extends State<NotificationCard> {
                           context: context,
                           initialTime: TimeOfDay(hour: widget.reminder.time.hour, minute:widget.reminder.time.minute),
                         ).then((time) async {
-                          widget.notifications.changeNotificationTime(notificationIndices[0], Time(time.hour, time.minute), reminderTypes[0], widget.reminder.isDaily);
+                          widget.notifications.changeNotificationTime(widget.ids, Time(time.hour, time.minute), widget.reminder.type, widget.reminder.isDaily);
                           await dao.updateReminder(widget.reminder.copyWith(time: DateTime(0,1,1,time.hour, time.minute)));
                         });
                       },

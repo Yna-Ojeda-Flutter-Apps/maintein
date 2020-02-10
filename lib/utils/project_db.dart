@@ -157,6 +157,23 @@ class GoalDao extends DatabaseAccessor<AppDatabase> with _$GoalDaoMixin {
     );
   }
 
+  Future<List<SmartGoal>> getAllEntries() async {
+    List<SmartGoal> list = [];
+    List<Goal> goalQuery = await (select(goals)).get();
+    goalQuery.forEach((item) async {
+      List<SubTask> subTaskQuery = await (select(subTasks)..where((task) => task.id.equals(item.id))).get();
+      List<Output> outputQuery = await (select(outputs)..where((o) => o.id.equals(item.id))).get();
+      list.add(
+        SmartGoal(
+          goal: item,
+          subTask: subTaskQuery,
+          output: outputQuery,
+        )
+      );
+    });
+    return list;
+  }
+
   Future insertGoal(Insertable<Goal> goal) => into(goals).insert(goal);
   Future updateGoal(Insertable<Goal> goal) => update(goals).replace(goal);
   Future deleteGoal(Insertable<Goal> goal) => delete(goals).delete(goal);
@@ -203,6 +220,7 @@ class JournalDao extends DatabaseAccessor<AppDatabase> with _$JournalDaoMixin {
     return entryQuery.watchSingle();
   }
 
+  Future<List<Journal>> getAllEntries() => select(journals).get();
   Future insertJournalEntry(Insertable<Journal> entry) => into(journals).insert(entry);
   Future updateJournalEntry(Insertable<Journal> entry) => update(journals).replace(entry);
   Future deleteJournalEntry(Insertable<Journal> entry) => delete(journals).delete(entry);
@@ -255,6 +273,7 @@ class AssessmentDao extends DatabaseAccessor<AppDatabase> with _$AssessmentDaoMi
     );
   }
 
+  Future<List<Assessment>> getAllAssessments() => select(assessments).get();
   Future insertAssessment(Insertable<Assessment> info) => into(assessments).insert(info);
   Future insertQuestion(Insertable<Question> question) => into(questions).insert(question);
   Future updateAssessment(Insertable<Assessment> info) => update(assessments).replace(info);
@@ -299,6 +318,7 @@ class ListenDao extends DatabaseAccessor<AppDatabase> with _$ListenDaoMixin {
     );
   }
 
+  Future<List<Listen>> getAllEntries() => select(listens).get();
   Future insertListenActivity(Insertable<Listen> activity) => into(listens).insert(activity);
   Future updateListenActivity(Insertable<Listen> activity) => update(listens).replace(activity);
   Future deleteListenActivity(Insertable<Listen> activity) => delete(listens).delete(activity);
@@ -314,6 +334,7 @@ class ReminderDao extends DatabaseAccessor<AppDatabase> with _$ReminderDaoMixin 
   ReminderDao(this.db) : super(db);
 
   Stream<List<Reminder>> watchAllEntries() => select(reminders).watch();
+  Future<List<Reminder>> getAllEntries() => select(reminders).get();
 
   void initializeReminders() async {
     final assessmentReminder = RemindersCompanion(
@@ -328,6 +349,7 @@ class ReminderDao extends DatabaseAccessor<AppDatabase> with _$ReminderDaoMixin 
       await into(reminders).insert(record);
     }
   }
+
 
   Future insertReminder(Insertable<Reminder> entry) => into(reminders).insert(entry);
   Future updateReminder(Insertable<Reminder> entry) => update(reminders).replace(entry);
