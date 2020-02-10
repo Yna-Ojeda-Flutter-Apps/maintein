@@ -1,10 +1,10 @@
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:eit_app/utils/const_list_and_enum.dart';
-import 'package:eit_app/widgets/active_listening/active_listening_edit_form.dart';
-import 'package:eit_app/widgets/active_listening/active_listening_view.dart';
-import 'package:eit_app/widgets/bottomnavbar.dart';
-import 'package:eit_app/themes/apptheme.dart';
-import 'package:eit_app/widgets/my_app_bar.dart';
+import 'package:maintein/utils/const_list_and_enum.dart';
+import 'package:maintein/widgets/active_listening/active_listening_edit_form.dart';
+import 'package:maintein/widgets/active_listening/active_listening_view.dart';
+import 'package:maintein/widgets/bottomnavbar.dart';
+import 'package:maintein/themes/apptheme.dart';
+import 'package:maintein/widgets/my_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class ActiveListenDetail extends StatefulWidget{

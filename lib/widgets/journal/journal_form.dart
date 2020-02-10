@@ -1,4 +1,4 @@
-import 'package:eit_app/themes/apptheme.dart';
+import 'package:maintein/themes/apptheme.dart';
 import 'package:flutter/material.dart';
 
 class JournalForm extends StatefulWidget {

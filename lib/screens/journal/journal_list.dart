@@ -1,12 +1,12 @@
-import 'package:eit_app/screens/journal/journal_new.dart';
-import 'package:eit_app/utils/const_list_and_enum.dart';
-import 'package:eit_app/widgets/bottomnavbar.dart';
-import 'package:eit_app/widgets/journal/journal_record_list.dart';
-import 'package:eit_app/widgets/my_add_entry_button.dart';
-import 'package:eit_app/widgets/my_app_bar.dart';
-import 'package:eit_app/widgets/praise_section.dart';
-import 'package:eit_app/widgets/prompt_generator.dart';
-import 'package:eit_app/themes/apptheme.dart';
+import 'package:maintein/screens/journal/journal_new.dart';
+import 'package:maintein/utils/const_list_and_enum.dart';
+import 'package:maintein/widgets/bottomnavbar.dart';
+import 'package:maintein/widgets/journal/journal_record_list.dart';
+import 'package:maintein/widgets/my_add_entry_button.dart';
+import 'package:maintein/widgets/my_app_bar.dart';
+import 'package:maintein/widgets/praise_section.dart';
+import 'package:maintein/widgets/prompt_generator.dart';
+import 'package:maintein/themes/apptheme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

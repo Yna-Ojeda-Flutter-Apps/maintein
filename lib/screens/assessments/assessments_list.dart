@@ -1,9 +1,9 @@
-import 'package:eit_app/screens/assessments/assessments_form.dart';
-import 'package:eit_app/widgets/assessments/assessments_record_list.dart';
-import 'package:eit_app/widgets/bottomnavbar.dart';
-import 'package:eit_app/themes/apptheme.dart';
-import 'package:eit_app/widgets/my_add_entry_button.dart';
-import 'package:eit_app/widgets/my_app_bar.dart';
+import 'package:maintein/screens/assessments/assessments_form.dart';
+import 'package:maintein/widgets/assessments/assessments_record_list.dart';
+import 'package:maintein/widgets/bottomnavbar.dart';
+import 'package:maintein/themes/apptheme.dart';
+import 'package:maintein/widgets/my_add_entry_button.dart';
+import 'package:maintein/widgets/my_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class AssessmentsList extends StatefulWidget {

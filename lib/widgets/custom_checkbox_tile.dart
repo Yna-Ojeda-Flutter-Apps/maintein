@@ -1,6 +1,6 @@
-import 'package:eit_app/screens/goaltracker/goal_detail.dart';
-import 'package:eit_app/themes/apptheme.dart';
-import 'package:eit_app/utils/project_db.dart';
+import 'package:maintein/screens/goaltracker/goal_detail.dart';
+import 'package:maintein/themes/apptheme.dart';
+import 'package:maintein/utils/project_db.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';

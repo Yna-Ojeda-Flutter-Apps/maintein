@@ -1,4 +1,4 @@
-import 'package:eit_app/utils/const_list_and_enum.dart';
+import 'package:maintein/utils/const_list_and_enum.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import "dart:math";
 

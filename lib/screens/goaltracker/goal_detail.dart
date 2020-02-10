@@ -1,9 +1,9 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:eit_app/widgets/bottomnavbar.dart';
-import 'package:eit_app/widgets/custom_checkbox_tile.dart';
-import 'package:eit_app/themes/apptheme.dart';
-import 'package:eit_app/utils/notification_helper.dart';
-import 'package:eit_app/utils/project_db.dart';
+import 'package:maintein/widgets/bottomnavbar.dart';
+import 'package:maintein/widgets/custom_checkbox_tile.dart';
+import 'package:maintein/themes/apptheme.dart';
+import 'package:maintein/utils/notification_helper.dart';
+import 'package:maintein/utils/project_db.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

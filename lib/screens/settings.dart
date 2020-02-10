@@ -1,10 +1,10 @@
-import 'package:eit_app/themes/apptheme.dart';
-import 'package:eit_app/utils/const_list_and_enum.dart';
-import 'package:eit_app/utils/notification_helper.dart';
-import 'package:eit_app/utils/project_db.dart';
-import 'package:eit_app/widgets/bottomnavbar.dart';
-import 'package:eit_app/widgets/my_app_bar.dart';
-import 'package:eit_app/widgets/settings/notification_card.dart';
+import 'package:maintein/themes/apptheme.dart';
+import 'package:maintein/utils/const_list_and_enum.dart';
+import 'package:maintein/utils/notification_helper.dart';
+import 'package:maintein/utils/project_db.dart';
+import 'package:maintein/widgets/bottomnavbar.dart';
+import 'package:maintein/widgets/my_app_bar.dart';
+import 'package:maintein/widgets/settings/notification_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';

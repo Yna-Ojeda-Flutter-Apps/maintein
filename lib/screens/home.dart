@@ -1,13 +1,13 @@
-import 'package:eit_app/assets/icons/home_icon_icons.dart';
-import 'package:eit_app/screens/assessments/assessments_list.dart';
-import 'package:eit_app/screens/breathing/breathing_exercise.dart';
-import 'package:eit_app/screens/goaltracker/goal_list.dart';
-import 'package:eit_app/screens/journal/journal_list.dart';
-import 'package:eit_app/screens/active_listening/active_list.dart';
-import 'package:eit_app/screens/settings.dart';
-import 'package:eit_app/themes/apptheme.dart';
-import 'package:eit_app/utils/notification_helper.dart';
-import 'package:eit_app/utils/project_db.dart';
+import 'package:maintein/assets/icons/home_icon_icons.dart';
+import 'package:maintein/screens/assessments/assessments_list.dart';
+import 'package:maintein/screens/breathing/breathing_exercise.dart';
+import 'package:maintein/screens/goaltracker/goal_list.dart';
+import 'package:maintein/screens/journal/journal_list.dart';
+import 'package:maintein/screens/active_listening/active_list.dart';
+import 'package:maintein/screens/settings.dart';
+import 'package:maintein/themes/apptheme.dart';
+import 'package:maintein/utils/notification_helper.dart';
+import 'package:maintein/utils/project_db.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

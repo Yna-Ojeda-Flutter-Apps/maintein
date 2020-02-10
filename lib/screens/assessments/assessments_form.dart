@@ -1,8 +1,8 @@
-import 'package:eit_app/screens/assessments/assessments_list.dart';
-import 'package:eit_app/utils/const_list_and_enum.dart';
-import 'package:eit_app/widgets/bottomnavbar.dart';
-import 'package:eit_app/themes/apptheme.dart';
-import 'package:eit_app/utils/project_db.dart';
+import 'package:maintein/screens/assessments/assessments_list.dart';
+import 'package:maintein/utils/const_list_and_enum.dart';
+import 'package:maintein/widgets/bottomnavbar.dart';
+import 'package:maintein/themes/apptheme.dart';
+import 'package:maintein/utils/project_db.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:moor/moor.dart' as moorPackage;

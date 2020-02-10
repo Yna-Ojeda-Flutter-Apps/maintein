@@ -42,7 +42,8 @@ class Goal extends DataClass implements Insertable<Goal> {
     );
   }
   factory Goal.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return Goal(
       id: serializer.fromJson<int>(json['id']),
       urgency: serializer.fromJson<int>(json['urgency']),
@@ -53,9 +54,9 @@ class Goal extends DataClass implements Insertable<Goal> {
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'urgency': serializer.toJson<int>(urgency),
       'task': serializer.toJson<String>(task),
@@ -123,7 +124,7 @@ class Goal extends DataClass implements Insertable<Goal> {
               $mrjc(completed.hashCode,
                   $mrjc(dueDate.hashCode, dateCompleted.hashCode))))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Goal &&
           other.id == this.id &&
@@ -262,40 +263,30 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, Goal> {
     final context = VerificationContext();
     if (d.id.present) {
       context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
-    } else if (id.isRequired && isInserting) {
-      context.missing(_idMeta);
     }
     if (d.urgency.present) {
       context.handle(_urgencyMeta,
           urgency.isAcceptableValue(d.urgency.value, _urgencyMeta));
-    } else if (urgency.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_urgencyMeta);
     }
     if (d.task.present) {
       context.handle(
           _taskMeta, task.isAcceptableValue(d.task.value, _taskMeta));
-    } else if (task.isRequired && isInserting) {
-      context.missing(_taskMeta);
     }
     if (d.completed.present) {
       context.handle(_completedMeta,
           completed.isAcceptableValue(d.completed.value, _completedMeta));
-    } else if (completed.isRequired && isInserting) {
-      context.missing(_completedMeta);
     }
     if (d.dueDate.present) {
       context.handle(_dueDateMeta,
           dueDate.isAcceptableValue(d.dueDate.value, _dueDateMeta));
-    } else if (dueDate.isRequired && isInserting) {
-      context.missing(_dueDateMeta);
     }
     if (d.dateCompleted.present) {
       context.handle(
           _dateCompletedMeta,
           dateCompleted.isAcceptableValue(
               d.dateCompleted.value, _dateCompletedMeta));
-    } else if (dateCompleted.isRequired && isInserting) {
-      context.missing(_dateCompletedMeta);
     }
     return context;
   }
@@ -364,7 +355,8 @@ class SubTask extends DataClass implements Insertable<SubTask> {
     );
   }
   factory SubTask.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return SubTask(
       sId: serializer.fromJson<int>(json['sId']),
       id: serializer.fromJson<int>(json['id']),
@@ -373,9 +365,9 @@ class SubTask extends DataClass implements Insertable<SubTask> {
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
       'sId': serializer.toJson<int>(sId),
       'id': serializer.toJson<int>(id),
       'task': serializer.toJson<String>(task),
@@ -416,7 +408,7 @@ class SubTask extends DataClass implements Insertable<SubTask> {
   int get hashCode => $mrjf($mrjc(sId.hashCode,
       $mrjc(id.hashCode, $mrjc(task.hashCode, completed.hashCode))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is SubTask &&
           other.sId == this.sId &&
@@ -513,25 +505,19 @@ class $SubTasksTable extends SubTasks with TableInfo<$SubTasksTable, SubTask> {
     final context = VerificationContext();
     if (d.sId.present) {
       context.handle(_sIdMeta, sId.isAcceptableValue(d.sId.value, _sIdMeta));
-    } else if (sId.isRequired && isInserting) {
-      context.missing(_sIdMeta);
     }
     if (d.id.present) {
       context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
-    } else if (id.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_idMeta);
     }
     if (d.task.present) {
       context.handle(
           _taskMeta, task.isAcceptableValue(d.task.value, _taskMeta));
-    } else if (task.isRequired && isInserting) {
-      context.missing(_taskMeta);
     }
     if (d.completed.present) {
       context.handle(_completedMeta,
           completed.isAcceptableValue(d.completed.value, _completedMeta));
-    } else if (completed.isRequired && isInserting) {
-      context.missing(_completedMeta);
     }
     return context;
   }
@@ -593,7 +579,8 @@ class Output extends DataClass implements Insertable<Output> {
     );
   }
   factory Output.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return Output(
       oId: serializer.fromJson<int>(json['oId']),
       id: serializer.fromJson<int>(json['id']),
@@ -602,9 +589,9 @@ class Output extends DataClass implements Insertable<Output> {
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
       'oId': serializer.toJson<int>(oId),
       'id': serializer.toJson<int>(id),
       'item': serializer.toJson<String>(item),
@@ -645,7 +632,7 @@ class Output extends DataClass implements Insertable<Output> {
   int get hashCode => $mrjf($mrjc(oId.hashCode,
       $mrjc(id.hashCode, $mrjc(item.hashCode, completed.hashCode))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Output &&
           other.oId == this.oId &&
@@ -742,25 +729,19 @@ class $OutputsTable extends Outputs with TableInfo<$OutputsTable, Output> {
     final context = VerificationContext();
     if (d.oId.present) {
       context.handle(_oIdMeta, oId.isAcceptableValue(d.oId.value, _oIdMeta));
-    } else if (oId.isRequired && isInserting) {
-      context.missing(_oIdMeta);
     }
     if (d.id.present) {
       context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
-    } else if (id.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_idMeta);
     }
     if (d.item.present) {
       context.handle(
           _itemMeta, item.isAcceptableValue(d.item.value, _itemMeta));
-    } else if (item.isRequired && isInserting) {
-      context.missing(_itemMeta);
     }
     if (d.completed.present) {
       context.handle(_completedMeta,
           completed.isAcceptableValue(d.completed.value, _completedMeta));
-    } else if (completed.isRequired && isInserting) {
-      context.missing(_completedMeta);
     }
     return context;
   }
@@ -844,7 +825,8 @@ class Journal extends DataClass implements Insertable<Journal> {
     );
   }
   factory Journal.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return Journal(
       id: serializer.fromJson<int>(json['id']),
       dateCreated: serializer.fromJson<DateTime>(json['dateCreated']),
@@ -858,9 +840,9 @@ class Journal extends DataClass implements Insertable<Journal> {
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'dateCreated': serializer.toJson<DateTime>(dateCreated),
       'title': serializer.toJson<String>(title),
@@ -958,7 +940,7 @@ class Journal extends DataClass implements Insertable<Journal> {
                               $mrjc(conclusion.hashCode,
                                   actionPlan.hashCode)))))))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Journal &&
           other.id == this.id &&
@@ -1167,56 +1149,44 @@ class $JournalsTable extends Journals with TableInfo<$JournalsTable, Journal> {
     final context = VerificationContext();
     if (d.id.present) {
       context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
-    } else if (id.isRequired && isInserting) {
-      context.missing(_idMeta);
     }
     if (d.dateCreated.present) {
       context.handle(_dateCreatedMeta,
           dateCreated.isAcceptableValue(d.dateCreated.value, _dateCreatedMeta));
-    } else if (dateCreated.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_dateCreatedMeta);
     }
     if (d.title.present) {
       context.handle(
           _titleMeta, title.isAcceptableValue(d.title.value, _titleMeta));
-    } else if (title.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_titleMeta);
     }
     if (d.description.present) {
       context.handle(_descriptionMeta,
           description.isAcceptableValue(d.description.value, _descriptionMeta));
-    } else if (description.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_descriptionMeta);
     }
     if (d.feelings.present) {
       context.handle(_feelingsMeta,
           feelings.isAcceptableValue(d.feelings.value, _feelingsMeta));
-    } else if (feelings.isRequired && isInserting) {
-      context.missing(_feelingsMeta);
     }
     if (d.evaluation.present) {
       context.handle(_evaluationMeta,
           evaluation.isAcceptableValue(d.evaluation.value, _evaluationMeta));
-    } else if (evaluation.isRequired && isInserting) {
-      context.missing(_evaluationMeta);
     }
     if (d.analysis.present) {
       context.handle(_analysisMeta,
           analysis.isAcceptableValue(d.analysis.value, _analysisMeta));
-    } else if (analysis.isRequired && isInserting) {
-      context.missing(_analysisMeta);
     }
     if (d.conclusion.present) {
       context.handle(_conclusionMeta,
           conclusion.isAcceptableValue(d.conclusion.value, _conclusionMeta));
-    } else if (conclusion.isRequired && isInserting) {
-      context.missing(_conclusionMeta);
     }
     if (d.actionPlan.present) {
       context.handle(_actionPlanMeta,
           actionPlan.isAcceptableValue(d.actionPlan.value, _actionPlanMeta));
-    } else if (actionPlan.isRequired && isInserting) {
-      context.missing(_actionPlanMeta);
     }
     return context;
   }
@@ -1295,7 +1265,8 @@ class Assessment extends DataClass implements Insertable<Assessment> {
     );
   }
   factory Assessment.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return Assessment(
       id: serializer.fromJson<int>(json['id']),
       isMWB: serializer.fromJson<bool>(json['isMWB']),
@@ -1304,9 +1275,9 @@ class Assessment extends DataClass implements Insertable<Assessment> {
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'isMWB': serializer.toJson<bool>(isMWB),
       'score': serializer.toJson<int>(score),
@@ -1350,7 +1321,7 @@ class Assessment extends DataClass implements Insertable<Assessment> {
   int get hashCode => $mrjf($mrjc(id.hashCode,
       $mrjc(isMWB.hashCode, $mrjc(score.hashCode, dateCreated.hashCode))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Assessment &&
           other.id == this.id &&
@@ -1447,26 +1418,18 @@ class $AssessmentsTable extends Assessments
     final context = VerificationContext();
     if (d.id.present) {
       context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
-    } else if (id.isRequired && isInserting) {
-      context.missing(_idMeta);
     }
     if (d.isMWB.present) {
       context.handle(
           _isMWBMeta, isMWB.isAcceptableValue(d.isMWB.value, _isMWBMeta));
-    } else if (isMWB.isRequired && isInserting) {
-      context.missing(_isMWBMeta);
     }
     if (d.score.present) {
       context.handle(
           _scoreMeta, score.isAcceptableValue(d.score.value, _scoreMeta));
-    } else if (score.isRequired && isInserting) {
-      context.missing(_scoreMeta);
     }
     if (d.dateCreated.present) {
       context.handle(_dateCreatedMeta,
           dateCreated.isAcceptableValue(d.dateCreated.value, _dateCreatedMeta));
-    } else if (dateCreated.isRequired && isInserting) {
-      context.missing(_dateCreatedMeta);
     }
     return context;
   }
@@ -1520,7 +1483,8 @@ class Question extends DataClass implements Insertable<Question> {
     );
   }
   factory Question.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return Question(
       id: serializer.fromJson<int>(json['id']),
       qId: serializer.fromJson<int>(json['qId']),
@@ -1528,9 +1492,9 @@ class Question extends DataClass implements Insertable<Question> {
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'qId': serializer.toJson<int>(qId),
       'score': serializer.toJson<int>(score),
@@ -1566,7 +1530,7 @@ class Question extends DataClass implements Insertable<Question> {
   int get hashCode =>
       $mrjf($mrjc(id.hashCode, $mrjc(qId.hashCode, score.hashCode)));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Question &&
           other.id == this.id &&
@@ -1648,19 +1612,17 @@ class $QuestionsTable extends Questions
     final context = VerificationContext();
     if (d.id.present) {
       context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
-    } else if (id.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_idMeta);
     }
     if (d.qId.present) {
       context.handle(_qIdMeta, qId.isAcceptableValue(d.qId.value, _qIdMeta));
-    } else if (qId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_qIdMeta);
     }
     if (d.score.present) {
       context.handle(
           _scoreMeta, score.isAcceptableValue(d.score.value, _scoreMeta));
-    } else if (score.isRequired && isInserting) {
-      context.missing(_scoreMeta);
     }
     return context;
   }
@@ -1725,7 +1687,8 @@ class Listen extends DataClass implements Insertable<Listen> {
     );
   }
   factory Listen.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return Listen(
       id: serializer.fromJson<int>(json['id']),
       dateCreated: serializer.fromJson<DateTime>(json['dateCreated']),
@@ -1735,9 +1698,9 @@ class Listen extends DataClass implements Insertable<Listen> {
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'dateCreated': serializer.toJson<DateTime>(dateCreated),
       'actName': serializer.toJson<String>(actName),
@@ -1798,7 +1761,7 @@ class Listen extends DataClass implements Insertable<Listen> {
           $mrjc(actName.hashCode,
               $mrjc(insights.hashCode, descriptionCount.hashCode)))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Listen &&
           other.id == this.id &&
@@ -1922,25 +1885,21 @@ class $ListensTable extends Listens with TableInfo<$ListensTable, Listen> {
     final context = VerificationContext();
     if (d.id.present) {
       context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
-    } else if (id.isRequired && isInserting) {
-      context.missing(_idMeta);
     }
     if (d.dateCreated.present) {
       context.handle(_dateCreatedMeta,
           dateCreated.isAcceptableValue(d.dateCreated.value, _dateCreatedMeta));
-    } else if (dateCreated.isRequired && isInserting) {
-      context.missing(_dateCreatedMeta);
     }
     if (d.actName.present) {
       context.handle(_actNameMeta,
           actName.isAcceptableValue(d.actName.value, _actNameMeta));
-    } else if (actName.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_actNameMeta);
     }
     if (d.insights.present) {
       context.handle(_insightsMeta,
           insights.isAcceptableValue(d.insights.value, _insightsMeta));
-    } else if (insights.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_insightsMeta);
     }
     if (d.descriptionCount.present) {
@@ -1948,8 +1907,6 @@ class $ListensTable extends Listens with TableInfo<$ListensTable, Listen> {
           _descriptionCountMeta,
           descriptionCount.isAcceptableValue(
               d.descriptionCount.value, _descriptionCountMeta));
-    } else if (descriptionCount.isRequired && isInserting) {
-      context.missing(_descriptionCountMeta);
     }
     return context;
   }
@@ -2009,7 +1966,8 @@ class Desc extends DataClass implements Insertable<Desc> {
     );
   }
   factory Desc.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return Desc(
       id: serializer.fromJson<int>(json['id']),
       cId: serializer.fromJson<int>(json['cId']),
@@ -2017,9 +1975,9 @@ class Desc extends DataClass implements Insertable<Desc> {
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'cId': serializer.toJson<int>(cId),
       'charVal': serializer.toJson<bool>(charVal),
@@ -2056,7 +2014,7 @@ class Desc extends DataClass implements Insertable<Desc> {
   int get hashCode =>
       $mrjf($mrjc(id.hashCode, $mrjc(cId.hashCode, charVal.hashCode)));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Desc &&
           other.id == this.id &&
@@ -2137,19 +2095,17 @@ class $DescsTable extends Descs with TableInfo<$DescsTable, Desc> {
     final context = VerificationContext();
     if (d.id.present) {
       context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
-    } else if (id.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_idMeta);
     }
     if (d.cId.present) {
       context.handle(_cIdMeta, cId.isAcceptableValue(d.cId.value, _cIdMeta));
-    } else if (cId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_cIdMeta);
     }
     if (d.charVal.present) {
       context.handle(_charValMeta,
           charVal.isAcceptableValue(d.charVal.value, _charValMeta));
-    } else if (charVal.isRequired && isInserting) {
-      context.missing(_charValMeta);
     }
     return context;
   }
@@ -2210,7 +2166,8 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     );
   }
   factory Reminder.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return Reminder(
       id: serializer.fromJson<int>(json['id']),
       type: serializer.fromJson<String>(json['type']),
@@ -2219,9 +2176,9 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'type': serializer.toJson<String>(type),
       'time': serializer.toJson<DateTime>(time),
@@ -2263,7 +2220,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
   int get hashCode => $mrjf($mrjc(id.hashCode,
       $mrjc(type.hashCode, $mrjc(time.hashCode, isDaily.hashCode))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Reminder &&
           other.id == this.id &&
@@ -2361,26 +2318,20 @@ class $RemindersTable extends Reminders
     final context = VerificationContext();
     if (d.id.present) {
       context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
-    } else if (id.isRequired && isInserting) {
-      context.missing(_idMeta);
     }
     if (d.type.present) {
       context.handle(
           _typeMeta, type.isAcceptableValue(d.type.value, _typeMeta));
-    } else if (type.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_typeMeta);
     }
     if (d.time.present) {
       context.handle(
           _timeMeta, time.isAcceptableValue(d.time.value, _timeMeta));
-    } else if (time.isRequired && isInserting) {
-      context.missing(_timeMeta);
     }
     if (d.isDaily.present) {
       context.handle(_isDailyMeta,
           isDaily.isAcceptableValue(d.isDaily.value, _isDailyMeta));
-    } else if (isDaily.isRequired && isInserting) {
-      context.missing(_isDailyMeta);
     }
     return context;
   }
@@ -2454,7 +2405,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   ReminderDao get reminderDao =>
       _reminderDao ??= ReminderDao(this as AppDatabase);
   @override
-  List<TableInfo> get allTables => [
+  Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
+  @override
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
         goals,
         subTasks,
         outputs,

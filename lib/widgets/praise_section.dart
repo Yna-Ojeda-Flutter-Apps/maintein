@@ -1,6 +1,6 @@
-import 'package:eit_app/utils/const_list_and_enum.dart';
-import 'package:eit_app/utils/list_filters.dart';
-import 'package:eit_app/utils/project_db.dart';
+import 'package:maintein/utils/const_list_and_enum.dart';
+import 'package:maintein/utils/list_filters.dart';
+import 'package:maintein/utils/project_db.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

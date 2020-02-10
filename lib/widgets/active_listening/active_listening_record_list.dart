@@ -1,9 +1,9 @@
-import 'package:eit_app/screens/active_listening/active_detail.dart';
-import 'package:eit_app/themes/apptheme.dart';
-import 'package:eit_app/utils/const_list_and_enum.dart';
-import 'package:eit_app/utils/list_filters.dart';
-import 'package:eit_app/utils/project_db.dart';
-import 'package:eit_app/widgets/my_slidable.dart';
+import 'package:maintein/screens/active_listening/active_detail.dart';
+import 'package:maintein/themes/apptheme.dart';
+import 'package:maintein/utils/const_list_and_enum.dart';
+import 'package:maintein/utils/list_filters.dart';
+import 'package:maintein/utils/project_db.dart';
+import 'package:maintein/widgets/my_slidable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';

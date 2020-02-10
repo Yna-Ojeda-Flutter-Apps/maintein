@@ -1,4 +1,4 @@
-import 'package:eit_app/utils/const_list_and_enum.dart';
+import 'package:maintein/utils/const_list_and_enum.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:moor/moor.dart' as moorPackage;

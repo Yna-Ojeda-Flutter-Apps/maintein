@@ -1,6 +1,6 @@
-import 'package:eit_app/assets/icons/home_icon_icons.dart';
-import 'package:eit_app/screens/home.dart';
-import 'package:eit_app/themes/apptheme.dart';
+import 'package:maintein/assets/icons/home_icon_icons.dart';
+import 'package:maintein/screens/home.dart';
+import 'package:maintein/themes/apptheme.dart';
 import 'package:flutter/material.dart';
 
 

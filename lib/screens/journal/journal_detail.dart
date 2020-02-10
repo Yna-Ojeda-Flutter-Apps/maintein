@@ -1,10 +1,10 @@
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:eit_app/utils/project_db.dart';
-import 'package:eit_app/widgets/bottomnavbar.dart';
-import 'package:eit_app/themes/apptheme.dart';
-import 'package:eit_app/widgets/journal/journal_detail_view.dart';
-import 'package:eit_app/widgets/journal/journal_form.dart';
-import 'package:eit_app/widgets/my_app_bar.dart';
+import 'package:maintein/utils/project_db.dart';
+import 'package:maintein/widgets/bottomnavbar.dart';
+import 'package:maintein/themes/apptheme.dart';
+import 'package:maintein/widgets/journal/journal_detail_view.dart';
+import 'package:maintein/widgets/journal/journal_form.dart';
+import 'package:maintein/widgets/my_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

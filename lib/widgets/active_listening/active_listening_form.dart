@@ -1,4 +1,4 @@
-import 'package:eit_app/themes/apptheme.dart';
+import 'package:maintein/themes/apptheme.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 

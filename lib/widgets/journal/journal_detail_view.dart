@@ -1,5 +1,5 @@
-import 'package:eit_app/themes/apptheme.dart';
-import 'package:eit_app/utils/project_db.dart';
+import 'package:maintein/themes/apptheme.dart';
+import 'package:maintein/utils/project_db.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';

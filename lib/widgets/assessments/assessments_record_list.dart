@@ -1,7 +1,7 @@
-import 'package:eit_app/assets/icons/emoji_icons_icons.dart';
-import 'package:eit_app/themes/apptheme.dart';
-import 'package:eit_app/utils/project_db.dart';
-import 'package:eit_app/widgets/my_slidable.dart';
+import 'package:maintein/assets/icons/emoji_icons_icons.dart';
+import 'package:maintein/themes/apptheme.dart';
+import 'package:maintein/utils/project_db.dart';
+import 'package:maintein/widgets/my_slidable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

@@ -1,5 +1,5 @@
-import 'package:eit_app/utils/const_list_and_enum.dart';
-import 'package:eit_app/utils/project_db.dart';
+import 'package:maintein/utils/const_list_and_enum.dart';
+import 'package:maintein/utils/project_db.dart';
 
 
 bool isSameDate(DateTime date1, DateTime date2) => (date1.month == date2.month && date1.day == date2.day && date1.year == date2.year);
