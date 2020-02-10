@@ -7,12 +7,11 @@ Emotional Intelligence Training app that facilitates activities like Recflective
 * Reflective Journal Feature
 * Active Listening Screens
 * Breathing Exercise Screen
+* Settings Screen & Local Notification
 
 ## Currently working on
-* Settings Screen & Local Notifications
+* Data Collection using Firebase
  
 ## To do
-* Some validations missing
-* Improve UI
 * Add hotlines in breathinge exercise screen
-
+* System Testing
