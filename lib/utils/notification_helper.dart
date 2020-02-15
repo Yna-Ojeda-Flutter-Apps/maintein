@@ -2,6 +2,8 @@ import 'package:maintein/utils/const_list_and_enum.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import "dart:math";
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class NotificationManager {
   FlutterLocalNotificationsPlugin notificationsPlugin;
   final _random = new Random();
@@ -153,11 +155,16 @@ class NotificationManager {
   }
 
 
-  void setInitialNotifications() async {
-    showNotificationWeekly(0, reminderTypes[0], weekday[0], Time(8,0,0));
-    for ( int i = 1; i < reminderTypes.length; i++ ) {
-      showNotificationDaily(i*7, reminderTypes[i], Time(8,0,0));
+  Future setInitialNotifications() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if ( prefs.getBool("toSetInitialNotifications") ?? true ) {
+      showNotificationWeekly(0, reminderTypes[0], weekday[0], Time(8,0,0));
+      for ( int i = 1; i < reminderTypes.length; i++ ) {
+        showNotificationDaily(i*7, reminderTypes[i], Time(8,0,0));
+      }
+      await prefs.setBool("toSetInitialNotifications", false);
     }
+    return await notificationsPlugin.pendingNotificationRequests();
   }
 
   String _getNotificationTitle(String reminderType) {

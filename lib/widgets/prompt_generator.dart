@@ -2,14 +2,17 @@ import 'package:maintein/themes/apptheme.dart';
 import 'package:flutter/material.dart';
 import "dart:math";
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 final _random = new Random();
 _randomElement(List lst) => lst[_random.nextInt(lst.length)];
 
 class PromptGenerator extends StatefulWidget {
   final List<String> prompts;
   final String header;
+  final String promptType;
 
-  PromptGenerator(this.prompts, this.header);
+  PromptGenerator(this.prompts, this.header, this.promptType);
 
   @override
   State<StatefulWidget> createState() {
@@ -31,8 +34,11 @@ class _PromptGeneratorState extends State<PromptGenerator> {
         color: MyBlue.picton,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
         elevation: 5.0,
-        onPressed: () {
+        onPressed: () async {
           _prompt = _randomElement(widget.prompts) ?? "";
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          int _accessCount = prefs.getInt(widget.promptType) ?? 0;
+          await prefs.setInt(widget.promptType, _accessCount+1);
           _generatePromptDialog();
         },
       ),
@@ -50,7 +56,10 @@ class _PromptGeneratorState extends State<PromptGenerator> {
           actions: <Widget>[
             FlatButton(
               child: Text('Next Prompt'),
-              onPressed: () {
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                int _accessCount = prefs.getInt(widget.promptType) ?? 0;
+                await prefs.setInt(widget.promptType, _accessCount+1);
                 setState(() {
                   _prompt = _randomElement(widget.prompts);
                   Navigator.of(context).pop();

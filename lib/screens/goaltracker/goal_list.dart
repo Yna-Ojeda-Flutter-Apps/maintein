@@ -139,7 +139,8 @@ class _GoalListState extends State<GoalList> {
                       final goal = GoalsCompanion(
                           task: moorPackage.Value(taskController.text),
                           urgency: moorPackage.Value(1),
-                          dueDate: moorPackage.Value(newTaskDate)
+                          dateCreated: moorPackage.Value(DateTime.now()),
+                          dueDate: moorPackage.Value(newTaskDate),
                       );
                       int id = await dao.insertGoal(goal);
                       if ( newTaskDate != null ){

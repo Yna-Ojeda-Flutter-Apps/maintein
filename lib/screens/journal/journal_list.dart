@@ -44,7 +44,7 @@ class _JournalListState extends State<JournalList> {
         child: CustomScrollView(
           slivers: <Widget>[
             SliverPadding(padding: EdgeInsets.all(10), sliver: SliverList(delegate: SliverChildListDelegate([
-              PromptGenerator(reflectionPrompts, journalPromptHeader),
+              PromptGenerator(reflectionPrompts, journalPromptHeader, "Journal Prompt Access"),
               PraiseSection(isJournal: true,),
             ]),),),
             JournalRecordList(currentFilter: _currentFilter ?? DateFilter.Today,),

@@ -45,7 +45,7 @@ class _ActiveListenListState extends State<ActiveListenList>{
         child: CustomScrollView(
           slivers: <Widget>[
             SliverPadding(padding: EdgeInsets.all(10), sliver: SliverList(delegate: SliverChildListDelegate([
-              PromptGenerator(conversationPrompts, conversationPromptHeader),
+              PromptGenerator(conversationPrompts, conversationPromptHeader, "Listening Prompt Access"),
               PraiseSection(isJournal: false,),
             ]),),),
             ActiveListeningRecordList(currentFilter: _currentFilter ?? DateFilter.Today,),

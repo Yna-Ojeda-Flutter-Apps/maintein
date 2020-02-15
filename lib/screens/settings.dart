@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 class Settings extends StatefulWidget {
   static final String routeName = "/settings";
   final NotificationManager notifications;
+  //TODO: Add notifications, app guide, and attributions
 
   Settings(this.notifications);
   @override

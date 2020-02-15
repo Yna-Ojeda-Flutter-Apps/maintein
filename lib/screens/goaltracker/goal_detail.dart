@@ -261,7 +261,7 @@ class GoalDetailState extends State<GoalDetail> {
                     setState(() {
                       _dueDate = null;
                     });
-                    Goal tempGaol = Goal(id: goal.id, urgency: goal.urgency, task: goal.task, completed: goal.completed, dueDate: null);
+                    Goal tempGaol = Goal(id: goal.id, urgency: goal.urgency, task: goal.task, completed: goal.completed, dueDate: null, dateCreated: goal.dateCreated);
                     await daoGoal.updateGoal(tempGaol);
                     widget.notifications.cancelGoalDueDate(goal.id);
                   },
@@ -313,6 +313,7 @@ class GoalDetailState extends State<GoalDetail> {
             final output = OutputsCompanion(
               item: moorPackage.Value(_newOutputController.text),
               id: moorPackage.Value(goalId),
+              dateCreated: moorPackage.Value(DateTime.now()),
             );
             await dao.insertOutput(output);
             _newOutputController.clear();
@@ -350,6 +351,7 @@ class GoalDetailState extends State<GoalDetail> {
             final subTask = SubTasksCompanion(
               task: moorPackage.Value(_newSubTaskController.text),
               id: moorPackage.Value(goalId),
+              dateCreated: moorPackage.Value(DateTime.now()),
             );
             await dao.insertSubTask(subTask);
             _newSubTaskController.clear();

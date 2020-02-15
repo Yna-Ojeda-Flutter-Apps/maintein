@@ -1,11 +1,22 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info/device_info.dart';
+import 'package:maintein/screens/active_listening/active_detail.dart';
+import 'package:maintein/screens/breathing/breathing_exercise.dart';
+import 'package:maintein/screens/goaltracker/goal_detail.dart';
+import 'package:maintein/screens/journal/journal_detail.dart';
 import 'package:maintein/utils/const_list_and_enum.dart';
+import 'package:intl/intl.dart';
+import 'package:maintein/utils/list_filters.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:moor/moor.dart' as moorPackage;
+import 'package:shared_preferences/shared_preferences.dart';
 part 'project_db.g.dart';
 
 class Goals extends Table {
   IntColumn get id => integer().autoIncrement()();
+  DateTimeColumn get dateCreated => dateTime()();
   IntColumn get urgency => integer()();
   TextColumn get task => text().nullable()();
   BoolColumn get completed => boolean().withDefault(Constant(false))();
@@ -14,12 +25,14 @@ class Goals extends Table {
 }
 class SubTasks extends Table {
   IntColumn get sId => integer().autoIncrement()();
+  DateTimeColumn get dateCreated => dateTime()();
   IntColumn get id => integer().customConstraint('REFERENCES goals(id) ON DELETE CASCADE')();
   TextColumn get task => text().nullable()();
   BoolColumn get completed => boolean().withDefault(Constant(false))();
 }
 class Outputs extends Table {
   IntColumn get oId => integer().autoIncrement()();
+  DateTimeColumn get dateCreated => dateTime()();
   IntColumn get id => integer().customConstraint('REFERENCES goals(id) ON DELETE CASCADE')();
   TextColumn get item => text().nullable()();
   BoolColumn get completed => boolean().withDefault(Constant(false))();
@@ -93,7 +106,7 @@ class Reminders extends Table {
 
 
 
-@UseMoor(tables: [Goals, SubTasks, Outputs, Journals, Assessments, Questions, Listens, Descs, Reminders], daos: [GoalDao, SubTaskDao, OutputDao, JournalDao, AssessmentDao, ListenDao, ReminderDao])
+@UseMoor(tables: [Goals, SubTasks, Outputs, Journals, Assessments, Questions, Listens, Descs, Reminders], daos: [GoalDao, SubTaskDao, OutputDao, JournalDao, AssessmentDao, ListenDao, ReminderDao, CollectorDao])
 class AppDatabase extends _$AppDatabase {
   AppDatabase () : super(FlutterQueryExecutor.inDatabaseFolder(path: 'db.sqlite'));
   @override
@@ -336,17 +349,23 @@ class ReminderDao extends DatabaseAccessor<AppDatabase> with _$ReminderDaoMixin 
   Stream<List<Reminder>> watchAllEntries() => select(reminders).watch();
   Future<List<Reminder>> getAllEntries() => select(reminders).get();
 
-  void initializeReminders() async {
-    final assessmentReminder = RemindersCompanion(
-      type: moorPackage.Value(reminderTypes[0]),
-      isDaily: moorPackage.Value(false),
-    );
-    await into(reminders).insert(assessmentReminder);
-    for (int i = 1; i < reminderTypes.length; i++) {
-      final record = RemindersCompanion(
-        type: moorPackage.Value(reminderTypes[i]),
-      );
-      await into(reminders).insert(record);
+  Future setInitialReminders() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if ( prefs.getBool("toInitializeReminders") ?? true ) {
+      await prefs.setBool("toInitializeReminders", false);
+      return transaction(() async {
+        final assessmentReminder = RemindersCompanion(
+          type: moorPackage.Value(reminderTypes[0]),
+          isDaily: moorPackage.Value(false),
+        );
+        await into(reminders).insert(assessmentReminder);
+        for (int i = 1; i < reminderTypes.length; i++) {
+          final record = RemindersCompanion(
+            type: moorPackage.Value(reminderTypes[i]),
+          );
+          await into(reminders).insert(record);
+        }
+      });
     }
   }
 
@@ -355,4 +374,97 @@ class ReminderDao extends DatabaseAccessor<AppDatabase> with _$ReminderDaoMixin 
   Future updateReminder(Insertable<Reminder> entry) => update(reminders).replace(entry);
   Future deleteReminder(Insertable<Reminder> entry) => delete(reminders).delete(entry);
 }
+
+@UseDao(tables: [Goals, SubTasks, Outputs, Journals, Assessments, Questions, Listens, Descs],)
+class CollectorDao extends DatabaseAccessor<AppDatabase> with _$CollectorDaoMixin {
+  final AppDatabase db;
+  CollectorDao(this.db) : super(db);
+
+  Future collectData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String lastCollectedString = "19990122";
+    DateTime lastCollectedDate = DateTime.parse(lastCollectedString);
+    bool toCollect = !isSameDate(lastCollectedDate, DateTime.now());
+    
+    if ( toCollect ) {
+//      await prefs.setString("last collected", DateFormat("yyyyMMdd").format(DateTime.now()));
+      return transaction(() async {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        String identifier;
+        if ( Platform.isAndroid ) {
+          AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+          identifier = androidInfo.androidId;
+        } else if ( Platform.isIOS ) {
+          IosDeviceInfo iosDeviceInfo = await deviceInfo.iosInfo;
+          identifier = iosDeviceInfo.identifierForVendor;
+        } else {
+          identifier = "Could not identify";
+        }
+        List<Journal> journalEntries = await (select(journals)..where((entry) => entry.dateCreated.isBetweenValues(lastCollectedDate, DateTime.now()))).get();
+        List<Goal> goalEntries = await (select(goals)..where((entry) => entry.dateCreated.isBetweenValues(lastCollectedDate, DateTime.now()))).get();
+        List<SubTask> subTaskEntries = await (select(subTasks)..where((entry) => entry.dateCreated.isBetweenValues(lastCollectedDate, DateTime.now()))).get();
+        List<Output> outputEntries = await (select(outputs)..where((entry) => entry.dateCreated.isBetweenValues(lastCollectedDate, DateTime.now()))).get();
+        List<Listen> listenEntries = await (select(listens)..where((entry) => entry.dateCreated.isBetweenValues(lastCollectedDate, DateTime.now()))).get();
+        List<Assessment> assessmentEntries = await (select(assessments)..where((entry) => entry.dateCreated.isBetweenValues(lastCollectedDate, DateTime.now()))).get();
+        var averageEntryLength = 0;
+        (journalEntries ?? []).forEach((entry) {
+          averageEntryLength = averageEntryLength + (entry.description ?? "").length +
+            (entry.feelings ?? "").length +
+            (entry.evaluation ?? "").length +
+            (entry.analysis ?? "").length +
+            (entry.conclusion ?? "").length +
+            (entry.actionPlan ?? "").length;
+        });
+        await Firestore.instance.collection('journal').document("["+DateFormat("yyyyMMdd").format(DateTime.now())+"]"+identifier).setData({
+          "userId": identifier,
+          "date": DateTime.now(),
+          "promptAccess": prefs.getInt("Journal Prompt Access") ?? 0,
+          "entryCount": (journalEntries ?? []).length,
+          "detailAccess": prefs.getInt(JournalDetail.routeName + ' screen') ?? 0,
+          "aveLength": averageEntryLength
+        });
+
+        averageEntryLength = 0;
+        (listenEntries ?? []).forEach((entry) {
+          averageEntryLength = averageEntryLength + entry.descriptionCount;
+        });
+        await Firestore.instance.collection('activeListening').document("["+DateFormat("yyyyMMdd").format(DateTime.now())+"]"+identifier).setData({
+          "userId": identifier,
+          "date": DateTime.now(),
+          "promptAccess": prefs.getInt("Listening Prompt Access") ?? 0,
+          "entryCount": (listenEntries ?? []).length,
+          "detailAccess": prefs.getInt(ActiveListenDetail.routeName + ' screen') ?? 0,
+          "aveLength": averageEntryLength
+        });
+        await Firestore.instance.collection('goal').document("["+DateFormat("yyyyMMdd").format(DateTime.now())+"]"+identifier).setData({
+          "userId": identifier,
+          "date": DateTime.now(),
+          "detailAccess": prefs.getInt(GoalDetail.routeName + ' screen') ?? 0,
+          "goalCount": (goalEntries ?? []).length,
+          "outputCount": (outputEntries ?? []).length,
+          "subtaskCount": (subTaskEntries ?? []).length,
+          "completedGoalCount": (goalEntries ?? []).where((entry) => entry.completed).length,
+          "completedSubTaskCount": (outputEntries ?? []).where((entry) => entry.completed).length,
+          "completedOutputCount": (subTaskEntries ?? []).where((entry) => entry.completed).length,
+        });
+
+        List<Map<String, dynamic>> assessmentsEntryList = [];
+        (assessmentEntries ?? []).forEach((entry) => assessmentsEntryList.add({'identifier': identifier, 'date': entry.dateCreated, 'isMWB': entry.isMWB, 'score': entry.score}));
+
+        await Firestore.instance.collection('others').document("["+DateFormat("yyyyMMdd").format(DateTime.now())+"]"+identifier).setData({
+          "userId": identifier,
+          "date": DateTime.now(),
+          "breatheAccess": prefs.getInt(BreathingExercise.routeName + ' screen') ?? 0,
+          "assessments": assessmentsEntryList,
+        });
+      });
+    } else {
+      return Future.value(-1);
+    }
+  }
+
+
+}
+
+
 

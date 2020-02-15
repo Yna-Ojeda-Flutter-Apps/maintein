@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "200592875721",
+    "firebase_url": "https://maintein-57c1a.firebaseio.com",
+    "project_id": "maintein-57c1a",
+    "storage_bucket": "maintein-57c1a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:200592875721:android:3e96fb3bd7055c9e38ad18",
+        "android_client_info": {
+          "package_name": "com.maintein"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "200592875721-pjvehe6fko5jgbpmi45ohq6fo89qlvlq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpTSi05XZdZ9owTLimrphQzxDK9NFX_QM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "200592875721-pjvehe6fko5jgbpmi45ohq6fo89qlvlq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

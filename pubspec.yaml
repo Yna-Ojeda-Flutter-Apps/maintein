@@ -20,13 +20,15 @@ dependencies:
   flutter:
     sdk: flutter
   moor_flutter: ^2.0.0
+  cloud_firestore:
+  device_info:
   provider: ^3.1.0+1
   rxdart: ^0.22.6
   flutter_slidable: ^0.5.4
   datetime_picker_formfield: ^0.4.3
   shared_preferences: ^0.5.6
   dots_indicator:
-  flutter_local_notifications: ^1.1.1
+  flutter_local_notifications: ^1.1.6
   flushbar: ^1.9.1
   grouped_buttons: ^1.0.4
 

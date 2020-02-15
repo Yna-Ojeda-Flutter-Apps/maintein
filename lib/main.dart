@@ -25,6 +25,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final NotificationManager notifications = NotificationManager();
+  //TODO: change logo, one-time tutorial
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         Provider(create: (_) => db.assessmentDao),
         Provider(create: (_) => db.listenDao),
         Provider(create: (_) => db.reminderDao),
+        Provider(create: (_) => db.collectorDao),
       ],
       child: MaterialApp(
         title: 'feelUP',
