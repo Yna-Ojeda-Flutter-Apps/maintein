@@ -6,7 +6,8 @@ A persuasive mobile application that facilitates emotional intelligence training
 ## Functionalities done
 * Goal Tracking Feature
 * Reflective Journal Feature
-* Active Listening Screens
+* Active Listening Feature
+* Assessment Feature
 * Breathing Exercise Screen
 * Settings Screen & Local Notification
 * Data Collection using Firebase
