@@ -382,12 +382,12 @@ class CollectorDao extends DatabaseAccessor<AppDatabase> with _$CollectorDaoMixi
 
   Future collectData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String lastCollectedString = "19990122";
+    String lastCollectedString = prefs.getString("last collected") ?? "19990122";
     DateTime lastCollectedDate = DateTime.parse(lastCollectedString);
     bool toCollect = !isSameDate(lastCollectedDate, DateTime.now());
     
     if ( toCollect ) {
-//      await prefs.setString("last collected", DateFormat("yyyyMMdd").format(DateTime.now()));
+      await prefs.setString("last collected", DateFormat("yyyyMMdd").format(DateTime.now()));
       return transaction(() async {
         DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
         String identifier;

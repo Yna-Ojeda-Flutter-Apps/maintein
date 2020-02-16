@@ -107,7 +107,9 @@ class NotificationManager {
       showNotificationDaily(ids[0], reminderType, time);
     } else {
       affectedIds.forEach((id) {
-        showNotificationDaily(id, reminderType, time);
+        int _dayIndex = id % 7;
+
+        showNotificationWeekly(id, reminderType, weekday[_dayIndex], time);
       });
     }
   }

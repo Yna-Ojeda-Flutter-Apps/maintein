@@ -79,9 +79,7 @@ class _JournalDetailState extends State<JournalDetail> {
                   textFieldInitialValue: record.feelings,
                   textFieldHint: "Consider the before, during, and after.",
                   textFieldOnChanged: (value) { setState(() {
-                    if ( value.length > 0 ) {
-                      dao.updateJournalEntry(record.copyWith(feelings: value));
-                    }
+                    dao.updateJournalEntry(record.copyWith(feelings: value));
                   });},
                 ),
                 JournalForm(
@@ -95,9 +93,7 @@ class _JournalDetailState extends State<JournalDetail> {
                   textFieldInitialValue: record.evaluation,
                   textFieldHint: "Consider the things you and other people contributed to the situation..",
                   textFieldOnChanged: (value) { setState(() {
-                    if ( value.length > 0 ) {
-                      dao.updateJournalEntry(record.copyWith(evaluation: value));
-                    }
+                    dao.updateJournalEntry(record.copyWith(evaluation: value));
                   });},
                 ),
                 JournalForm(
@@ -111,9 +107,7 @@ class _JournalDetailState extends State<JournalDetail> {
                   textFieldInitialValue: record.analysis,
                   textFieldHint: "Consider the things that helped or worsened the situation.",
                   textFieldOnChanged: (value) { setState(() {
-                    if ( value.length > 0 ) {
-                      dao.updateJournalEntry(record.copyWith(analysis: value));
-                    }
+                    dao.updateJournalEntry(record.copyWith(analysis: value));
                   });},
                 ),
                 JournalForm(
@@ -127,9 +121,7 @@ class _JournalDetailState extends State<JournalDetail> {
                   textFieldInitialValue: record.conclusion,
                   textFieldHint: "Consider whether you could and/or should have responded in a different way.",
                   textFieldOnChanged: (value) { setState(() {
-                    if ( value.length > 0 ) {
-                      dao.updateJournalEntry(record.copyWith(conclusion: value));
-                    }
+                    dao.updateJournalEntry(record.copyWith(conclusion: value));
                   });},
                 ),
                 JournalForm(
@@ -143,9 +135,7 @@ class _JournalDetailState extends State<JournalDetail> {
                   textFieldInitialValue: record.actionPlan,
                   textFieldHint: "Consider the what, who, when, where, why, and why.",
                   textFieldOnChanged: (value) { setState(() {
-                    if ( value.length > 0 ) {
-                      dao.updateJournalEntry(record.copyWith(actionPlan: value));
-                    }
+                    dao.updateJournalEntry(record.copyWith(actionPlan: value));
                   });},
                 ),
               ],

@@ -50,7 +50,9 @@ class _JournalRecordListState extends State<JournalRecordList>{
         return SliverList(
           delegate: SliverChildBuilderDelegate((BuildContext context, index) {
             return MySlidable(
-              onTap: () => _confirmDelete(context, records[index], dao),
+              entryName: records[index].title,
+              entry: records[index],
+              entryType: 1,
               child: Card(
                 color: Colors.white,
                 elevation: 3.0,
@@ -119,27 +121,5 @@ class _JournalRecordListState extends State<JournalRecordList>{
     );
   }
 
-  void _confirmDelete(BuildContext context, Journal entry, JournalDao dao) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
-            title: Text("Delete '"+entry.title+"'?"),
-            content: Text("Deleting this entry cannot be undone."),
-            actions: <Widget>[
-              FlatButton(child: Text('Cancel'), onPressed: () => Navigator.of(context).pop(),),
-              FlatButton(
-                child: Text('Delete', style: TextStyle(color: Colors.redAccent),),
-                onPressed: () async {
-                  dao.deleteJournalEntry(entry);
-                  Navigator.of(context).pop();
-                },
-              )
 
-            ],
-          );
-        }
-    );
-  }
 }

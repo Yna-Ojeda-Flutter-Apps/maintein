@@ -35,7 +35,7 @@ class JournalDetailViewMode extends StatelessWidget {
                 Text(record.evaluation ?? "", textAlign: TextAlign.justify, style: Theme.of(context).textTheme.body1,),
                 Text(record.analysis ?? "", textAlign: TextAlign.justify, style: Theme.of(context).textTheme.body1,),
                 Text(record.conclusion ?? "", textAlign: TextAlign.justify, style: Theme.of(context).textTheme.body1,),
-                Text(record.analysis ?? "", textAlign: TextAlign.justify, style: Theme.of(context).textTheme.body1,),
+                Text(record.actionPlan ?? "", textAlign: TextAlign.justify, style: Theme.of(context).textTheme.body1,),
               ]),)
             ],
           ),

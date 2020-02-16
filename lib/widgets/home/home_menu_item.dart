@@ -14,7 +14,6 @@ class HomeMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dao = Provider.of<CollectorDao>(context);
     return Card(
         color: Colors.white,
         elevation: 0.0,
@@ -28,9 +27,8 @@ class HomeMenuItem extends StatelessWidget {
               ),
             ],
           ),
-          onPressed: () async {
+          onPressed: () {
             Navigator.pushNamed(context, routeName);
-            await dao.collectData();
           },
         )
     );

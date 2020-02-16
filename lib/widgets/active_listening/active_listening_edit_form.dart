@@ -95,9 +95,7 @@ class _ActiveListeningEditFormState extends State<ActiveListeningEditForm>{
                   ),
                   initialValue: record.detail.insights,
                   onChanged: (value) {
-                    if ( value.length > 0 ) {
-                      dao.updateListenActivity(record.detail.copyWith(actName: value));
-                    }
+                    dao.updateListenActivity(record.detail.copyWith(insights: value));
                   },
                 ),
               ]),)

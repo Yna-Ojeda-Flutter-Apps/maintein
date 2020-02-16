@@ -39,7 +39,9 @@ class _AssessmentRecordListState extends State<AssessmentRecordList>{
             itemBuilder: (_, index) {
               final record = records[index];
               return MySlidable(
-                onTap: () async => await dao.deleteAssessment(record),
+                entryName: DateFormat('MMMM dd, y').format(record.dateCreated),
+                entry: records[index],
+                entryType: 0,
                 child: Container(
                   height: 75,
                   child: Card(

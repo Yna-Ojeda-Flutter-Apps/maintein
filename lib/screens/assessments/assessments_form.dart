@@ -195,6 +195,7 @@ class _TakeAssessmentState extends State<TakeAssessment> {
       onPressed: () async {
         if ( _validateFields() ) {
           final dao = Provider.of<AssessmentDao>(context);
+          final collector = Provider.of<CollectorDao>(context);
           final entry = AssessmentsCompanion(
             isMWB: moorPackage.Value(_isMWB),
             dateCreated: moorPackage.Value(DateTime.now()),
@@ -214,6 +215,7 @@ class _TakeAssessmentState extends State<TakeAssessment> {
             _pageIndex = 0;
           });
           Navigator.pushNamed((context), AssessmentsList.routeName);
+          await collector.collectData();
         }
       },
       tooltip: 'Submit Assessment',

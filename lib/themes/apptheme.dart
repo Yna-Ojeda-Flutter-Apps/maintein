@@ -8,6 +8,11 @@ ThemeData appTheme() {
     accentColor: MyBlue.seagull,
     fontFamily: 'Roboto',
     textTheme: TextTheme(
+      display2: TextStyle(
+        fontFamily: 'Raleway',
+        fontSize: 30,
+        fontWeight: FontWeight.w700,
+      ),
       display1: TextStyle(
         fontFamily: 'Raleway',
         fontSize: 24,

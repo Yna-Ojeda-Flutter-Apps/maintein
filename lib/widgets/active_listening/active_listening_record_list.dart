@@ -49,7 +49,9 @@ class _ActiveListeningRecordListState extends State<ActiveListeningRecordList>{
         return SliverList(
           delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
             return MySlidable(
-              onTap: () => _confirmDelete(context, records[index], dao),
+              entryName: records[index].actName,
+              entry: records[index],
+              entryType: 2,
               child: Card(
                 color: Colors.white,
                 elevation: 3.0,
@@ -118,27 +120,4 @@ class _ActiveListeningRecordListState extends State<ActiveListeningRecordList>{
     );
   }
 
-  void _confirmDelete(BuildContext context, Listen listen, ListenDao dao) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
-            title: Text("Delete '"+listen.actName+"'?"),
-            content: Text("Deleting this entry cannot be undone."),
-            actions: <Widget>[
-              FlatButton(child: Text('Cancel'), onPressed: () => Navigator.of(context).pop(),),
-              FlatButton(
-                child: Text('Delete', style: TextStyle(color: Colors.redAccent),),
-                onPressed: () async {
-                  dao.deleteListenActivity(listen);
-                  Navigator.of(context).pop();
-                },
-              )
-
-            ],
-          );
-        }
-    );
-  }
 }

@@ -31,7 +31,7 @@ class _NotificationCardState extends State<NotificationCard> {
       future: widget.notifications.checkIfInPending(widget.ids),
       builder: (BuildContext context, AsyncSnapshot<List<bool>> snapshot) {
         if ( !snapshot.hasData ) {
-          return Text("loading data...");
+          return Container();
         } else if ( snapshot.hasError ) {
           return Text("oops. error.");
         }

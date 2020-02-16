@@ -10,26 +10,33 @@ import 'package:maintein/screens/home.dart';
 import 'package:maintein/screens/journal/journal_detail.dart';
 import 'package:maintein/screens/journal/journal_list.dart';
 import 'package:maintein/screens/journal/journal_new.dart';
+import 'package:maintein/screens/onboarding.dart';
 import 'package:maintein/screens/settings.dart';
 import 'package:maintein/themes/apptheme.dart';
 import 'package:maintein/utils/my_observer.dart';
 import 'package:maintein/utils/notification_helper.dart';
 import 'package:maintein/utils/project_db.dart';
 import 'package:flutter/material.dart';
+import 'package:maintein/widgets/onboarding_page.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+bool toOnboardingPage;
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  toOnboardingPage = prefs.getBool("toOnboardingPage") ?? true;
+  debugPrint(toOnboardingPage.toString());
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   final NotificationManager notifications = NotificationManager();
-  //TODO: change logo, one-time tutorial
+  final db = AppDatabase();
 
   @override
   Widget build(BuildContext context) {
-    final db = AppDatabase();
     return MultiProvider(
       providers: [
         Provider(create: (_) => db.goalDao),
@@ -47,7 +54,7 @@ class MyApp extends StatelessWidget {
         theme: appTheme(),
         navigatorObservers: [MyRouteObserver()],
         home: MyHome(notifications),
-        initialRoute: '/',
+        initialRoute: (toOnboardingPage) ? OnBoarding.routeName : MyHome.routeName,
         routes: {
           GoalList.routeName: (context) => GoalList(notifications),
           GoalDetail.routeName: (context) => GoalDetail(notifications),
@@ -61,6 +68,7 @@ class MyApp extends StatelessWidget {
           ActiveListenDetail.routeName: (context) => ActiveListenDetail(),
           BreathingExercise.routeName: (context) => BreathingExercise(),
           Settings.routeName: (context) => Settings(notifications),
+          OnBoarding.routeName: (context) => OnBoarding(notifications),
         },
       ),
     );
