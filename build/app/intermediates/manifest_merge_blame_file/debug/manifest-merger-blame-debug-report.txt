@@ -47,9 +47,9 @@
 31        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 31-->[androidx.core:core:1.1.0] C:\Users\yna\.gradle\caches\transforms-2\files-2.1\3aaf6e5219b7f981ec263df919098c6f\core-1.1.0\AndroidManifest.xml:24:18-86
 32        android:debuggable="true"
-33        android:icon="@mipmap/ic_launcher"
-33-->C:\Users\yna\AndroidStudioProjects\maintein\android\app\src\main\AndroidManifest.xml:13:9-43
-34        android:label="maintein" >
+33        android:icon="@mipmap/launcher_icon"
+33-->C:\Users\yna\AndroidStudioProjects\maintein\android\app\src\main\AndroidManifest.xml:13:9-45
+34        android:label="Maintein" >
 34-->C:\Users\yna\AndroidStudioProjects\maintein\android\app\src\main\AndroidManifest.xml:12:9-33
 35        <activity
 35-->C:\Users\yna\AndroidStudioProjects\maintein\android\app\src\main\AndroidManifest.xml:14:9-25:20

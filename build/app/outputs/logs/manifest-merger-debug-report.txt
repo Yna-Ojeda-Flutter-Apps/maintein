@@ -139,7 +139,7 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\yn
 	android:label
 		ADDED from C:\Users\yna\AndroidStudioProjects\maintein\android\app\src\main\AndroidManifest.xml:12:9-33
 	android:icon
-		ADDED from C:\Users\yna\AndroidStudioProjects\maintein\android\app\src\main\AndroidManifest.xml:13:9-43
+		ADDED from C:\Users\yna\AndroidStudioProjects\maintein\android\app\src\main\AndroidManifest.xml:13:9-45
 	android:name
 		ADDED from C:\Users\yna\AndroidStudioProjects\maintein\android\app\src\main\AndroidManifest.xml:11:9-57
 activity#com.maintein.MainActivity

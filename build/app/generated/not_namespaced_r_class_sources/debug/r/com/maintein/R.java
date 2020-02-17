@@ -407,6 +407,7 @@ public final class R {
     public static final int notification_template_icon_low_bg=0x7f040020;
     public static final int notification_tile_bg=0x7f040021;
     public static final int notify_panel_notification_icon_bg=0x7f040022;
+    public static final int splash_screen_logo=0x7f040023;
   }
   public static final class id {
     public static final int accessibility_action_clickable_span=0x7f050000;
@@ -531,6 +532,7 @@ public final class R {
   }
   public static final class mipmap {
     public static final int ic_launcher=0x7f080000;
+    public static final int launcher_icon=0x7f080001;
   }
   public static final class string {
     public static final int common_google_play_services_enable_button=0x7f090000;
