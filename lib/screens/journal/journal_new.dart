@@ -91,7 +91,7 @@ class _JournalNewFormState extends State<JournalNewForm> {
               titleOnChanged: (value) { setState(() { _title = value; });},
               header: "What will you do for next time?",
               textFieldInitialValue: _actionPlan,
-              textFieldHint: "Consider the what, who, when, where, why, and why.",
+              textFieldHint: "Consider the things you need to know and/or do to improve for next time.",
               textFieldOnChanged: (value) { setState(() { _actionPlan = value; });},
             ),
           ],

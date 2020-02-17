@@ -133,7 +133,7 @@ class _JournalDetailState extends State<JournalDetail> {
                   });},
                   header: "What will you do for next time?",
                   textFieldInitialValue: record.actionPlan,
-                  textFieldHint: "Consider the what, who, when, where, why, and why.",
+                  textFieldHint: "Consider the things you need to know and/or do to improve for next time.",
                   textFieldOnChanged: (value) { setState(() {
                     dao.updateJournalEntry(record.copyWith(actionPlan: value));
                   });},

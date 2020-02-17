@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maintein/screens/settings.dart';
 import 'package:maintein/themes/apptheme.dart';
 import 'package:maintein/utils/notification_helper.dart';
 import 'package:maintein/utils/project_db.dart';
@@ -14,6 +15,7 @@ class HomeMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dao = Provider.of<ReminderDao>(context);
     return Card(
         color: Colors.white,
         elevation: 0.0,
@@ -27,7 +29,7 @@ class HomeMenuItem extends StatelessWidget {
               ),
             ],
           ),
-          onPressed: () {
+          onPressed: () async {
             Navigator.pushNamed(context, routeName);
           },
         )
