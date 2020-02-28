@@ -10,16 +10,16 @@ A persuasive mobile application that facilitates emotional intelligence training
 * Assessment Feature
 * Breathing Exercise Screen
 * Settings Screen & Local Notification
-* Data Collection using Firebase
+* Data Collection using Firestore
 * Onboarding screen upon installation
+* Settings: About the app, and screen for attributions
 
 ## Currently working on
 * System Testing
+* Breathing Exercises: add hotliens and appropriate tempo
  
 ## To do
-* Breathing exercises: add hotlines, and appropriate tempo
-* Settings: help/guide of the app, and screen for attributions
-* Launch screen
+* Update new launch screen
 
 
 
