@@ -36,7 +36,9 @@ class NotificationManager {
   }
 
   NotificationDetails _getPlatformChannelSpecifics() {
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails('your other channel id', 'your other channel name', 'your other channel description');
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails('your other channel id', 'your other channel name', 'your other channel description',
+    importance: Importance.High,
+    priority: Priority.High);
     var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
     NotificationDetails platformChannelSpecifics = new NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     return platformChannelSpecifics;

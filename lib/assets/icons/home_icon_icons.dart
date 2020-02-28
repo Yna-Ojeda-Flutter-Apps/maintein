@@ -23,8 +23,8 @@ class HomeIcon {
   static const IconData diary = const IconData(0xe800, fontFamily: _kFontFam);
   static const IconData settings = const IconData(0xe801, fontFamily: _kFontFam);
   static const IconData target = const IconData(0xe802, fontFamily: _kFontFam);
-  static const IconData test = const IconData(0xe803, fontFamily: _kFontFam);
   static const IconData home = const IconData(0xe804, fontFamily: _kFontFam);
   static const IconData conversation = const IconData(0xe805, fontFamily: _kFontFam);
   static const IconData calm = const IconData(0xe806, fontFamily: _kFontFam);
+  static const IconData test = const IconData(0xe807, fontFamily: _kFontFam);
 }

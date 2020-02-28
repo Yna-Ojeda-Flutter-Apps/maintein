@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maintein/screens/settings.dart';
+import 'package:maintein/screens/settings/settings.dart';
 import 'package:maintein/themes/apptheme.dart';
 import 'package:maintein/utils/notification_helper.dart';
 import 'package:maintein/utils/project_db.dart';

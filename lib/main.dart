@@ -11,7 +11,10 @@ import 'package:maintein/screens/journal/journal_detail.dart';
 import 'package:maintein/screens/journal/journal_list.dart';
 import 'package:maintein/screens/journal/journal_new.dart';
 import 'package:maintein/screens/onboarding.dart';
-import 'package:maintein/screens/settings.dart';
+import 'package:maintein/screens/settings/about_the_app.dart';
+import 'package:maintein/screens/settings/notification_settings.dart';
+import 'package:maintein/screens/settings/resource_attributions.dart';
+import 'package:maintein/screens/settings/settings.dart';
 import 'package:maintein/themes/apptheme.dart';
 import 'package:maintein/utils/my_observer.dart';
 import 'package:maintein/utils/notification_helper.dart';
@@ -49,7 +52,7 @@ class MyApp extends StatelessWidget {
         Provider(create: (_) => db.collectorDao),
       ],
       child: MaterialApp(
-        title: 'feelUP',
+        title: 'Maintein',
         debugShowCheckedModeBanner: false,
         theme: appTheme(),
         navigatorObservers: [MyRouteObserver()],
@@ -69,6 +72,9 @@ class MyApp extends StatelessWidget {
           BreathingExercise.routeName: (context) => BreathingExercise(),
           Settings.routeName: (context) => Settings(notifications),
           OnBoarding.routeName: (context) => OnBoarding(notifications),
+          NotificationSetting.routeName: (context) => NotificationSetting(notifications),
+          ResourceAttribution.routeName: (context) => ResourceAttribution(),
+          AboutTheApp.routeName: (context) => AboutTheApp(),
         },
       ),
     );

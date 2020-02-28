@@ -4,7 +4,7 @@ import 'package:maintein/screens/breathing/breathing_exercise.dart';
 import 'package:maintein/screens/goaltracker/goal_list.dart';
 import 'package:maintein/screens/journal/journal_list.dart';
 import 'package:maintein/screens/active_listening/active_list.dart';
-import 'package:maintein/screens/settings.dart';
+import 'package:maintein/screens/settings/settings.dart';
 import 'package:maintein/utils/notification_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:maintein/widgets/home/home_greeting.dart';
@@ -44,7 +44,7 @@ class _MyHomeState extends State<MyHome> {
         ),
       ),
       body: GridView.count(
-        padding: EdgeInsets.all(40),
+        padding: EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
         crossAxisSpacing: 50,
         mainAxisSpacing: 20,
         crossAxisCount: 2,

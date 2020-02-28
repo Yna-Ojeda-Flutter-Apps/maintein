@@ -39,7 +39,7 @@ class _NotificationCardState extends State<NotificationCard> {
         return Container(
           padding: EdgeInsets.only(bottom: 10.0),
           decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: Colors.grey))
+            border: Border(bottom: BorderSide(color: Colors.grey, width: 1))
           ),
           child: Card(
             elevation: 0,
@@ -48,7 +48,7 @@ class _NotificationCardState extends State<NotificationCard> {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    Text(widget.reminder.type, style: Theme.of(context).textTheme.display1.copyWith(color: MyBlue.light),),
+                    Text(widget.reminder.type, style: Theme.of(context).textTheme.title.copyWith(color: MyBlue.light, fontWeight: FontWeight.w300),),
                     IconButton(
                       icon: Icon(Icons.alarm, color: MyBlue.light,),
                       iconSize: 15.0,
