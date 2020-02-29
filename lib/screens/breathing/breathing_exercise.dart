@@ -31,6 +31,11 @@ class BreathingState extends State<BreathingExercise> {
   }
 
   @override
+  void deactivate(){
+    _controller.pause();
+    super.deactivate();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
