@@ -16,9 +16,8 @@ class ActiveListeningViewMode extends StatelessWidget {
       stream: dao.watchListenEntry(id),
       builder: (context, AsyncSnapshot<ListenRecord> snapshot) {
         if ( !snapshot.hasData ){
-          return Image(
-            image: AssetImage('lib/assets/images/data/loading.png'),
-            height: 300,
+          return Center(
+            child:CircularProgressIndicator(),
           );
         }
         final ListenRecord record = snapshot.data ?? ListenRecord();

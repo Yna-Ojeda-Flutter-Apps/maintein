@@ -35,9 +35,8 @@ class _JournalDetailState extends State<JournalDetail> {
         stream: dao.watchJournalEntry(_id),
         builder: (context, AsyncSnapshot<Journal> snapshot) {
           if ( !snapshot.hasData ) {
-            return Image(
-              image: AssetImage('lib/assets/images/data/loading.png'),
-              height: 300,
+            return Center(
+              child:CircularProgressIndicator(),
             );
           }
           Journal record = snapshot.data;
@@ -184,6 +183,7 @@ class _JournalDetailState extends State<JournalDetail> {
   }
   _detailModeButton(){
     return FloatingActionButton(
+        tooltip: (_editMode) ?  "View Mode" : "Edit Mode",
         backgroundColor: MyBlue.picton,
         foregroundColor: Colors.white,
         child: (_editMode) ? Icon(Icons.remove_red_eye) : Icon(Icons.edit),

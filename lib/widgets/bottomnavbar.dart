@@ -19,16 +19,22 @@ class BottomNavBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          IconButton(
-            icon: Icon(HomeIcon.home, size: 30.0, color: MyBlue.light,),
-            onPressed: () async {
-              Navigator.pushNamed(context, MyHome.routeName);
-              await dao.collectData();
-            }
+          Tooltip(
+            message: "Home",
+            child: IconButton(
+                icon: Icon(HomeIcon.home, size: 30.0, color: MyBlue.light,),
+                onPressed: () async {
+                  Navigator.pushNamed(context, MyHome.routeName);
+                  await dao.collectData();
+                }
+            ),
           ),
-          IconButton(
-            icon: Icon(HomeIcon.calm, size: 30.0, color: MyBlue.light),
-            onPressed: () => Navigator.pushNamed(context, BreathingExercise.routeName),
+          Tooltip(
+            message: "Breathing Guide",
+            child: IconButton(
+              icon: Icon(HomeIcon.calm, size: 30.0, color: MyBlue.light),
+              onPressed: () => Navigator.pushNamed(context, BreathingExercise.routeName),
+            ),
           ),
         ],
       ),

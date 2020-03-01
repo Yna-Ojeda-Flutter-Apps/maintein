@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:maintein/themes/apptheme.dart';
 import 'package:maintein/widgets/bottomnavbar.dart';
 import 'package:maintein/widgets/my_app_bar.dart';

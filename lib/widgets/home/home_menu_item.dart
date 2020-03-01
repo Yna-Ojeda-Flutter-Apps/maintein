@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:maintein/screens/settings/settings.dart';
 import 'package:maintein/themes/apptheme.dart';
 import 'package:maintein/utils/notification_helper.dart';
-import 'package:maintein/utils/project_db.dart';
-import 'package:provider/provider.dart';
 
 class HomeMenuItem extends StatelessWidget {
   final String item;
@@ -15,7 +12,6 @@ class HomeMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dao = Provider.of<ReminderDao>(context);
     return Card(
         color: Colors.white,
         elevation: 0.0,

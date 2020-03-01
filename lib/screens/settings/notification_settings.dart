@@ -41,9 +41,8 @@ class _NotificationSettingState extends State<NotificationSetting>{
         stream: dao.watchAllEntries(),
         builder: (context, AsyncSnapshot<List<Reminder>> snapshot) {
           if ( !snapshot.hasData ) {
-            return Image(
-              image: AssetImage('lib/assets/images/data/loading.png'),
-              height: 300,
+            return Center(
+              child:CircularProgressIndicator(),
             );
           }
           List<Reminder> records = snapshot.data;

@@ -20,7 +20,7 @@ class OnBoarding extends StatefulWidget {
 }
 
 class _OnBoardingState extends State<OnBoarding>{
-  final int _totalPages = 5;
+  final int _totalPages = 6;
   final PageController _pageController = PageController(initialPage: 0);
   int _pageIndex = 0;
   String bottomButtonText = "next";
@@ -83,6 +83,11 @@ class _OnBoardingState extends State<OnBoarding>{
                   subtitle: "Take the assessments weekly or daily. Monitor your mental well-being and emotional intelligence!",
                   imagePath: "lib/assets/images/data/monitor.png",
                 ),
+                OnBoardingPage(
+                  title: "Maintein: Research Version",
+                  subtitle: "The version of Maintein you are currently using is for research purposes. By clicking 'Let's get started', you confirm that you are one of the research participants that have been briefed, have signed the consent form, and have agreed to participate.",
+                  imagePath: "lib/assets/images/notify.png",
+                ),
               ],
               onPageChanged: (value){
                 setState(() {
@@ -99,7 +104,7 @@ class _OnBoardingState extends State<OnBoarding>{
     return Align(
       alignment: Alignment.bottomCenter,
       child: DotsIndicator(
-        dotsCount: 5,
+        dotsCount: _totalPages,
         decorator: DotsDecorator(activeColor: MyBlue.seagull),
         position: currentPage.toDouble(),
       ),

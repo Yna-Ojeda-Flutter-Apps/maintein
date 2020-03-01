@@ -23,6 +23,10 @@ class _ActiveListenNewFormState extends State<ActiveListenNewForm>{
   String _actName;
   String _insights;
   List<bool> _characteristics = List<bool>.filled(12, false);
+  List<String> _checkedIHad = [];
+  List<String> _checkedIGave = [];
+  List<String> _checkedICan = [];
+  List<String> _checkedIDidNot = [];
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +58,11 @@ class _ActiveListenNewFormState extends State<ActiveListenNewForm>{
               header: "I had . . .",
               isCheckboxList: true,
               checkListItems: iHad,
+              checkListValues: _checkedIHad,
               checkboxOnChange: (bool isChecked, String label, int index) {
                 setState(() {
                   _characteristics[index] = isChecked;
+                  (isChecked) ? _checkedIHad.add(iHad[index]) : _checkedIHad.remove(iHad[index]);
                 });
               },
             ),ActiveListeningForm(
@@ -65,9 +71,11 @@ class _ActiveListenNewFormState extends State<ActiveListenNewForm>{
               header: "I gave . . .",
               isCheckboxList: true,
               checkListItems: iGave,
+              checkListValues: _checkedIGave,
               checkboxOnChange: (bool isChecked, String label, int index) {
                 setState(() {
                   _characteristics[index+4] = isChecked;
+                  (isChecked) ? _checkedIGave.add(iGave[index]) : _checkedIGave.remove(iGave[index]);
                 });
               },
             ),
@@ -77,9 +85,11 @@ class _ActiveListenNewFormState extends State<ActiveListenNewForm>{
               header: "I can . . .",
               isCheckboxList: true,
               checkListItems: iCan,
+              checkListValues: _checkedICan,
               checkboxOnChange: (bool isChecked, String label, int index) {
                 setState(() {
                   _characteristics[index+7] = isChecked;
+                  (isChecked) ? _checkedICan.add(iCan[index]) : _checkedICan.remove(iCan[index]);
                 });
               },
             ),
@@ -89,9 +99,11 @@ class _ActiveListenNewFormState extends State<ActiveListenNewForm>{
               header: "I did not . . .",
               isCheckboxList: true,
               checkListItems: iDidNot,
+              checkListValues: _checkedIDidNot,
               checkboxOnChange: (bool isChecked, String label, int index) {
                 setState(() {
                   _characteristics[index+9] = isChecked;
+                  (isChecked) ? _checkedIDidNot.add(iDidNot[index]) : _checkedIDidNot.remove(iDidNot[index]);
                 });
               },
             ),
@@ -113,6 +125,7 @@ class _ActiveListenNewFormState extends State<ActiveListenNewForm>{
   }
   FloatingActionButton _saveFormButton() {
     return FloatingActionButton(
+      tooltip: "Save Entry",
       backgroundColor: (_validateAll()) ? MyBlue.picton : Colors.grey,
       foregroundColor: Colors.white,
       child: const Icon(Icons.done),
@@ -142,6 +155,10 @@ class _ActiveListenNewFormState extends State<ActiveListenNewForm>{
             _insights = "";
             _characteristics = List<bool>.filled(12, false);
             _pageIndex = 0;
+            _checkedIHad = [];
+            _checkedIGave = [];
+            _checkedICan = [];
+            _checkedIDidNot = [];
           });
           Navigator.of(context).pop();
           _newEntryFeedback(context, _count);

@@ -17,9 +17,8 @@ class JournalDetailViewMode extends StatelessWidget {
       stream: dao.watchJournalEntry(id),
       builder: (context, AsyncSnapshot<Journal> snapshot) {
         if ( !snapshot.hasData ){
-          return Image(
-            image: AssetImage('lib/assets/images/data/loading.png'),
-            height: 300,
+          return Center(
+            child:CircularProgressIndicator(),
           );
         }
         final Journal record = snapshot.data;

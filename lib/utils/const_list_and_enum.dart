@@ -235,7 +235,7 @@ const List<String> reflectionPrompts = [
   "Make a list of everything you’d like to say yes to.",
   "Write the words you need to hear."
 ];
-const List<String> journalPraise = ["Great job! You've practiced reflection at least once today.", "Amazing, you're on a roll! Reflections increases a person's self-awareness, and you've done it at least thrice today."];
+const List<String> journalPraise = ["Great job! You've practiced reflection at least once today.", "Amazing, you're on a roll! Reflections increases a person's self-awareness, and you've done it at least twice today."];
 const String journalPromptHeader = "No particular thoughts? Here's some brain food:";
 
 

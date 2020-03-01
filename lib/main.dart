@@ -12,6 +12,7 @@ import 'package:maintein/screens/journal/journal_list.dart';
 import 'package:maintein/screens/journal/journal_new.dart';
 import 'package:maintein/screens/onboarding.dart';
 import 'package:maintein/screens/settings/about_the_app.dart';
+import 'package:maintein/screens/settings/hotlines.dart';
 import 'package:maintein/screens/settings/notification_settings.dart';
 import 'package:maintein/screens/settings/resource_attributions.dart';
 import 'package:maintein/screens/settings/settings.dart';
@@ -20,7 +21,6 @@ import 'package:maintein/utils/my_observer.dart';
 import 'package:maintein/utils/notification_helper.dart';
 import 'package:maintein/utils/project_db.dart';
 import 'package:flutter/material.dart';
-import 'package:maintein/widgets/onboarding_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -75,6 +75,7 @@ class MyApp extends StatelessWidget {
           NotificationSetting.routeName: (context) => NotificationSetting(notifications),
           ResourceAttribution.routeName: (context) => ResourceAttribution(),
           AboutTheApp.routeName: (context) => AboutTheApp(),
+          HotlinesList.routeName: (context) => HotlinesList()
         },
       ),
     );

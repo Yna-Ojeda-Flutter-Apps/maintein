@@ -28,9 +28,8 @@ class _JournalRecordListState extends State<JournalRecordList>{
       stream: dao.watchAllEntries(),
       builder: (context, AsyncSnapshot<List<Journal>> snapshot) {
         if ( !snapshot.hasData ) {
-          return SliverList(delegate: SliverChildListDelegate([Image(
-            image: AssetImage('lib/assets/images/data/loading.png'),
-            height: 300,
+          return SliverList(delegate: SliverChildListDelegate([Center(
+            child:CircularProgressIndicator(),
           )]),);
         }
         List<Journal> records = snapshot.data ?? List<Journal>();

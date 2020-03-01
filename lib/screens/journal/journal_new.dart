@@ -149,6 +149,7 @@ class _JournalNewFormState extends State<JournalNewForm> {
 
   _saveFormButton() {
     return FloatingActionButton(
+      tooltip: "Save",
       backgroundColor: (_validateAll()) ? MyBlue.picton : Colors.grey,
       foregroundColor: Colors.white,
       child: const Icon(Icons.done,),

@@ -7,13 +7,14 @@ class ActiveListeningForm extends StatefulWidget {
   final String titleInitialValue;
   final String header;
   final List<String> checkListItems;
+  final List<String> checkListValues;
   final Function titleOnChanged;
   final Function checkboxOnChange;
   final Function textFieldOnChange;
   final bool isCheckboxList;
 
 
-  ActiveListeningForm({this.titleInitialValue, this.header, this.checkListItems, this.titleOnChanged, this.checkboxOnChange, this.textFieldOnChange,  this.isCheckboxList});
+  ActiveListeningForm({this.titleInitialValue, this.header, this.checkListItems, this.checkListValues, this.titleOnChanged, this.checkboxOnChange, this.textFieldOnChange,  this.isCheckboxList});
   @override
   State<StatefulWidget> createState() => _ActiveListeningFormState();
 
@@ -45,6 +46,7 @@ class _ActiveListeningFormState extends State<ActiveListeningForm>{
             (widget.isCheckboxList) ? CheckboxGroup(
               labels: widget.checkListItems ?? List<String>(),
               onChange: widget.checkboxOnChange,
+              checked: widget.checkListValues,
               padding: EdgeInsets.all(10.0),
               itemBuilder: (Checkbox checkbox, Text text, int index) {
                 return Row(

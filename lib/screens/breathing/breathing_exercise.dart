@@ -1,4 +1,7 @@
-import 'package:maintein/widgets/bottomnavbar.dart';
+import 'package:maintein/assets/icons/home_icon_icons.dart';
+import 'package:maintein/screens/home.dart';
+import 'package:maintein/screens/settings/hotlines.dart';
+import 'package:maintein/themes/apptheme.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 class BreathingExercise extends StatefulWidget {
@@ -13,6 +16,7 @@ class BreathingExercise extends StatefulWidget {
 class BreathingState extends State<BreathingExercise> {
   VideoPlayerController _controller;
   Future<void> _initializeVideoPlayerFuture;
+  bool _isMute = false;
 
   @override
   void initState(){
@@ -38,6 +42,7 @@ class BreathingState extends State<BreathingExercise> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Center(
         child: FutureBuilder(
           future: _initializeVideoPlayerFuture,
@@ -57,7 +62,52 @@ class BreathingState extends State<BreathingExercise> {
           },
         ),
       ),
-      bottomNavigationBar: BottomNavBar(),
+      bottomNavigationBar: BottomAppBar(
+        elevation: 10.0,
+        shape: CircularNotchedRectangle(),
+        color: Colors.white,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Tooltip(
+              message: "Home",
+              child: IconButton(
+                  icon: Icon(HomeIcon.home, size: 30.0, color: MyBlue.light,),
+                  onPressed: () async {
+                    Navigator.pushNamed(context, MyHome.routeName);
+                  }
+              ),
+            ),
+            Tooltip(
+              message: "Hotline Information",
+              child: IconButton(
+                icon: Icon(Icons.info_outline, size: 30.0, color: MyBlue.light),
+                onPressed: () => Navigator.pushNamed(context, HotlinesList.routeName),
+              ),
+            )
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: ( _isMute ) ? Colors.grey : MyBlue.picton,
+        foregroundColor: Colors.white,
+        onPressed: () async {
+          if ( _isMute ) {
+            await _controller.setVolume(1.0);
+            setState(() {
+              _isMute = false;
+            });
+          } else {
+            await _controller.setVolume(0.0);
+            setState(() {
+              _isMute = true;
+            });
+          }
+        },
+        tooltip: (_isMute) ? "Mute" : "Unmute",
+        child: Icon(Icons.volume_mute),
+      ),
     );
   }
 

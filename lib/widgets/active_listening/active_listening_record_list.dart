@@ -27,9 +27,8 @@ class _ActiveListeningRecordListState extends State<ActiveListeningRecordList>{
       stream: dao.watchAll(),
       builder: (context, AsyncSnapshot<List<Listen>> snapshot) {
         if ( !snapshot.hasData ) {
-          return SliverList(delegate: SliverChildListDelegate([Image(
-            image: AssetImage('lib/assets/images/data/loading.png'),
-            height: 300,
+          return SliverList(delegate: SliverChildListDelegate([Center(
+            child:CircularProgressIndicator(),
           )]),);
         }
         List<Listen> records = snapshot.data ?? List<Listen>();

@@ -69,6 +69,7 @@ flutter:
     - lib/assets/images/app_icon.png
     - lib/assets/images/welcome.png
     - lib/assets/images/thanks.png
+    - lib/assets/images/notify.png
     - lib/assets/images/praise/popper.png
     - lib/assets/images/praise/confetti.png
     - lib/assets/images/data/converse.png
@@ -76,7 +77,6 @@ flutter:
     - lib/assets/images/data/goals.png
     - lib/assets/images/data/content.png
     - lib/assets/images/data/completed.png
-    - lib/assets/images/data/loading.png
     - lib/assets/images/data/monitor.png
     - lib/assets/videos/BreathingGuide_v2.mp4
   #  - images/a_dot_burr.jpeg

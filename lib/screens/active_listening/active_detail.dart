@@ -84,6 +84,7 @@ class _ActiveListenDetailState extends State<ActiveListenDetail>{
 
   _detailModeButton(){
     return FloatingActionButton(
+      tooltip: (_editMode) ? "View Mode" : "Edit Mode",
       backgroundColor: MyBlue.picton,
       foregroundColor: Colors.white,
       child: (_editMode) ? Icon(Icons.remove_red_eye) : Icon(Icons.edit),

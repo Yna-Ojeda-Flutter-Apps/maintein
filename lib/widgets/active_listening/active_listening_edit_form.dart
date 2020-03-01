@@ -26,9 +26,8 @@ class _ActiveListeningEditFormState extends State<ActiveListeningEditForm>{
       stream:  dao.watchListenEntry(widget.id),
       builder: (context, AsyncSnapshot<ListenRecord> snapshot) {
         if ( !snapshot.hasData ){
-          return Image(
-            image: AssetImage('lib/assets/images/data/loading.png'),
-            height: 300,
+          return Center(
+            child:CircularProgressIndicator(),
           );
         }
         final ListenRecord record = snapshot.data ?? ListenRecord();

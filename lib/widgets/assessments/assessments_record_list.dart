@@ -22,9 +22,8 @@ class _AssessmentRecordListState extends State<AssessmentRecordList>{
       stream: (widget.isMWB) ? dao.watchAllMWB() : dao.watchAllEIS(),
       builder: (context, AsyncSnapshot<List<Assessment>> snapshot) {
         if ( !snapshot.hasData ) {
-          return Image(
-            image: AssetImage('lib/assets/images/data/loading.png'),
-            height: 300,
+          return Center(
+            child:CircularProgressIndicator(),
           );
         }
         var records = snapshot.data ?? List();
