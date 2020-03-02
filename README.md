@@ -1,6 +1,6 @@
 # maintein
 
-A persuasive mobile application that facilitates emotional intelligence training for maintaining mental well-being
+A persuasive mobile application that facilitates emotional intelligence training for maintaining mental well-being.
 
 
 ## Functionalities done
@@ -9,20 +9,17 @@ A persuasive mobile application that facilitates emotional intelligence training
 * Active Listening Feature
 * Assessment Feature
 * Breathing Exercise Screen
-* Settings Screen & Local Notification
+* Settings Screen: notifications, about the app and attributions
+* Local Notifications
 * Data Collection using Firestore
 * Onboarding screen upon installation
 * Settings: About the app, and screen for attributions
 
 ## Currently working on
 * System Testing
-* Breathing Exercises: add hotliens and appropriate tempo
  
-## To do
-* Update new launch screen
-
-
-
+ 
+ 
 ## Getting Started
 A few resources to get you started if this is your first Flutter project:
 
