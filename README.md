@@ -1,6 +1,9 @@
-# maintein
+# Maintein
 
 A persuasive mobile application that facilitates emotional intelligence training for maintaining mental well-being.
+
+## Notice!
+This application was built for research purposes. As such, the current version collects usage data from the users.
 
 
 ## Functionalities done
