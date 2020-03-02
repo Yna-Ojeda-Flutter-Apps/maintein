@@ -24,7 +24,7 @@ class HotlinesList extends StatelessWidget {
         padding: EdgeInsets.all(15.0),
         child: ListView(
           children: <Widget>[
-            Text("UP PsychServ",
+            Text("UP PsycServ",
               style: Theme.of(context).textTheme.subhead.copyWith(color: MyBlue.light),
             ),
             Padding(
