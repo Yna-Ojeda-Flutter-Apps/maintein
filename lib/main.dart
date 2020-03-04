@@ -12,7 +12,7 @@ import 'package:maintein/screens/journal/journal_list.dart';
 import 'package:maintein/screens/journal/journal_new.dart';
 import 'package:maintein/screens/onboarding.dart';
 import 'package:maintein/screens/settings/about_the_app.dart';
-import 'package:maintein/screens/settings/hotlines.dart';
+import 'package:maintein/screens/breathing/hotlines.dart';
 import 'package:maintein/screens/settings/notification_settings.dart';
 import 'package:maintein/screens/settings/resource_attributions.dart';
 import 'package:maintein/screens/settings/settings.dart';

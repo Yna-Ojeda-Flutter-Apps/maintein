@@ -14,7 +14,6 @@ class MyHome extends StatefulWidget {
   static const routeName = '/';
   final NotificationManager notifications;
 
-  //TODO: Fix data collector and init reminders
 
   MyHome(this.notifications);
 

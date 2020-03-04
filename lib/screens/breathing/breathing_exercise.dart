@@ -1,6 +1,6 @@
 import 'package:maintein/assets/icons/home_icon_icons.dart';
 import 'package:maintein/screens/home.dart';
-import 'package:maintein/screens/settings/hotlines.dart';
+import 'package:maintein/screens/breathing/hotlines.dart';
 import 'package:maintein/themes/apptheme.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -39,6 +39,8 @@ class BreathingState extends State<BreathingExercise> {
     _controller.pause();
     super.deactivate();
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

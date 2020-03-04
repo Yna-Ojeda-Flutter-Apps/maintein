@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 class NotificationSetting extends StatefulWidget {
   static final String routeName = "/notifications";
   final NotificationManager notifications;
-  //TODO: Add notifications, app guide, and attributions
 
   NotificationSetting(this.notifications);
 
