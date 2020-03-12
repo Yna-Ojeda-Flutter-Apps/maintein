@@ -14,54 +14,12 @@ class BreathingExercise extends StatefulWidget {
 }
 
 class BreathingState extends State<BreathingExercise> {
-  VideoPlayerController _controller;
-  Future<void> _initializeVideoPlayerFuture;
-  bool _isMute = false;
-
-  @override
-  void initState(){
-    _controller = VideoPlayerController.asset('lib/assets/videos/BreathingGuide_v2.mp4');
-    _initializeVideoPlayerFuture = _controller.initialize();
-    _controller.setLooping(true);
-    _controller.setVolume(1.0);
-    _controller.play();
-    super.initState();
-  }
-
-  @override
-  void dispose(){
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  void deactivate(){
-    _controller.pause();
-    super.deactivate();
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Center(
-        child: FutureBuilder(
-          future: _initializeVideoPlayerFuture,
-          builder: (context, snapshot){
-            if (snapshot.connectionState == ConnectionState.done){
-              return Center(
-                child: AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
-                ),
-              );
-            } else {
-              return Center(
-                child:CircularProgressIndicator(),
-              );
-            }
-          },
+        child: Image(
+          image: AssetImage('lib/assets/images/breathing.gif'),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -90,25 +48,6 @@ class BreathingState extends State<BreathingExercise> {
             )
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: ( _isMute ) ? Colors.grey : MyBlue.picton,
-        foregroundColor: Colors.white,
-        onPressed: () async {
-          if ( _isMute ) {
-            await _controller.setVolume(1.0);
-            setState(() {
-              _isMute = false;
-            });
-          } else {
-            await _controller.setVolume(0.0);
-            setState(() {
-              _isMute = true;
-            });
-          }
-        },
-        tooltip: (_isMute) ? "Mute" : "Unmute",
-        child: Icon(Icons.volume_mute),
       ),
     );
   }
